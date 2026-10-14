@@ -95,3 +95,4 @@ flowchart LR
    - Extrusión de columnas y losas con material predefinido: `Concrete f'c=25 MPa, E=25 GPa, Poisson=0.2`.
    - Inserción de la placa de anclaje de turbina eólica en *Part Design*.
    - Módulo *FEM*: Aplicación de fuerza tangencial $F_T = 1020\text{ N}$ y torsión en la base del mástil. Simulación con solver CalculiX para verificar que la deformación máxima en punta de columna sea inferior a $H/500 = 7\text{ mm}$.
+

@@ -14,3 +14,4 @@
 - Hilos guía de nylon instalados permanentemente en cada ducto para ampliaciones futuras.
 
 *Para la memoria de cálculo completa, consulte [`docs/notas_de_diseno/03_canalizaciones_normadas_y_redes_fluidos.md`](../../docs/notas_de_diseno/03_canalizaciones_normadas_y_redes_fluidos.md).*
+

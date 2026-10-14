@@ -66,3 +66,4 @@ flowchart TD
 2. **LibreCAD (Plantas de Instalaciones):**
    - Capas diferenciadas: `INST_GAS_COMISION` (magenta), `INST_GAS_LP_BIOGAS` (naranja), `INST_HIDR_FRIA` (azul), `INST_HIDR_CALIENTE` (rojo), `INST_ELECT_POTENCIA` (amarillo), `INST_DATOS_CAT6A` (verde).
    - Generación de planos constructivos para instaladores certificados.
+

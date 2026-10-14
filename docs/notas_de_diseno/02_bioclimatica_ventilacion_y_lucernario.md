@@ -59,3 +59,4 @@ flowchart TD
 2. **Blender (Estudio de Sombras y Asoleamiento):**
    - Asignación de coordenadas geográficas precisas y fecha/hora mediante el addon *Sun Position*.
    - Renderizado con Cycles para verificar que la luz directa no cause deslumbramiento en áreas de trabajo.
+

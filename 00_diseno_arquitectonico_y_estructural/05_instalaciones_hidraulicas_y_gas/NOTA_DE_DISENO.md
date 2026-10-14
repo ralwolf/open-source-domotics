@@ -13,3 +13,4 @@
 - **Caudal de Diseño:** $Q_{pico} = 0.65\text{ L/s}$ a $2.5\text{ bar}$ de presión constante con grupo hidroneumático de frecuencia variable.
 
 *Para la memoria de cálculo completa, consulte [`docs/notas_de_diseno/03_canalizaciones_normadas_y_redes_fluidos.md`](../../docs/notas_de_diseno/03_canalizaciones_normadas_y_redes_fluidos.md).*
+

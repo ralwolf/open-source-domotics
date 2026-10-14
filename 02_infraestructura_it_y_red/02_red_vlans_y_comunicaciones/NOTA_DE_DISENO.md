@@ -11,3 +11,4 @@
 - Aislamiento estricto de la VLAN 30 (cámaras IP de Frigate) sin puerta de enlace hacia WAN pública.
 
 *Para la memoria de cálculo completa, consulte [`docs/notas_de_diseno/05_infraestructura_it_red_vlans_y_seguridad.md`](../../docs/notas_de_diseno/05_infraestructura_it_red_vlans_y_seguridad.md).*
+

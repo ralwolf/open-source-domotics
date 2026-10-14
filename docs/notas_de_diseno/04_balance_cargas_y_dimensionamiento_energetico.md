@@ -89,3 +89,4 @@ graph LR
 
 - Transformadores de corriente toroidales de núcleo partido (*Split-Core CTs*) en cada circuito derivado de $15\text{A}$ y $20\text{A}$ (PZEM-004T v3 / CircuitSetup 6-channel expander).
 - Muestreo a $1\text{ Hz}$ de: Tensión eficaz ($V_{rms}$), Corriente ($I_{rms}$), Potencia Activa ($W$), Factor de Potencia ($PF$) y Frecuencia ($Hz$).
+

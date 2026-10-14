@@ -14,3 +14,4 @@
 4. Conexión de zapatas con el sistema de puesta a tierra equipotencial del edificio (anillo perimetral enterrado de cobre desnudo $50\text{ mm}^2$).
 
 *Para la memoria de cálculo completa y fórmulas de capacidad, consulte [`docs/notas_de_diseno/01_geotecnia_cimentacion_y_estructuras.md`](../../docs/notas_de_diseno/01_geotecnia_cimentacion_y_estructuras.md).*
+

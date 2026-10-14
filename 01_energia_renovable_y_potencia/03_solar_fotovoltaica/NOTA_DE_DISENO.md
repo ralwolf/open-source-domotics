@@ -14,3 +14,4 @@
 - Caja combinadora DC con fusibles gPV de $1000\text{ V} / 20\text{ A}$, descargador de sobretensiones transitorias SPD Clase II ($1000\text{ V}$ DC, $I_n = 20\text{ kA}$, $I_{max} = 40\text{ kA}$) y seccionador de corte en carga rotativo de $1000\text{ V} / 32\text{ A}$.
 
 *Para la memoria de cálculo completa, consulte [`docs/notas_de_diseno/04_balance_cargas_y_dimensionamiento_energetico.md`](../../docs/notas_de_diseno/04_balance_cargas_y_dimensionamiento_energetico.md).*
+

@@ -18,3 +18,4 @@
   3. *Storm Lock:* Cierre y bloqueo total inmediato ante primera gota o ráfaga.
 
 *Para la memoria de cálculo completa, consulte [`docs/notas_de_diseno/02_bioclimatica_ventilacion_y_lucernario.md`](../../docs/notas_de_diseno/02_bioclimatica_ventilacion_y_lucernario.md).*
+

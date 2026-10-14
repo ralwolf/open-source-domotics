@@ -15,3 +15,4 @@
 - 4 vientos de cable de acero inoxidable AISI-316 $\phi 8\text{ mm}$ con tensores forjados y amortiguadores silentblock elastoméricos para filtrar microvibraciones a la estructura del edificio.
 
 *Para la memoria de cálculo completa, consulte [`docs/notas_de_diseno/04_balance_cargas_y_dimensionamiento_energetico.md`](../../docs/notas_de_diseno/04_balance_cargas_y_dimensionamiento_energetico.md).*
+

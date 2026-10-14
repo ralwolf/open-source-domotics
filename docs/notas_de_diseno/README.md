@@ -24,3 +24,4 @@ Cada documento sigue el siguiente estándar de ingeniería:
 3. **Especificación de Materiales y Tolerancias:** Fichas de componentes, aleaciones, calibres, presiones y tensiones nominales.
 4. **Guía de Modelado FOSS:** Flujo de diseño para representar la solución en las herramientas de software libre seleccionadas.
 5. **Puntos de Integración e Interfaces:** Cruce con otros módulos (ej. anclajes mecánicos con red eléctrica, sensores con buses de datos).
+

@@ -16,3 +16,4 @@
 - **Anclajes Estructura Fotovoltaica:** Espárragos roscados $M10$ de acero inoxidable AISI-316 con taco químico de resina de viniléster bicomponente, profundidad de taladrado $\ge 110\text{ mm}$.
 
 *Para la memoria de cálculo completa, consulte [`docs/notas_de_diseno/01_geotecnia_cimentacion_y_estructuras.md`](../../docs/notas_de_diseno/01_geotecnia_cimentacion_y_estructuras.md).*
+

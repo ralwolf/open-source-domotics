@@ -77,3 +77,4 @@ La intercomunicación residencial opera sobre un servidor **Asterisk PBX / Kamai
 2. **Frigate NVR + Coral TPU:**
    - Detección de personas y vehículos en tiempo real en los accesos antes de que toquen el timbre.
    - Previsualización automática de la cámara del portero en todas las pantallas activas cuando se detecta aproximación en el porche.
+

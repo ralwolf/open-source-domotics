@@ -13,3 +13,4 @@
 - **Frecuencia de Publicación:** Telemetría a $1\text{ Hz}$ local vía MQTT hacia Home Assistant sin nube externa.
 
 *Para la memoria de cálculo completa, consulte [`docs/notas_de_diseno/04_balance_cargas_y_dimensionamiento_energetico.md`](../../docs/notas_de_diseno/04_balance_cargas_y_dimensionamiento_energetico.md).*
+

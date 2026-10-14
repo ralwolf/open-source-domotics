@@ -18,3 +18,4 @@
 - **Códec de Video:** H.264 Baseline Profile empaquetado vía WebRTC a través de `go2rtc` para latencia $< 80\text{ ms}$.
 
 *Para la memoria de cálculo completa, consulte [`docs/notas_de_diseno/05_infraestructura_it_red_vlans_y_seguridad.md`](../../docs/notas_de_diseno/05_infraestructura_it_red_vlans_y_seguridad.md).*
+
