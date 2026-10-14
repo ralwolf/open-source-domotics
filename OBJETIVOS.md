@@ -1,8 +1,9 @@
-# Plan Maestro y Objetivos del Proyecto: Domótica Integral Autosustentable
+# Plan Maestro y Objetivos del Proyecto: open-source-domotics
 
+> **Proyecto:** open-source-domotics (Domótica Integral Autosustentable y Resiliente)  
 > **Estado del Proyecto:** En Planificación y Especificación Técnica  
 > **Núcleo de Automatización:** Home Assistant (Supervised / Container bajo Proxmox VE)  
-> **Enfoque Principal:** Resiliencia y Autosuficiencia Energética (Off-Grid / Híbrido), Seguridad Perimetral Avanzada, Monitorización Eléctrica Granular y Confort Automatizado.
+> **Enfoque Principal:** Resiliencia y Autosuficiencia Energética (Off-Grid / Híbrido), Infraestructura FOSS, Seguridad Perimetral Avanzada, Monitorización Eléctrica Granular y Confort Automatizado.
 
 ---
 
