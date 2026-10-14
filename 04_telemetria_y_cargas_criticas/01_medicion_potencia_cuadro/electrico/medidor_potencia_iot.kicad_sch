@@ -1,0 +1,126 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "910a1c8d-0860-4f2d-8128-46ca975bb22e")
+	(paper "A3")
+	(title_block
+		(title "ESP32 IoT Energy Gateway & Safety Shutoff Controller")
+		(date "2026-10-14")
+		(rev "1.0")
+		(company "Open Source Domotics")
+		(comment 1 "Bus RS-485 Modbus RTU + 4x PZEM UART + Dual Emergency Relays + Isolated PSU")
+		(comment 2 "Hardware 100% Abierto y Reproducible en KiCad")
+	)
+	(lib_symbols)
+	(text "SECCIÓN 1: FUENTE DE ALIMENTACIÓN AC/DC AISLADA (100-240VAC -> 5VDC / 3.3VDC)"
+		(at 30 25 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "df8503c8-d4da-4186-b4f3-13b163cbf7b0")
+	)
+	(text "F1: Fusible Térmico 1A / 250V\nMOV1: Varistor 275V (10D431K)\nPSU1: Hi-Link HLK-PM01 (5V / 3W)\nU1: Regulador LDO AMS1117-3.3V (800mA)\nC1: 470uF 16V Low-ESR | C2: 100nF Cerámico\nC3: 220uF 10V | C4: 100nF Cerámico"
+		(at 30 35 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "1ca26e83-be11-44ae-afe4-ee4e9b51f231")
+	)
+	(text "SECCIÓN 2: MICROCONTROLADOR ESP32 Y CONECTIVIDAD"
+		(at 160 25 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "6fadb74d-7584-491f-a6f3-3fa8270d7f98")
+	)
+	(text "U2: ESP32-WROOM-32E (4MB Flash)\n- Pin EN / RESET: R_pullup 10k + C_deb 1uF + Pulsador RESET\n- Pin IO0 / BOOT: R_pullup 10k + Pulsador BOOT\n- Pin TXD0/RXD0: Cabezal de programación USB-UART (CH340C / CP2102)\n- Pin IO21 (SDA), IO22 (SCL): I2C Display OLED 0.96\" SSD1306 (128x64)\n- Pin IO16 (RX2), IO17 (TX2): Bus RS-485 Modbus RTU\n- Pin IO4, IO5, IO18, IO19: UART Software / Opto PZEM-004T v3\n- Pin IO25: Relé 1 (Corte Cargas Críticas / Alerta)\n- Pin IO26: Relé 2 (Load-Shedding Desconexión Horno/EV)"
+		(at 160 35 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "4dbc369d-72d0-4026-9930-bf0a2b8191a8")
+	)
+	(text "SECCIÓN 3: TRANSCEPTOR RS-485 MODBUS AISLADO (EASTRON SDM630 / ATM90E32)"
+		(at 30 115 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "046596e7-b5ee-49d7-a482-c18f9e243ec6")
+	)
+	(text "U3: Transceptor RS-485 Industrial MAX485 / SP3485 (o ISO3082 Aislado galvánicamente)\n- Pin DI -> IO17 (ESP32 TX2)\n- Pin RO -> IO16 (ESP32 RX2)\n- Pin RE/DE -> IO23 (Dirección TX/RX con circuito Auto-Direction NPN opcional)\n- Bornera J3 (A+, B-, GND-SHIELD): Conexión par trenzado blindado\n- R_term: Resistencia 120 Ohm con Jumper seleccionable\n- TVS1, TVS2: Diodos SMBJ6.8CA para supresión de picos ESD y transitorios"
+		(at 30 125 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "dad142e3-5eae-433a-a440-26494b45ef0c")
+	)
+	(text "SECCIÓN 4: INTERFAZ OPTOACOPLADA PZEM-004T V3 (SUB-MEDICIÓN DERIVADOS)"
+		(at 160 115 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "ee5b6fdc-09f3-4b25-bf43-b4ba4344bad3")
+	)
+	(text "Cabezales J4, J5, J6, J7 (4 Canales de corriente y tensión AC):\n- Canal 1 (J4): Medición Cocina / Placa Inducción (CT 100A)\n- Canal 2 (J5): Medición Climatización Aerotermia/Multi-Split (CT 100A)\n- Canal 3 (J6): Medición Lavandería y Bomba de Agua (CT 100A)\n- Canal 4 (J7): Medición Sala IT / Servidores Domótica (CT 100A)\n- Aislamiento galvánico óptico de 3.75 kV nativo del PZEM-004T"
+		(at 160 125 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "69724f52-6950-45bd-aa4b-c5d0769010eb")
+	)
+	(text "SECCIÓN 5: ETAPA DE ACCIONAMIENTO DE RELÉS DE SEGURIDAD Y LOAD-SHEDDING"
+		(at 30 190 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "232d94f1-e956-4a6f-97c9-4377cbfc97d9")
+	)
+	(text "Q1, Q2: Transistores NPN 2N2222 / MMBT2222 (o Optoacopladores PC817)\nK1: Relé Omron G5LE-1 5VDC / 10A (Disparo de Contactor de Cargas Desconectables)\nK2: Relé Omron G5LE-1 5VDC / 10A (Corte de Seguridad / Alarma Acústica en Cuadro)\nD1, D2: Diodos Flyback 1N4148 / 1N4007 para protección contra fuerza contraelectromotriz\nLED1, LED2: Indicadores luminosos de estado activo de cada relé\nJ8: Bornera enchufable 5.08mm (NO1, NC1, COM1, NO2, NC2, COM2)"
+		(at 30 200 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "0a58335a-93b4-4a62-b7f1-40aee3702dc5")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+)

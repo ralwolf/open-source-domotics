@@ -30,5 +30,8 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 
 ## 5. Estructura de este Directorio
 - `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
-- `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
+- `electrico/`:
+  - [`cuadro_general_unifilar.dxf`](./electrico/cuadro_general_unifilar.dxf): Plano CAD 2D estándar en DXF (LibreCAD / AutoCAD) del diagrama unifilar del Tablero General de Baja Tensión (TGBT).
+  - [`cuadro_general_unifilar.svg`](./electrico/cuadro_general_unifilar.svg): Esquema vectorial SVG interactivo de alta resolución visualizable directamente en navegador y GitHub con segregación de cargas críticas (UPS) y desconectables (Load Shedding).
+  - Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
 - `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).

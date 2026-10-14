@@ -22,5 +22,7 @@ Distribución espacial de la vivienda optimizada para el confort bioclimático, 
 - Rotura de puente térmico en todos los encuentros de forjados y carpinterías.
 
 ## 4. Contenido del Directorio
+- `planos_2d_dxf/`:
+  - [`planta_arquitectonica_base.dxf`](./planos_2d_dxf/planta_arquitectonica_base.dxf): Plano CAD 2D de distribución arquitectónica ($10 \times 10\text{ m}$), incluyendo sala social, cocina, recámaras, sala IT central, patio interior y hueco cenital de lucernario.
 - `planos_arquitectonicos/`: Plantas arquitectónicas acotadas, alzados, secciones longitudinales y transversales.
 - `renders_y_distribucion/`: Renders 3D, diagramas de zonificación y mobiliario de distribución interior.

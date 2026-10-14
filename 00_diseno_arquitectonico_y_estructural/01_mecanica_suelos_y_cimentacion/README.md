@@ -20,5 +20,9 @@ Define el estudio del terreno, capacidad de soporte del sustrato y el cálculo e
   - Recubrimiento mínimo de hormigón contra terreno: 5.0 cm a 7.5 cm con solera de hormigón de limpieza previa.
 
 ## 4. Contenido del Directorio
-- `planos_y_calculos/`: Planos de replanteo de zapatas, despiece de armaduras de zapatas y vigas riostras, memorias de cálculo de cargas.
+- `planos_y_calculos/`:
+  - [`plano_cimentacion_ejes.dxf`](./planos_y_calculos/plano_cimentacion_ejes.dxf): Plano CAD 2D de replanteo con ejes 1-3 y A-C, zapatas aisladas ($1.30 \times 1.30\text{ m}$), vigas riostras y columna maestra C-TURB.
+  - [`cimentacion_zapatas_pilares.FCStd`](./planos_y_calculos/cimentacion_zapatas_pilares.FCStd): Modelo 3D paramétrico nativo en FreeCAD 1.1+.
+  - [`cimentacion_zapatas_pilares.step`](./planos_y_calculos/cimentacion_zapatas_pilares.step): Exportación universal STEP AP214 para visualización e interoperabilidad BIM.
 - `especificaciones/`: Fichas técnicas de hormigones, estudio geotécnico del terreno y directrices de excavación y drenajes.
+- [`NOTA_DE_DISENO.md`](./NOTA_DE_DISENO.md): Memoria de cálculo geotécnico y dimensionamiento estructural.

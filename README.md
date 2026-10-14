@@ -15,6 +15,19 @@ Repositorio central para el diseño, dimensionamiento, automatización y desplie
 
 ---
 
+## 🚀 Entregables Técnicos Generados (CAD 2D, FreeCAD 3D, KiCad y Firmware)
+
+| Subsistema / Módulo | Formatos y Archivos Generados | Descripción Técnica |
+| :--- | :--- | :--- |
+| **Cimentación y Geotecnia** | [`plano_cimentacion_ejes.dxf`](00_diseno_arquitectonico_y_estructural/01_mecanica_suelos_y_cimentacion/planos_y_calculos/plano_cimentacion_ejes.dxf)<br>[`cimentacion_zapatas_pilares.FCStd`](00_diseno_arquitectonico_y_estructural/01_mecanica_suelos_y_cimentacion/planos_y_calculos/cimentacion_zapatas_pilares.FCStd)<br>[`cimentacion_zapatas_pilares.step`](00_diseno_arquitectonico_y_estructural/01_mecanica_suelos_y_cimentacion/planos_y_calculos/cimentacion_zapatas_pilares.step) | Ejes de replanteo 1-3 y A-C, 9 zapatas aisladas ($1.30 \times 1.30\text{ m}$), vigas riostras y columna C-TURB ($35 \times 35\text{ cm}$) para absorción de momentos del aerogenerador Archimedes MK9. |
+| **Arquitectura Base** | [`planta_arquitectonica_base.dxf`](00_diseno_arquitectonico_y_estructural/03_arquitectura_habitaciones_patios_terrazas/planos_2d_dxf/planta_arquitectonica_base.dxf) | Distribución 2D de vivienda ($10 \times 10\text{ m}$): Sala/Comedor, Cocina ergonómica, Recámara principal, Recámara infantil, Cuarto Técnico IT central, Patio interior y hueco cenital. |
+| **Lucernario Bioclimático** | [`lucernario_astronomico_cenital.FCStd`](00_diseno_arquitectonico_y_estructural/04_bioclimatica_ventilacion_lucernario_celeste/mecanico/lucernario_astronomico_cenital.FCStd)<br>[`lucernario_astronomico_cenital.step`](00_diseno_arquitectonico_y_estructural/04_bioclimatica_ventilacion_lucernario_celeste/mecanico/lucernario_astronomico_cenital.step) | Modelo 3D de cúpula cenital ($3.0 \times 2.0\text{ m}$) con marco de aluminio con RPT, doble acristalamiento templado low-iron para observación estelar y actuador lineal $24\text{ V}$ para ventilación nocturna. |
+| **Tablero Eléctrico General** | [`cuadro_general_unifilar.dxf`](01_energia_renovable_y_potencia/07_tableros_distribucion_y_protecciones/electrico/cuadro_general_unifilar.dxf)<br>[`cuadro_general_unifilar.svg`](01_energia_renovable_y_potencia/07_tableros_distribucion_y_protecciones/electrico/cuadro_general_unifilar.svg) | Diagrama unifilar TGBT con conmutación ATS (Red / Inversor ESS), DPS Clase II, IGA 63A, RCD 63A/30mA A-SI, medidor Modbus y 9 circuitos derivados segregados (cargas esenciales vs. load-shedding). |
+| **Gateway Telemetría IoT** | [`medidor_potencia_iot.kicad_sch`](04_telemetria_y_cargas_criticas/01_medicion_potencia_cuadro/electrico/medidor_potencia_iot.kicad_sch)<br>[`medidor_potencia_iot.svg`](04_telemetria_y_cargas_criticas/01_medicion_potencia_cuadro/electrico/esquema_svg/medidor_potencia_iot.svg)<br>[`BOM.md`](04_telemetria_y_cargas_criticas/01_medicion_potencia_cuadro/electrico/BOM.md) | Hardware KiCad 10 con ESP32-WROOM-32, interfaz Modbus RS-485 aislada, 4 canales PZEM UART, fuente HLK-PM01 integrada y doble relé de seguridad/corte de cargas secundarias. |
+| **Firmware de Control** | [`esp32_energy_monitor.yaml`](04_telemetria_y_cargas_criticas/01_medicion_potencia_cuadro/control/esp32_energy_monitor.yaml)<br>[`src/main.cpp`](04_telemetria_y_cargas_criticas/01_medicion_potencia_cuadro/control/src/main.cpp) | Firmware dual: (1) ESPHome con Modbus Controller, PZEMAC, pantalla OLED SSD1306 y API nativa HA; (2) Firmware C++ PlatformIO con watchdog, reglas autónomas de corte y MQTT. |
+
+---
+
 ## 🏗️ Arquitectura Tecnológica y Software 100% Libre (Puro FOSS)
 
 - **Diseño Arquitectónico y Civil:** Ingetrazzo (trazados/replanteo), LibreCAD (planos 2D DXF) y Blender.

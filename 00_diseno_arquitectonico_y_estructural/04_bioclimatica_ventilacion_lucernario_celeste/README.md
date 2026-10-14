@@ -18,5 +18,9 @@ Aprovechamiento de los recursos naturales del entorno (radiación solar, vientos
   - Cortina plisada celular motorizada para oscurecimiento total y aislamiento térmico en horas de máxima radiación estival.
 
 ## 4. Contenido del Directorio
+- `mecanico/`:
+  - [`lucernario_astronomico_cenital.FCStd`](./mecanico/lucernario_astronomico_cenital.FCStd): Modelo 3D paramétrico en FreeCAD 1.1+ (marco perimetral de $3.0 \times 2.0\text{ m}$, acristalamiento doble laminado low-iron y actuador lineal basculante de $24\text{ V}$).
+  - [`lucernario_astronomico_cenital.step`](./mecanico/lucernario_astronomico_cenital.step): Modelo universal STEP AP214 para fabricación y ensamble mecánico.
 - `diseno_lucernario/`: Planos de detalle constructivo del lucernario cenital, sellados impermeables EPDM, marco de aluminio y especificaciones del vidrio astronómico.
 - `simulacion_ventilacion/`: Diagramas de flujo de ventilación cruzada, estudios de asoleamiento estacional y confort térmico pasivo.
+- [`NOTA_DE_DISENO.md`](./NOTA_DE_DISENO.md): Memoria de cálculo bioclimático, transmitancia lumínica y tiro térmico pasivo.
