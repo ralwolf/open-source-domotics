@@ -11,6 +11,7 @@ Repositorio central para el diseño, dimensionamiento, automatización y desplie
   3. **Seguridad Perimetral, Accesos e Intercomunicación:** Cámaras PoE con IA, cerraduras biométricas, videoportero en puerta de entrada con botón y relé de cerradura, intercomunicadores de pared/sobremesa multi-estancia (SIP/WebRTC), monitores con visión invisible 940nm y detección acústica de llanto/ladridos (bebés y mascotas), electroválvulas de corte para agua/gas, cortinas y relés.
   4. **Telemetría y Monitorización Eléctrica Granular:** Medición precisa de voltaje y corriente en cocina (estufa, horno, refrigerador con regulador y UPS, extractor, lavavajillas, microondas), recámara/multimedia, lavandería (con protectores de picos), climatización multi-split y oficina (PC, periféricos, audio de estudio).
   5. **Confort y Exteriores:** Iluminación circadiana y regulada, robot aspirador/limpiador, riego inteligente para plantas y automatización/química para piscina.
+- **[Notas de Diseño y Memorias de Cálculo](docs/notas_de_diseno/README.md)**: Cuadernos de ingeniería con fórmulas gobernantes, dimensionamiento de cargas y flujos de modelado FOSS (Geotecnia, Cúpula Astronómica, Canalizaciones Segregadas, Baterías LiFePO4, Redes VLAN).
 
 ---
 
