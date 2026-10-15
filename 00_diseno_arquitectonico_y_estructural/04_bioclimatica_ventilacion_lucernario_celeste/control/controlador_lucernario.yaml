@@ -121,3 +121,4 @@ sensor:
         then:
           - cover.close: compuertas_lucernario
           - logger.log: "¡VIENTO FUERTE (>40 km/h)! Cerrando compuertas preventivamente."
+

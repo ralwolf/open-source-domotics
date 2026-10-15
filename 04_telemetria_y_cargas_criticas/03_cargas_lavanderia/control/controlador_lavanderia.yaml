@@ -134,3 +134,4 @@ switch:
     id: sw_enchufe_potencia
     output: out_rele_enchufe_16a
     restore_mode: RESTORE_DEFAULT_ON
+

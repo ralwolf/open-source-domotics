@@ -222,3 +222,4 @@ if __name__ == "__main__":
     dxf_out = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/08_intrusion_perimetral_sensores_y_sirena/mecanico/plano_seguridad_perimetral_intrusion.dxf"
     svg_out = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/08_intrusion_perimetral_sensores_y_sirena/mecanico/plano_seguridad_perimetral_intrusion.svg"
     generar_plano_intrusion(dxf_out, svg_out)
+

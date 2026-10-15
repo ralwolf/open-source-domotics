@@ -170,3 +170,4 @@ if __name__ == "__main__":
 
     generar_plano_multisplit_dxf(dxf_file)
     generar_svg_multisplit(svg_file)
+

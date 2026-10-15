@@ -242,3 +242,4 @@ def generar_planos_videoportero():
 
 if __name__ == "__main__":
     generar_planos_videoportero()
+

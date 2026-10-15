@@ -261,3 +261,4 @@ def generar_kicad_solar_termico():
 
 if __name__ == "__main__":
     generar_kicad_solar_termico()
+

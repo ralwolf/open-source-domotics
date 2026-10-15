@@ -127,3 +127,4 @@ binary_sensor:
     filters:
       - delayed_on: 50ms
       - delayed_off: 50ms
+

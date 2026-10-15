@@ -256,3 +256,4 @@ def generar_kicad_lucernario():
 
 if __name__ == "__main__":
     generar_kicad_lucernario()
+

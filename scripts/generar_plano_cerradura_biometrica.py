@@ -216,3 +216,4 @@ def generar_planos_cerradura():
 
 if __name__ == "__main__":
     generar_planos_cerradura()
+

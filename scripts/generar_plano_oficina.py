@@ -172,3 +172,4 @@ if __name__ == "__main__":
 
     generar_plano_oficina_dxf(dxf_file)
     generar_svg_oficina(svg_file)
+

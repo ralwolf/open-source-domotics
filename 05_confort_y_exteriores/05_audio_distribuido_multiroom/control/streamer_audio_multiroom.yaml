@@ -113,3 +113,4 @@ status_led:
   pin:
     number: GPIO10
     inverted: true
+

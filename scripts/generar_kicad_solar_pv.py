@@ -292,3 +292,4 @@ def generar_kicad_pv():
 
 if __name__ == "__main__":
     generar_kicad_pv()
+

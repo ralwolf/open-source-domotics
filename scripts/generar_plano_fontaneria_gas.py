@@ -333,3 +333,4 @@ def generar_planos_fontaneria_y_gas(base_dir):
 if __name__ == "__main__":
     base = "/home/ral/Documents/GitHub/open-source-domotics/00_diseno_arquitectonico_y_estructural/05_instalaciones_hidraulicas_y_gas"
     generar_planos_fontaneria_y_gas(base)
+

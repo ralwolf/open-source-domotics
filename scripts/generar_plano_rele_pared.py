@@ -186,3 +186,4 @@ if __name__ == "__main__":
 
     generar_plano_rele_dxf(dxf_file)
     generar_svg_rele_pared(svg_file)
+

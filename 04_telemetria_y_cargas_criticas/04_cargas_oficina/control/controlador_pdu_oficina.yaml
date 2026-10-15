@@ -106,3 +106,4 @@ light:
     name: "Señalizador Puerta ON AIR"
     id: light_onair
     restore_mode: RESTORE_DEFAULT_OFF
+

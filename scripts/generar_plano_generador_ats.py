@@ -154,3 +154,4 @@ if __name__ == "__main__":
 
     generar_plano_generador_ats_dxf(dxf_file)
     generar_svg_generador_ats(svg_file)
+

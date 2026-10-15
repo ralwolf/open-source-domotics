@@ -178,3 +178,4 @@ interval:
           } else {
             segundos_activa = 0;
           }
+

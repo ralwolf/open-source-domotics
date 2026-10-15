@@ -255,3 +255,4 @@ def generar_planos_lucernario():
 
 if __name__ == "__main__":
     generar_planos_lucernario()
+

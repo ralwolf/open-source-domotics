@@ -170,3 +170,4 @@ script:
           event: esphome.descarga_aerosol_ejecutada
           data:
             zona: "rack_it_baterias"
+

@@ -244,3 +244,4 @@ def generar_planos_baterias():
 
 if __name__ == "__main__":
     generar_planos_baterias()
+

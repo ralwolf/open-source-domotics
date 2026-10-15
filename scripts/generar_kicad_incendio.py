@@ -258,3 +258,4 @@ def generar_kicad_incendio(output_dir):
 if __name__ == "__main__":
     out = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/07_seguridad_incendio_co_y_aerosoles/electrico"
     generar_kicad_incendio(out)
+

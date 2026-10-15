@@ -199,3 +199,4 @@ time:
           - script.execute: arrancar_generador_secuencia
           - delay: 600s # 10 minutos
           - script.execute: apagar_generador_secuencia
+

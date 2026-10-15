@@ -296,3 +296,4 @@ def generar_kicad_cgmp():
 
 if __name__ == "__main__":
     generar_kicad_cgmp()
+

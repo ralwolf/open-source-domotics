@@ -148,3 +148,4 @@ if __name__ == "__main__":
 
     generar_plano_robotica_dxf(dxf_file)
     generar_svg_robotica(svg_file)
+

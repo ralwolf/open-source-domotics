@@ -182,3 +182,4 @@ if __name__ == "__main__":
 
     generar_plano_audio_dxf(dxf_file)
     generar_svg_audio_multiroom(svg_file)
+

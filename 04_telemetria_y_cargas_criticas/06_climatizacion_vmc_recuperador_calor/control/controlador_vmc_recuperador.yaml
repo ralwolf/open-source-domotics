@@ -284,3 +284,4 @@ time:
         minutes: "/15"
         then:
           - script.execute: verificar_free_cooling
+

@@ -205,3 +205,4 @@ if __name__ == "__main__":
 
     generar_plano_vmc_dxf(dxf_file)
     generar_svg_vmc(svg_file)
+

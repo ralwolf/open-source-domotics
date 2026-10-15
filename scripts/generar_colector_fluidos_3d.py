@@ -131,3 +131,4 @@ def generar_colector_fluidos_3d(output_dir):
 if __name__ == "__main__":
     out_dir = "/home/ral/Documents/GitHub/open-source-domotics/00_diseno_arquitectonico_y_estructural/05_instalaciones_hidraulicas_y_gas/planos_fontaneria"
     generar_colector_fluidos_3d(out_dir)
+

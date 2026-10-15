@@ -244,3 +244,4 @@ def generar_kicad_intrusion(output_dir):
 if __name__ == "__main__":
     out = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/08_intrusion_perimetral_sensores_y_sirena/electrico"
     generar_kicad_intrusion(out)
+

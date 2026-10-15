@@ -97,3 +97,4 @@ def generar_aerosol_incendio_3d(output_dir):
 if __name__ == "__main__":
     out_dir = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/07_seguridad_incendio_co_y_aerosoles/mecanico"
     generar_aerosol_incendio_3d(out_dir)
+

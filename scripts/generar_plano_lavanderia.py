@@ -156,3 +156,4 @@ if __name__ == "__main__":
 
     generar_plano_lavanderia_dxf(dxf_file)
     generar_svg_lavanderia(svg_file)
+

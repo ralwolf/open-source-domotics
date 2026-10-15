@@ -237,3 +237,4 @@ if __name__ == "__main__":
     dxf_out = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/07_seguridad_incendio_co_y_aerosoles/mecanico/plano_seguridad_incendio_aerosoles.dxf"
     svg_out = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/07_seguridad_incendio_co_y_aerosoles/mecanico/plano_seguridad_incendio_aerosoles.svg"
     generar_plano_incendio(dxf_out, svg_out)
+

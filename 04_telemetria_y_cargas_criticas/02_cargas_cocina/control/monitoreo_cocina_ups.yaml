@@ -145,3 +145,4 @@ switch:
     id: sw_transferencia_ups
     output: out_rele_ups
     restore_mode: RESTORE_DEFAULT_OFF
+

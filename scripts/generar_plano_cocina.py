@@ -168,3 +168,4 @@ if __name__ == "__main__":
 
     generar_plano_cocina_dxf(dxf_file)
     generar_svg_cocina(svg_file)
+
