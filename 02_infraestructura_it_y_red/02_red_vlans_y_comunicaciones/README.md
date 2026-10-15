@@ -25,7 +25,11 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 ---
 
 ## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
+- `mecanico/`:
+  - [`patch_panel_24p_1u.FCStd`](./mecanico/patch_panel_24p_1u.FCStd): Modelo CAD 3D paramétrico nativo en FreeCAD 1.1+ del patch panel modular de 24 puertos Keystone 1U (EIA-310-D) con bandeja de retención trasera de cableado y perno M5 de tierra.
+  - [`patch_panel_24p_1u.step`](./mecanico/patch_panel_24p_1u.step): Exportación universal STEP AP214 para montaje e interoperabilidad en el rack de 15U.
+  - [`plano_patch_panel_red_1u.dxf`](./mecanico/plano_patch_panel_red_1u.dxf): Plano CAD 2D de alzado frontal, planta y detalle de colisas de anclaje según norma DIN 41494.
+  - [`plano_patch_panel_red_1u.svg`](./mecanico/plano_patch_panel_red_1u.svg): Vista vectorial técnica interactiva con asignación de puertos, codificación de color por VLAN y criterios de curvatura y EMC.
 - `electrico/`:
   - [`topologia_red_vlans.dxf`](./electrico/topologia_red_vlans.dxf): Plano CAD 2D normalizado de la arquitectura de red y enlaces LACP/Trunk 802.1Q.
   - [`topologia_red_vlans.svg`](./electrico/topologia_red_vlans.svg): Diagrama vectorial interactivo de las 5 VLANs segregadas con direcciones IP, puertos y políticas Zero-Trust.

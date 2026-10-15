@@ -16,7 +16,7 @@ Este subsistema proporciona la capacidad de corte electromecánico ultra-rápido
 ## 3. Entregables Eléctricos y Electrónica (`electrico/`)
 - [`controlador_valvulas_seguridad.kicad_sch`](./electrico/controlador_valvulas_seguridad.kicad_sch): Esquema electrónico en KiCad 10 con microcontrolador ESP32, comparador analógico fail-safe por hardware con histéresis (corte inmediato sin esperar ciclo de CPU), optoacopladores para sondas de agua resistivas, interfaz para sensor catalítico de gas MQ-4 y etapas de potencia en puente H para inversión de polaridad en apertura/cierre de válvulas.
 - [`controlador_valvulas_seguridad.kicad_pro`](./electrico/controlador_valvulas_seguridad.kicad_pro): Archivo de proyecto en KiCad 10.
-- [`controlador_valvulas_seguridad.svg`](./electrico/controlador_valvulas_seguridad.svg): Renderizado esquemático interactivo.
+- [`controlador_valvulas_seguridad.svg`](./electrico/esquema_svg/controlador_valvulas_seguridad.svg): Renderizado esquemático interactivo.
 - [`BOM.md`](./electrico/BOM.md): Lista completa de componentes y materiales.
 
 ---

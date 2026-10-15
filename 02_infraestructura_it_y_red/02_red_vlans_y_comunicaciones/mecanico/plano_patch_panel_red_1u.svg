@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="100%" height="100%" style="background-color: #0d1117; font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;">
+  <defs>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#161b22" stroke-width="1"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#58a6ff" />
+    </marker>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#grid)"/>
+
+  <!-- Cuadro de Rotulación / Carátula -->
+  <rect x="50" y="30" width="1100" height="70" fill="#161b22" stroke="#30363d" stroke-width="2" rx="6"/>
+  <text x="75" y="65" fill="#f0f6fc" font-size="20" font-weight="bold">PATCH PANEL MODULAR RACK 19" 1U - 24 PUERTOS KEYSTONE CAT6A FTP</text>
+  <text x="75" y="88" fill="#8b949e" font-size="13">EIA-310-D / IEC 60297-3 | Acero Laminado SPCC 1.5 mm | Barra Guía Posterior con Bridas | Perno de Puesta a Tierra M5</text>
+
+  <!-- 1. ALZADO FRONTAL (FRONT ELEVATION) -->
+  <rect x="50" y="130" width="1100" height="320" fill="#161b22" stroke="#30363d" stroke-width="2" rx="6"/>
+  <text x="75" y="165" fill="#58a6ff" font-size="15" font-weight="bold">1. ALZADO FRONTAL - ASIGNACIÓN DE PUERTOS Y CODIFICACIÓN VLAN</text>
+
+  <!-- Chasis Frontal del Patch Panel (Escalado en X: 482.6 mm -> 965 px, Y: 43.6 mm -> 87 px) -->
+  <!-- Centrado: X = 117.5 a 1082.5 -->
+  <!-- Oreja Izquierda: 117.5 a 160.0 (42.5 px = 21.25 mm) -->
+  <!-- Cuerpo Central: 160.0 a 1040.0 (880 px = 440 mm) -->
+  <!-- Oreja Derecha: 1040.0 a 1082.5 (42.5 px = 21.25 mm) -->
+  <g transform="translate(117.5, 200)">
+    <!-- Panel Body -->
+    <rect x="0" y="0" width="965" height="87" fill="#21262d" stroke="#8b949e" stroke-width="2" rx="3"/>
+    <line x1="42.5" y1="0" x2="42.5" y2="87" stroke="#30363d" stroke-width="2" stroke-dasharray="4,3"/>
+    <line x1="922.5" y1="0" x2="922.5" y2="87" stroke="#30363d" stroke-width="2" stroke-dasharray="4,3"/>
+
+    <!-- Oreja Izquierda - Ranuras EIA-310 -->
+    <rect x="12" y="15" width="18" height="14" rx="7" fill="#0d1117" stroke="#58a6ff" stroke-width="2"/>
+    <rect x="12" y="58" width="18" height="14" rx="7" fill="#0d1117" stroke="#58a6ff" stroke-width="2"/>
+    <!-- Perno Tierra M5 -->
+    <circle cx="32" cy="43.5" r="6" fill="#d29922" stroke="#f0f6fc" stroke-width="1.5"/>
+    <text x="29" y="47" fill="#0d1117" font-size="9" font-weight="bold">⏚</text>
+
+    <!-- Oreja Derecha - Ranuras EIA-310 -->
+    <rect x="935" y="15" width="18" height="14" rx="7" fill="#0d1117" stroke="#58a6ff" stroke-width="2"/>
+    <rect x="935" y="58" width="18" height="14" rx="7" fill="#0d1117" stroke="#58a6ff" stroke-width="2"/>
+
+    <!-- 24 Puertos Keystone divididos en 4 Grupos de 6 -->
+
+    <!-- Grupo 1: VLAN 10 / 40: SERVIDORES & LAN -->
+    <rect x="60.0" y="8" width="202.0" height="12" fill="#1f6feb" fill-opacity="0.2" rx="2"/>
+    <text x="161.0" y="17" fill="#58a6ff" font-size="8" font-weight="bold" text-anchor="middle">VLAN 10 / 40: SERVIDORES & LAN</text>
+
+      <rect x="60.0" y="28" width="30" height="39" fill="#161b22" stroke="#58a6ff" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 66.0 52 L 84.0 52 L 81.0 63 L 69.0 63 Z" fill="#1f6feb" fill-opacity="0.4"/>
+      <text x="75.0" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">1</text>
+
+      <rect x="94.4" y="28" width="30" height="39" fill="#161b22" stroke="#58a6ff" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 100.4 52 L 118.4 52 L 115.4 63 L 103.4 63 Z" fill="#1f6feb" fill-opacity="0.4"/>
+      <text x="109.4" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">2</text>
+
+      <rect x="128.8" y="28" width="30" height="39" fill="#161b22" stroke="#58a6ff" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 134.8 52 L 152.8 52 L 149.8 63 L 137.8 63 Z" fill="#1f6feb" fill-opacity="0.4"/>
+      <text x="143.8" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">3</text>
+
+      <rect x="163.2" y="28" width="30" height="39" fill="#161b22" stroke="#58a6ff" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 169.2 52 L 187.2 52 L 184.2 63 L 172.2 63 Z" fill="#1f6feb" fill-opacity="0.4"/>
+      <text x="178.2" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">4</text>
+
+      <rect x="197.6" y="28" width="30" height="39" fill="#161b22" stroke="#58a6ff" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 203.6 52 L 221.6 52 L 218.6 63 L 206.6 63 Z" fill="#1f6feb" fill-opacity="0.4"/>
+      <text x="212.6" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">5</text>
+
+      <rect x="232.0" y="28" width="30" height="39" fill="#161b22" stroke="#58a6ff" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 238.0 52 L 256.0 52 L 253.0 63 L 241.0 63 Z" fill="#1f6feb" fill-opacity="0.4"/>
+      <text x="247.0" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">6</text>
+
+    <!-- Grupo 2: VLAN 20: CCTV & NVR PoE -->
+    <rect x="274.3" y="8" width="202.0" height="12" fill="#8957e5" fill-opacity="0.2" rx="2"/>
+    <text x="375.3" y="17" fill="#bc8cff" font-size="8" font-weight="bold" text-anchor="middle">VLAN 20: CCTV & NVR PoE</text>
+
+      <rect x="274.3" y="28" width="30" height="39" fill="#161b22" stroke="#bc8cff" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 280.3 52 L 298.3 52 L 295.3 63 L 283.3 63 Z" fill="#8957e5" fill-opacity="0.4"/>
+      <text x="289.3" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">7</text>
+
+      <rect x="308.7" y="28" width="30" height="39" fill="#161b22" stroke="#bc8cff" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 314.7 52 L 332.7 52 L 329.7 63 L 317.7 63 Z" fill="#8957e5" fill-opacity="0.4"/>
+      <text x="323.7" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">8</text>
+
+      <rect x="343.1" y="28" width="30" height="39" fill="#161b22" stroke="#bc8cff" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 349.1 52 L 367.1 52 L 364.1 63 L 352.1 63 Z" fill="#8957e5" fill-opacity="0.4"/>
+      <text x="358.1" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">9</text>
+
+      <rect x="377.5" y="28" width="30" height="39" fill="#161b22" stroke="#bc8cff" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 383.5 52 L 401.5 52 L 398.5 63 L 386.5 63 Z" fill="#8957e5" fill-opacity="0.4"/>
+      <text x="392.5" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">10</text>
+
+      <rect x="411.9" y="28" width="30" height="39" fill="#161b22" stroke="#bc8cff" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 417.9 52 L 435.9 52 L 432.9 63 L 420.9 63 Z" fill="#8957e5" fill-opacity="0.4"/>
+      <text x="426.9" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">11</text>
+
+      <rect x="446.3" y="28" width="30" height="39" fill="#161b22" stroke="#bc8cff" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 452.3 52 L 470.3 52 L 467.3 63 L 455.3 63 Z" fill="#8957e5" fill-opacity="0.4"/>
+      <text x="461.3" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">12</text>
+
+    <!-- Grupo 3: VLAN 30: IoT & DOMÓTICA -->
+    <rect x="488.7" y="8" width="202.0" height="12" fill="#9e6a03" fill-opacity="0.2" rx="2"/>
+    <text x="589.7" y="17" fill="#d29922" font-size="8" font-weight="bold" text-anchor="middle">VLAN 30: IoT & DOMÓTICA</text>
+
+      <rect x="488.7" y="28" width="30" height="39" fill="#161b22" stroke="#d29922" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 494.7 52 L 512.7 52 L 509.7 63 L 497.7 63 Z" fill="#9e6a03" fill-opacity="0.4"/>
+      <text x="503.7" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">13</text>
+
+      <rect x="523.1" y="28" width="30" height="39" fill="#161b22" stroke="#d29922" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 529.1 52 L 547.1 52 L 544.1 63 L 532.1 63 Z" fill="#9e6a03" fill-opacity="0.4"/>
+      <text x="538.1" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">14</text>
+
+      <rect x="557.5" y="28" width="30" height="39" fill="#161b22" stroke="#d29922" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 563.5 52 L 581.5 52 L 578.5 63 L 566.5 63 Z" fill="#9e6a03" fill-opacity="0.4"/>
+      <text x="572.5" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">15</text>
+
+      <rect x="591.9" y="28" width="30" height="39" fill="#161b22" stroke="#d29922" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 597.9 52 L 615.9 52 L 612.9 63 L 600.9 63 Z" fill="#9e6a03" fill-opacity="0.4"/>
+      <text x="606.9" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">16</text>
+
+      <rect x="626.3" y="28" width="30" height="39" fill="#161b22" stroke="#d29922" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 632.3 52 L 650.3 52 L 647.3 63 L 635.3 63 Z" fill="#9e6a03" fill-opacity="0.4"/>
+      <text x="641.3" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">17</text>
+
+      <rect x="660.7" y="28" width="30" height="39" fill="#161b22" stroke="#d29922" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 666.7 52 L 684.7 52 L 681.7 63 L 669.7 63 Z" fill="#9e6a03" fill-opacity="0.4"/>
+      <text x="675.7" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">18</text>
+
+    <!-- Grupo 4: TRUNK / WAN / UPLINK -->
+    <rect x="703.0" y="8" width="202.0" height="12" fill="#238636" fill-opacity="0.2" rx="2"/>
+    <text x="804.0" y="17" fill="#3fb950" font-size="8" font-weight="bold" text-anchor="middle">TRUNK / WAN / UPLINK</text>
+
+      <rect x="703.0" y="28" width="30" height="39" fill="#161b22" stroke="#3fb950" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 709.0 52 L 727.0 52 L 724.0 63 L 712.0 63 Z" fill="#238636" fill-opacity="0.4"/>
+      <text x="718.0" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">19</text>
+
+      <rect x="737.4" y="28" width="30" height="39" fill="#161b22" stroke="#3fb950" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 743.4 52 L 761.4 52 L 758.4 63 L 746.4 63 Z" fill="#238636" fill-opacity="0.4"/>
+      <text x="752.4" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">20</text>
+
+      <rect x="771.8" y="28" width="30" height="39" fill="#161b22" stroke="#3fb950" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 777.8 52 L 795.8 52 L 792.8 63 L 780.8 63 Z" fill="#238636" fill-opacity="0.4"/>
+      <text x="786.8" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">21</text>
+
+      <rect x="806.2" y="28" width="30" height="39" fill="#161b22" stroke="#3fb950" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 812.2 52 L 830.2 52 L 827.2 63 L 815.2 63 Z" fill="#238636" fill-opacity="0.4"/>
+      <text x="821.2" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">22</text>
+
+      <rect x="840.6" y="28" width="30" height="39" fill="#161b22" stroke="#3fb950" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 846.6 52 L 864.6 52 L 861.6 63 L 849.6 63 Z" fill="#238636" fill-opacity="0.4"/>
+      <text x="855.6" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">23</text>
+
+      <rect x="875.0" y="28" width="30" height="39" fill="#161b22" stroke="#3fb950" stroke-width="1.8" rx="3"/>
+      <!-- Keystone RJ45 latch indent -->
+      <path d="M 881.0 52 L 899.0 52 L 896.0 63 L 884.0 63 Z" fill="#238636" fill-opacity="0.4"/>
+      <text x="890.0" y="46" fill="#f0f6fc" font-size="11" font-weight="bold" text-anchor="middle">24</text>
+
+    <!-- Cotas Frontales -->
+    <line x1="0" y1="-15" x2="965" y2="-15" stroke="#58a6ff" stroke-width="1.2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <text x="482.5" y="-20" fill="#58a6ff" font-size="12" font-weight="bold" text-anchor="middle">ANCHO TOTAL RACK 19": 482.6 mm</text>
+
+    <line x1="21" y1="105" x2="944" y2="105" stroke="#58a6ff" stroke-width="1.2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <text x="482.5" y="120" fill="#58a6ff" font-size="11" text-anchor="middle">DISTANCIA ENTRE EJES DE FIJACIÓN: 465.1 mm (EIA-310)</text>
+  </g>
+
+  <!-- 2. VISTA SUPERIOR (TOP ELEVATION) CON BANDEJA GUÍA DE CABLEADO -->
+  <rect x="50" y="475" width="1100" height="390" fill="#161b22" stroke="#30363d" stroke-width="2" rx="6"/>
+  <text x="75" y="510" fill="#58a6ff" font-size="15" font-weight="bold">2. PLANTA SUPERIOR - GESTIÓN Y RETENCIÓN TRASERA DE CABLES CAT6A</text>
+
+  <g transform="translate(117.5, 550)">
+    <!-- Front panel edge (thickness 3 px = 1.5 mm) -->
+    <rect x="0" y="0" width="965" height="6" fill="#8b949e" rx="1"/>
+
+    <!-- Brazos soporte laterales (L = 100 mm -> 180 px, espesor 2 mm -> 4 px) -->
+    <rect x="42.5" y="6" width="5" height="170" fill="#30363d" stroke="#58a6ff" stroke-width="1"/>
+    <rect x="917.5" y="6" width="5" height="170" fill="#30363d" stroke="#58a6ff" stroke-width="1"/>
+
+    <!-- Barra transversal de soporte de cables (L = 880 px, profundidad = 30 px) -->
+    <rect x="42.5" y="150" width="880" height="28" fill="#21262d" stroke="#58a6ff" stroke-width="1.8" rx="2"/>
+
+    <!-- Cable ties & paths for Cat6A STP cables -->
+
+      <!-- Cable Cat6A #1 -->
+      <path d="M 75.0 6 C 75.0 60, 75.0 110, 75.0 150" fill="none" stroke="#58a6ff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="70.0" y="156" width="10" height="16" fill="#161b22" stroke="#58a6ff" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #2 -->
+      <path d="M 109.4 6 C 109.4 60, 109.4 110, 109.4 150" fill="none" stroke="#58a6ff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="104.4" y="156" width="10" height="16" fill="#161b22" stroke="#58a6ff" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #3 -->
+      <path d="M 143.8 6 C 143.8 60, 143.8 110, 143.8 150" fill="none" stroke="#58a6ff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="138.8" y="156" width="10" height="16" fill="#161b22" stroke="#58a6ff" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #4 -->
+      <path d="M 178.2 6 C 178.2 60, 178.2 110, 178.2 150" fill="none" stroke="#58a6ff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="173.2" y="156" width="10" height="16" fill="#161b22" stroke="#58a6ff" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #5 -->
+      <path d="M 212.6 6 C 212.6 60, 212.6 110, 212.6 150" fill="none" stroke="#58a6ff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="207.6" y="156" width="10" height="16" fill="#161b22" stroke="#58a6ff" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #6 -->
+      <path d="M 247.0 6 C 247.0 60, 247.0 110, 247.0 150" fill="none" stroke="#58a6ff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="242.0" y="156" width="10" height="16" fill="#161b22" stroke="#58a6ff" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #7 -->
+      <path d="M 289.3 6 C 289.3 60, 289.3 110, 289.3 150" fill="none" stroke="#bc8cff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="284.3" y="156" width="10" height="16" fill="#161b22" stroke="#bc8cff" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #8 -->
+      <path d="M 323.7 6 C 323.7 60, 323.7 110, 323.7 150" fill="none" stroke="#bc8cff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="318.7" y="156" width="10" height="16" fill="#161b22" stroke="#bc8cff" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #9 -->
+      <path d="M 358.1 6 C 358.1 60, 358.1 110, 358.1 150" fill="none" stroke="#bc8cff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="353.1" y="156" width="10" height="16" fill="#161b22" stroke="#bc8cff" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #10 -->
+      <path d="M 392.5 6 C 392.5 60, 392.5 110, 392.5 150" fill="none" stroke="#bc8cff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="387.5" y="156" width="10" height="16" fill="#161b22" stroke="#bc8cff" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #11 -->
+      <path d="M 426.9 6 C 426.9 60, 426.9 110, 426.9 150" fill="none" stroke="#bc8cff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="421.9" y="156" width="10" height="16" fill="#161b22" stroke="#bc8cff" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #12 -->
+      <path d="M 461.3 6 C 461.3 60, 461.3 110, 461.3 150" fill="none" stroke="#bc8cff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="456.3" y="156" width="10" height="16" fill="#161b22" stroke="#bc8cff" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #13 -->
+      <path d="M 503.7 6 C 503.7 60, 503.7 110, 503.7 150" fill="none" stroke="#d29922" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="498.7" y="156" width="10" height="16" fill="#161b22" stroke="#d29922" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #14 -->
+      <path d="M 538.1 6 C 538.1 60, 538.1 110, 538.1 150" fill="none" stroke="#d29922" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="533.1" y="156" width="10" height="16" fill="#161b22" stroke="#d29922" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #15 -->
+      <path d="M 572.5 6 C 572.5 60, 572.5 110, 572.5 150" fill="none" stroke="#d29922" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="567.5" y="156" width="10" height="16" fill="#161b22" stroke="#d29922" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #16 -->
+      <path d="M 606.9 6 C 606.9 60, 606.9 110, 606.9 150" fill="none" stroke="#d29922" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="601.9" y="156" width="10" height="16" fill="#161b22" stroke="#d29922" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #17 -->
+      <path d="M 641.3 6 C 641.3 60, 641.3 110, 641.3 150" fill="none" stroke="#d29922" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="636.3" y="156" width="10" height="16" fill="#161b22" stroke="#d29922" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #18 -->
+      <path d="M 675.7 6 C 675.7 60, 675.7 110, 675.7 150" fill="none" stroke="#d29922" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="670.7" y="156" width="10" height="16" fill="#161b22" stroke="#d29922" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #19 -->
+      <path d="M 718.0 6 C 718.0 60, 718.0 110, 718.0 150" fill="none" stroke="#3fb950" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="713.0" y="156" width="10" height="16" fill="#161b22" stroke="#3fb950" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #20 -->
+      <path d="M 752.4 6 C 752.4 60, 752.4 110, 752.4 150" fill="none" stroke="#3fb950" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="747.4" y="156" width="10" height="16" fill="#161b22" stroke="#3fb950" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #21 -->
+      <path d="M 786.8 6 C 786.8 60, 786.8 110, 786.8 150" fill="none" stroke="#3fb950" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="781.8" y="156" width="10" height="16" fill="#161b22" stroke="#3fb950" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #22 -->
+      <path d="M 821.2 6 C 821.2 60, 821.2 110, 821.2 150" fill="none" stroke="#3fb950" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="816.2" y="156" width="10" height="16" fill="#161b22" stroke="#3fb950" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #23 -->
+      <path d="M 855.6 6 C 855.6 60, 855.6 110, 855.6 150" fill="none" stroke="#3fb950" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="850.6" y="156" width="10" height="16" fill="#161b22" stroke="#3fb950" stroke-width="1.2" rx="1"/>
+
+      <!-- Cable Cat6A #24 -->
+      <path d="M 890.0 6 C 890.0 60, 890.0 110, 890.0 150" fill="none" stroke="#3fb950" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Brida / Ranura de sujeción -->
+      <rect x="885.0" y="156" width="10" height="16" fill="#161b22" stroke="#3fb950" stroke-width="1.2" rx="1"/>
+
+    <!-- Barra Equipotencial de Tierra Trasera -->
+    <line x1="20" y1="164" x2="42.5" y2="164" stroke="#d29922" stroke-width="4" stroke-linecap="round"/>
+    <text x="-10" y="168" fill="#d29922" font-size="11" font-weight="bold">CABLE TIERRA 6mm²</text>
+
+    <!-- Cotas Planta -->
+    <line x1="935" y1="6" x2="935" y2="176" stroke="#58a6ff" stroke-width="1.2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <text x="945" y="95" fill="#58a6ff" font-size="11" font-weight="bold">PROFUNDIDAD BANDEJA: 100 mm</text>
+
+    <!-- Cuadro de Notas de Instalación -->
+    <rect x="45" y="200" width="875" height="95" fill="#0d1117" stroke="#30363d" stroke-width="1" rx="4"/>
+    <text x="60" y="225" fill="#f0f6fc" font-size="12" font-weight="bold">CRITERIOS DE CONEXIONADO Y COMPATIBILIDAD ELECTROMAGNÉTICA (EMC):</text>
+    <text x="60" y="245" fill="#8b949e" font-size="11">1. Radio de curvatura mínimo: R ≥ 30 mm (4x diámetro exterior de cable Cat6A F/UTP de 7.5 mm) para evitar paradiafonía.</text>
+    <text x="60" y="265" fill="#8b949e" font-size="11">2. Continuidad de apantallamiento 360° en keystone metálico fundido a presión conectado al chasis del rack.</text>
+    <text x="60" y="285" fill="#8b949e" font-size="11">3. Puesta a tierra equipotencial con trenza de cobre de 6 mm² conectada a la barra principal del rack de 15U (<0.1 Ω).</text>
+  </g>
+</svg>

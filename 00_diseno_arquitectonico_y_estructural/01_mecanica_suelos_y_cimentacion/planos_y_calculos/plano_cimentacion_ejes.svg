@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="100%" height="100%" style="background-color: #0d1117; font-family: 'DejaVu Sans', Arial, sans-serif;">
+  <defs>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#161b22" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+  <!-- Layer: EJES -->
+  <g id="layer_EJES">
+    <line x1="223.9" y1="1028.3" x2="223.9" y2="104.7" stroke="#f85149" stroke-width="1.5" stroke-dasharray="8,4,2,4"/>
+    <line x1="596.3" y1="1028.3" x2="596.3" y2="104.7" stroke="#f85149" stroke-width="1.5" stroke-dasharray="8,4,2,4"/>
+    <line x1="968.7" y1="1028.3" x2="968.7" y2="104.7" stroke="#f85149" stroke-width="1.5" stroke-dasharray="8,4,2,4"/>
+    <line x1="134.5" y1="938.9" x2="1058.1" y2="938.9" stroke="#f85149" stroke-width="1.5" stroke-dasharray="8,4,2,4"/>
+    <line x1="134.5" y1="566.5" x2="1058.1" y2="566.5" stroke="#f85149" stroke-width="1.5" stroke-dasharray="8,4,2,4"/>
+    <line x1="134.5" y1="194.1" x2="1058.1" y2="194.1" stroke="#f85149" stroke-width="1.5" stroke-dasharray="8,4,2,4"/>
+  </g>
+  <!-- Layer: CIM_ZAPATAS -->
+  <g id="layer_CIM_ZAPATAS">
+    <line x1="175.4" y1="987.3" x2="272.3" y2="987.3" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="272.3" y1="987.3" x2="272.3" y2="890.5" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="272.3" y1="890.5" x2="175.4" y2="890.5" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="175.4" y1="890.5" x2="175.4" y2="987.3" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="175.4" y1="614.9" x2="272.3" y2="614.9" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="272.3" y1="614.9" x2="272.3" y2="518.1" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="272.3" y1="518.1" x2="175.4" y2="518.1" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="175.4" y1="518.1" x2="175.4" y2="614.9" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="175.4" y1="242.5" x2="272.3" y2="242.5" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="272.3" y1="242.5" x2="272.3" y2="145.7" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="272.3" y1="145.7" x2="175.4" y2="145.7" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="175.4" y1="145.7" x2="175.4" y2="242.5" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="547.9" y1="987.3" x2="644.7" y2="987.3" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="644.7" y1="987.3" x2="644.7" y2="890.5" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="644.7" y1="890.5" x2="547.9" y2="890.5" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="547.9" y1="890.5" x2="547.9" y2="987.3" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="547.9" y1="614.9" x2="644.7" y2="614.9" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="644.7" y1="614.9" x2="644.7" y2="518.1" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="644.7" y1="518.1" x2="547.9" y2="518.1" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="547.9" y1="518.1" x2="547.9" y2="614.9" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="547.9" y1="242.5" x2="644.7" y2="242.5" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="644.7" y1="242.5" x2="644.7" y2="145.7" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="644.7" y1="145.7" x2="547.9" y2="145.7" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="547.9" y1="145.7" x2="547.9" y2="242.5" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="920.3" y1="987.3" x2="1017.1" y2="987.3" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="1017.1" y1="987.3" x2="1017.1" y2="890.5" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="1017.1" y1="890.5" x2="920.3" y2="890.5" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="920.3" y1="890.5" x2="920.3" y2="987.3" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="920.3" y1="614.9" x2="1017.1" y2="614.9" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="1017.1" y1="614.9" x2="1017.1" y2="518.1" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="1017.1" y1="518.1" x2="920.3" y2="518.1" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="920.3" y1="518.1" x2="920.3" y2="614.9" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="920.3" y1="242.5" x2="1017.1" y2="242.5" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="1017.1" y1="242.5" x2="1017.1" y2="145.7" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="1017.1" y1="145.7" x2="920.3" y2="145.7" stroke="#58a6ff" stroke-width="2.2"/>
+    <line x1="920.3" y1="145.7" x2="920.3" y2="242.5" stroke="#58a6ff" stroke-width="2.2"/>
+  </g>
+  <!-- Layer: ESTR_COLUMNAS -->
+  <g id="layer_ESTR_COLUMNAS">
+    <line x1="212.7" y1="950.1" x2="235.0" y2="950.1" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="235.0" y1="950.1" x2="235.0" y2="927.7" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="235.0" y1="927.7" x2="212.7" y2="927.7" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="212.7" y1="927.7" x2="212.7" y2="950.1" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="212.7" y1="577.7" x2="235.0" y2="577.7" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="235.0" y1="577.7" x2="235.0" y2="555.3" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="235.0" y1="555.3" x2="212.7" y2="555.3" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="212.7" y1="555.3" x2="212.7" y2="577.7" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="212.7" y1="205.2" x2="235.0" y2="205.2" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="235.0" y1="205.2" x2="235.0" y2="182.9" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="235.0" y1="182.9" x2="212.7" y2="182.9" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="212.7" y1="182.9" x2="212.7" y2="205.2" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="585.1" y1="950.1" x2="607.4" y2="950.1" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="607.4" y1="950.1" x2="607.4" y2="927.7" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="607.4" y1="927.7" x2="585.1" y2="927.7" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="585.1" y1="927.7" x2="585.1" y2="950.1" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="585.1" y1="577.7" x2="607.4" y2="577.7" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="607.4" y1="577.7" x2="607.4" y2="555.3" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="607.4" y1="555.3" x2="585.1" y2="555.3" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="585.1" y1="555.3" x2="585.1" y2="577.7" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="585.1" y1="205.2" x2="607.4" y2="205.2" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="607.4" y1="205.2" x2="607.4" y2="182.9" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="607.4" y1="182.9" x2="585.1" y2="182.9" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="585.1" y1="182.9" x2="585.1" y2="205.2" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="957.5" y1="950.1" x2="979.9" y2="950.1" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="979.9" y1="950.1" x2="979.9" y2="927.7" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="979.9" y1="927.7" x2="957.5" y2="927.7" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="957.5" y1="927.7" x2="957.5" y2="950.1" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="957.5" y1="577.7" x2="979.9" y2="577.7" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="979.9" y1="577.7" x2="979.9" y2="555.3" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="979.9" y1="555.3" x2="957.5" y2="555.3" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="957.5" y1="555.3" x2="957.5" y2="577.7" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="955.7" y1="207.1" x2="981.7" y2="207.1" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="981.7" y1="207.1" x2="981.7" y2="181.0" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="981.7" y1="181.0" x2="955.7" y2="181.0" stroke="#e3b341" stroke-width="2.0"/>
+    <line x1="955.7" y1="181.0" x2="955.7" y2="207.1" stroke="#e3b341" stroke-width="2.0"/>
+  </g>
+  <!-- Layer: CIM_RIOSTRAS -->
+  <g id="layer_CIM_RIOSTRAS">
+    <line x1="272.3" y1="950.1" x2="547.9" y2="950.1" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="547.9" y1="950.1" x2="547.9" y2="927.7" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="547.9" y1="927.7" x2="272.3" y2="927.7" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="272.3" y1="927.7" x2="272.3" y2="950.1" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="644.7" y1="950.1" x2="920.3" y2="950.1" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="920.3" y1="950.1" x2="920.3" y2="927.7" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="920.3" y1="927.7" x2="644.7" y2="927.7" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="644.7" y1="927.7" x2="644.7" y2="950.1" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="272.3" y1="577.7" x2="547.9" y2="577.7" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="547.9" y1="577.7" x2="547.9" y2="555.3" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="547.9" y1="555.3" x2="272.3" y2="555.3" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="272.3" y1="555.3" x2="272.3" y2="577.7" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="644.7" y1="577.7" x2="920.3" y2="577.7" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="920.3" y1="577.7" x2="920.3" y2="555.3" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="920.3" y1="555.3" x2="644.7" y2="555.3" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="644.7" y1="555.3" x2="644.7" y2="577.7" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="272.3" y1="205.2" x2="547.9" y2="205.2" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="547.9" y1="205.2" x2="547.9" y2="182.9" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="547.9" y1="182.9" x2="272.3" y2="182.9" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="272.3" y1="182.9" x2="272.3" y2="205.2" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="644.7" y1="205.2" x2="920.3" y2="205.2" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="920.3" y1="205.2" x2="920.3" y2="182.9" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="920.3" y1="182.9" x2="644.7" y2="182.9" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="644.7" y1="182.9" x2="644.7" y2="205.2" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="212.7" y1="890.5" x2="235.0" y2="890.5" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="235.0" y1="890.5" x2="235.0" y2="614.9" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="235.0" y1="614.9" x2="212.7" y2="614.9" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="212.7" y1="614.9" x2="212.7" y2="890.5" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="212.7" y1="518.1" x2="235.0" y2="518.1" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="235.0" y1="518.1" x2="235.0" y2="242.5" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="235.0" y1="242.5" x2="212.7" y2="242.5" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="212.7" y1="242.5" x2="212.7" y2="518.1" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="585.1" y1="890.5" x2="607.4" y2="890.5" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="607.4" y1="890.5" x2="607.4" y2="614.9" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="607.4" y1="614.9" x2="585.1" y2="614.9" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="585.1" y1="614.9" x2="585.1" y2="890.5" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="585.1" y1="518.1" x2="607.4" y2="518.1" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="607.4" y1="518.1" x2="607.4" y2="242.5" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="607.4" y1="242.5" x2="585.1" y2="242.5" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="585.1" y1="242.5" x2="585.1" y2="518.1" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="957.5" y1="890.5" x2="979.9" y2="890.5" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="979.9" y1="890.5" x2="979.9" y2="614.9" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="979.9" y1="614.9" x2="957.5" y2="614.9" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="957.5" y1="614.9" x2="957.5" y2="890.5" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="957.5" y1="518.1" x2="979.9" y2="518.1" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="979.9" y1="518.1" x2="979.9" y2="242.5" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="979.9" y1="242.5" x2="957.5" y2="242.5" stroke="#3fb950" stroke-width="1.8"/>
+    <line x1="957.5" y1="242.5" x2="957.5" y2="518.1" stroke="#3fb950" stroke-width="1.8"/>
+  </g>
+  <!-- Layer: SALA_IT_LOSA -->
+  <g id="layer_SALA_IT_LOSA">
+    <line x1="216.4" y1="946.3" x2="454.8" y2="946.3" stroke="#bc8cff" stroke-width="2.2" stroke-dasharray="6,4"/>
+    <line x1="454.8" y1="946.3" x2="454.8" y2="745.2" stroke="#bc8cff" stroke-width="2.2" stroke-dasharray="6,4"/>
+    <line x1="454.8" y1="745.2" x2="216.4" y2="745.2" stroke="#bc8cff" stroke-width="2.2" stroke-dasharray="6,4"/>
+    <line x1="216.4" y1="745.2" x2="216.4" y2="946.3" stroke="#bc8cff" stroke-width="2.2" stroke-dasharray="6,4"/>
+  </g>
+  <!-- Layer: TEXTO_COTAS -->
+  <g id="layer_TEXTO_COTAS">
+    <line x1="708.0" y1="1125.1" x2="1043.2" y2="1125.1" stroke="#c9d1d9" stroke-width="1.2"/>
+    <line x1="1043.2" y1="1125.1" x2="1043.2" y2="991.0" stroke="#c9d1d9" stroke-width="1.2"/>
+    <line x1="1043.2" y1="991.0" x2="708.0" y2="991.0" stroke="#c9d1d9" stroke-width="1.2"/>
+    <line x1="708.0" y1="991.0" x2="708.0" y2="1125.1" stroke="#c9d1d9" stroke-width="1.2"/>
+  </g>
+  <!-- Circles / Axis Bubbles -->
+    <circle cx="223.9" cy="1050.6" r="18.6" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <circle cx="596.3" cy="1050.6" r="18.6" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <circle cx="968.7" cy="1050.6" r="18.6" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <circle cx="112.1" cy="938.9" r="18.6" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <circle cx="112.1" cy="566.5" r="18.6" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <circle cx="112.1" cy="194.1" r="18.6" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+  <!-- Texts and Annotations -->
+    <text x="218.6" y="1064.1" fill="#f85149" font-size="16.0" font-weight="bold" text-anchor="middle">1</text>
+    <text x="591.1" y="1064.1" fill="#f85149" font-size="16.0" font-weight="bold" text-anchor="middle">2</text>
+    <text x="963.5" y="1064.1" fill="#f85149" font-size="16.0" font-weight="bold" text-anchor="middle">3</text>
+    <text x="104.7" y="950.1" fill="#f85149" font-size="16.0" font-weight="bold" text-anchor="middle">A</text>
+    <text x="104.7" y="577.7" fill="#f85149" font-size="16.0" font-weight="bold" text-anchor="middle">B</text>
+    <text x="104.7" y="205.3" fill="#f85149" font-size="16.0" font-weight="bold" text-anchor="middle">C</text>
+    <text x="186.6" y="886.8" fill="#e3b341" font-size="12.0" font-weight="bold" text-anchor="start">C11 (30x30)</text>
+    <text x="186.6" y="514.3" fill="#e3b341" font-size="12.0" font-weight="bold" text-anchor="start">C12 (30x30)</text>
+    <text x="186.6" y="141.9" fill="#e3b341" font-size="12.0" font-weight="bold" text-anchor="start">C13 (30x30)</text>
+    <text x="559.0" y="886.8" fill="#e3b341" font-size="12.0" font-weight="bold" text-anchor="start">C21 (30x30)</text>
+    <text x="559.0" y="514.3" fill="#e3b341" font-size="12.0" font-weight="bold" text-anchor="start">C22 (30x30)</text>
+    <text x="559.0" y="141.9" fill="#e3b341" font-size="12.0" font-weight="bold" text-anchor="start">C23 (30x30)</text>
+    <text x="931.4" y="886.8" fill="#e3b341" font-size="12.0" font-weight="bold" text-anchor="start">C31 (30x30)</text>
+    <text x="931.4" y="514.3" fill="#e3b341" font-size="12.0" font-weight="bold" text-anchor="start">C32 (30x30)</text>
+    <text x="931.4" y="141.9" fill="#e3b341" font-size="12.0" font-weight="bold" text-anchor="start">C-TURB (35x35)</text>
+    <text x="238.8" y="849.5" fill="#d2a8ff" font-size="12.0" font-weight="bold" text-anchor="start">LOSA REFORZADA SALA TECNICA IT Y BATERIAS (e=20cm)</text>
+    <text x="722.9" y="1013.4" fill="#58a6ff" font-size="14.0" font-weight="bold" text-anchor="start">PROYECTO: open-source-domotics</text>
+    <text x="722.9" y="1035.7" fill="#58a6ff" font-size="14.0" font-weight="bold" text-anchor="start">PLANO: REPLANTEO DE CIMENTACION Y PILARES</text>
+    <text x="722.9" y="1058.1" fill="#8b949e" font-size="11.0" font-weight="normal" text-anchor="start">ESCALA: 1:50 | COTAS EN MILIMETROS</text>
+    <text x="722.9" y="1080.4" fill="#8b949e" font-size="11.0" font-weight="normal" text-anchor="start">SOFTWARE: LIBRE (LibreCAD / FreeCAD / DXF R12)</text>
+</svg>

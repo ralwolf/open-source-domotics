@@ -22,6 +22,7 @@ Define el estudio del terreno, capacidad de soporte del sustrato y el cálculo e
 ## 4. Contenido del Directorio
 - `planos_y_calculos/`:
   - [`plano_cimentacion_ejes.dxf`](./planos_y_calculos/plano_cimentacion_ejes.dxf): Plano CAD 2D de replanteo con ejes 1-3 y A-C, zapatas aisladas ($1.30 \times 1.30\text{ m}$), vigas riostras y columna maestra C-TURB.
+  - [`plano_cimentacion_ejes.svg`](./planos_y_calculos/plano_cimentacion_ejes.svg): Vista vectorial interactiva de replanteo de zapatas, vigas riostras y losa técnica de sala de baterías.
   - [`cimentacion_zapatas_pilares.FCStd`](./planos_y_calculos/cimentacion_zapatas_pilares.FCStd): Modelo 3D paramétrico nativo en FreeCAD 1.1+.
   - [`cimentacion_zapatas_pilares.step`](./planos_y_calculos/cimentacion_zapatas_pilares.step): Exportación universal STEP AP214 para visualización e interoperabilidad BIM.
 - `especificaciones/`: Fichas técnicas de hormigones, estudio geotécnico del terreno y directrices de excavación y drenajes.
