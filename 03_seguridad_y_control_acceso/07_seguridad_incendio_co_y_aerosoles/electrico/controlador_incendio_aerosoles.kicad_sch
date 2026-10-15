@@ -1,0 +1,139 @@
+(kicad_sch
+  (version 20231120)
+  (generator "open-source-domotics-gen")
+  (generator_version "10.0")
+  (uuid "27d07f05-bf84-439b-b7b7-ac1521bf4b34")
+  (paper "A3")
+  (title_block
+    (title "CENTRAL DE INCENDIO EN54, CO Y EXTINCION POR AEROSOL CONDENSADO")
+    (date "2026-10-15")
+    (rev "v1.0")
+    (company "open-source-domotics (Hardware Libre)")
+    (comment 1 "Lazo Supervisado EOL 4.7k + Disparo por Supercap Dual-MOSFET 24V 2A")
+    (comment 2 "Supervisión de Línea Iniciador <10mA + Enclavamiento Gas/VMC + Sirena Strobe")
+  )
+
+  (wire (pts (xy 30.0 50.0) (xy 70.0 50.0))
+    (stroke (width 0) (type default))
+    (uuid "f2c2bc18-7e34-4160-823f-59e0518cc574")
+  )
+  (text "ALIMENTACION_24VDC_RESPALDO_UPS"
+    (at 30.0 48.0 0)
+    (effects (font (size 1.5 1.5)))
+    (uuid "d9e0eed6-4ac4-4ddd-a0aa-7c77a34f734c")
+  )
+
+  (symbol
+    (lib_id "Regulator_Switching:MP1584")
+    (at 80.0 65.0 0)
+    (unit 1)
+    (uuid "ac49dfe8-efa1-46f9-b2f6-4e84bce1b77c")
+    (property "Reference" "U1" (at 80.0 50.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MP1584_24V_to_3V3" (at 80.0 53.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Converter_DCDC:Converter_DCDC_MP1584_Mini" (at 80.0 65.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "RF_Module:ESP32-WROOM-32E")
+    (at 160.0 75.0 0)
+    (unit 1)
+    (uuid "40cf7e4f-8d17-4818-9a36-8617e1fccd2c")
+    (property "Reference" "U2" (at 160.0 42.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ESP32-WROOM-32E" (at 160.0 45.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-WROOM-32E" (at 160.0 75.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Device:C_Polarized")
+    (at 220.0 55.0 0)
+    (unit 1)
+    (uuid "85680d87-3859-4899-8029-a6358c39b6ee")
+    (property "Reference" "C1" (at 220.0 42.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "4700uF_35V_LowESR" (at 220.0 45.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Capacitor_THT:CP_Radial_D16.0mm_P7.50mm" (at 220.0 55.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Transistor_FET:AOD4184A")
+    (at 260.0 55.0 0)
+    (unit 1)
+    (uuid "b5432f1b-bc8c-4f87-b21f-c81089185108")
+    (property "Reference" "Q1" (at 260.0 42.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "P_MOSFET_HighSide" (at 260.0 45.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:TO-252-2" (at 260.0 55.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Transistor_FET:AOD4184A")
+    (at 260.0 85.0 0)
+    (unit 1)
+    (uuid "299e0a54-3225-46a5-9885-321ad922023e")
+    (property "Reference" "Q2" (at 260.0 72.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "N_MOSFET_LowSide" (at 260.0 75.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:TO-252-2" (at 260.0 85.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 320.0 70.0 0)
+    (unit 1)
+    (uuid "05466568-ea03-448d-aa9a-51d9dfd8bb8e")
+    (property "Reference" "J1" (at 320.0 58.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "SALIDA_INICIADOR_AEROSOL_24V" (at 320.0 61.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 320.0 70.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 80.0 110.0 0)
+    (unit 1)
+    (uuid "93073527-8bf3-4df6-a4e6-b5bd7bd42523")
+    (property "Reference" "J2" (at 80.0 98.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "LAZO_DETECTORES_HUMO_EOL" (at 80.0 101.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 80.0 110.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Sensor_Gas:TGS5042")
+    (at 80.0 145.0 0)
+    (unit 1)
+    (uuid "43d6ac55-e05e-44b7-9399-1a3afafdcaef")
+    (property "Reference" "U3" (at 80.0 132.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "TGS5042_Sensor_CO_Electroquimico" (at 80.0 135.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_THT:TO-5-3" (at 80.0 145.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Relay:Relay_SPDT")
+    (at 320.0 115.0 0)
+    (unit 1)
+    (uuid "f466c747-0484-4918-8b3b-f6a126e5a298")
+    (property "Reference" "K1" (at 320.0 102.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "RELE_CORTE_GAS_Y_VMC" (at 320.0 105.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5Q-1" (at 320.0 115.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Relay:Relay_SPST")
+    (at 320.0 145.0 0)
+    (unit 1)
+    (uuid "819fe883-f67a-4dee-a4d4-b23d0457fba9")
+    (property "Reference" "K2" (at 320.0 132.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "RELE_SIRENA_STROBE_24V" (at 320.0 135.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5Q-1" (at 320.0 145.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 160.0 135.0 0)
+    (unit 1)
+    (uuid "727a1618-ecfd-4bf3-9354-6d2b3b15270b")
+    (property "Reference" "J3" (at 160.0 122.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "PULSADOR_ABORTO_EXTINCION" (at 160.0 125.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 160.0 135.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

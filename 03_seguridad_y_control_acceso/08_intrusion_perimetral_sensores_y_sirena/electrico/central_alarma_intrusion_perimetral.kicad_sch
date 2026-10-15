@@ -1,0 +1,129 @@
+(kicad_sch
+  (version 20231120)
+  (generator "open-source-domotics-gen")
+  (generator_version "10.0")
+  (uuid "64bfdfaf-51f0-4979-8327-d0c830992adf")
+  (paper "A3")
+  (title_block
+    (title "CENTRAL DE INTRUSION PERIMETRAL DEOL Y DRIVER SIRENA 120dB")
+    (date "2026-10-15")
+    (rev "v1.0")
+    (company "open-source-domotics (Hardware Libre)")
+    (comment 1 "4 Zonas Balanceadas DEOL 2x 2.2kΩ (Alarma + Tamper + Corte)")
+    (comment 2 "Driver MOSFET Sirena 120dB + Flash Strobe con Respaldo Batería 12V")
+  )
+
+  (wire (pts (xy 30.0 50.0) (xy 70.0 50.0))
+    (stroke (width 0) (type default))
+    (uuid "332f6ba5-6c85-4638-bbc4-3f9308a83b29")
+  )
+  (text "ALIMENTACION_12VDC_BATERIA"
+    (at 30.0 48.0 0)
+    (effects (font (size 1.5 1.5)))
+    (uuid "5c65558a-ddbd-4011-9107-f311a43f6dc0")
+  )
+
+  (symbol
+    (lib_id "Regulator_Switching:MP1584")
+    (at 80.0 65.0 0)
+    (unit 1)
+    (uuid "c1767f10-0f80-4e9b-b693-9447d0935b6c")
+    (property "Reference" "U1" (at 80.0 50.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MP1584_12V_to_3V3" (at 80.0 53.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Converter_DCDC:Converter_DCDC_MP1584_Mini" (at 80.0 65.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "RF_Module:ESP32-WROOM-32E")
+    (at 160.0 75.0 0)
+    (unit 1)
+    (uuid "f5b918a4-622d-403f-b868-b28dcccc6f17")
+    (property "Reference" "U2" (at 160.0 42.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ESP32-WROOM-32E" (at 160.0 45.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-WROOM-32E" (at 160.0 75.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Transistor_FET:AOD4184A")
+    (at 240.0 60.0 0)
+    (unit 1)
+    (uuid "bed9d34e-50e0-45e5-8d29-b953801bb277")
+    (property "Reference" "Q1" (at 240.0 48.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AOD4184A_SIRENA_120dB" (at 240.0 51.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:TO-252-2" (at 240.0 60.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Transistor_FET:AOD4184A")
+    (at 240.0 95.0 0)
+    (unit 1)
+    (uuid "3d2c4b79-6b7e-42d4-afdb-9fe86f24322c")
+    (property "Reference" "Q2" (at 240.0 82.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AOD4184A_FLASH_STROBE" (at 240.0 85.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:TO-252-2" (at 240.0 95.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 300.0 60.0 0)
+    (unit 1)
+    (uuid "8fa737bb-ad8d-4f20-ac58-a544aba9389d")
+    (property "Reference" "J1" (at 300.0 50.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNA_SIRENA_EXTERIOR_12V" (at 300.0 53.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 300.0 60.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 300.0 95.0 0)
+    (unit 1)
+    (uuid "efc93fb9-264a-4681-ba53-31dab96bd74c")
+    (property "Reference" "J2" (at 300.0 85.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNA_FLASH_STROBE_12V" (at 300.0 88.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 300.0 95.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 80.0 100.0 0)
+    (unit 1)
+    (uuid "315a5e74-daa4-41d2-b85b-2029ff29383c")
+    (property "Reference" "J3" (at 80.0 90.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ZONA_1_BARRERAS_AIR_DEOL" (at 80.0 93.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 80.0 100.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 80.0 125.0 0)
+    (unit 1)
+    (uuid "1bcccdef-8c58-4d20-abb6-18d27c9c45a9")
+    (property "Reference" "J4" (at 80.0 115.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ZONA_2_PUERTAS_REED_DEOL" (at 80.0 118.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 80.0 125.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 80.0 150.0 0)
+    (unit 1)
+    (uuid "7fa2c354-ec68-4c43-8771-af8d91c6f5c8")
+    (property "Reference" "J5" (at 80.0 140.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ZONA_3_VENTANAS_REED_DEOL" (at 80.0 143.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 80.0 150.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 80.0 175.0 0)
+    (unit 1)
+    (uuid "76e09ea7-f399-4d5e-975e-cc6e9207bd17")
+    (property "Reference" "J6" (at 80.0 165.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ZONA_4_ROTURA_CRISTAL_DEOL" (at 80.0 168.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 80.0 175.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

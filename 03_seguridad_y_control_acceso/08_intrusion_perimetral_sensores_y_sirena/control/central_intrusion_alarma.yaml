@@ -1,0 +1,180 @@
+substitutions:
+  node_name: "central-alarma-intrusion"
+  friendly_name: "Central de Alarma e Intrusión Perimetral"
+
+esphome:
+  name: ${node_name}
+  friendly_name: ${friendly_name}
+  comment: "Central autónoma de intrusión con supervisión de 4 zonas DEOL y driver sirena 120dB"
+  min_version: 2024.6.0
+
+esp32:
+  board: esp32-wroom-32e
+  framework:
+    type: esp-idf
+
+wdt:
+  timeout: 15s
+
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+  manual_ip:
+    static_ip: 10.30.0.95
+    gateway: 10.30.0.1
+    subnet: 255.255.255.0
+    dns1: 10.10.0.1
+  power_save_mode: none
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+  services:
+    - service: activar_sirena_panico
+      then:
+        - switch.turn_on: salida_sirena_120db
+        - switch.turn_on: salida_flash_strobe
+    - service: silenciar_alarma
+      then:
+        - switch.turn_off: salida_sirena_120db
+        - switch.turn_off: salida_flash_strobe
+        - logger.log: "Sirena y Flash silenciados por usuario."
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+logger:
+  level: INFO
+
+switch:
+  # MOSFET Q1: Sirena Exterior de Alta Potencia 120dB (12VDC 2A)
+  - platform: gpio
+    name: "Sirena Exterior 120dB"
+    pin: GPIO25
+    id: salida_sirena_120db
+    icon: "mdi:volume-high"
+    restore_mode: ALWAYS_OFF
+
+  # MOSFET Q2: Flash Estroboscópico de Señalización Visual
+  - platform: gpio
+    name: "Flash Strobe Disuasorio"
+    pin: GPIO26
+    id: salida_flash_strobe
+    icon: "mdi:flash"
+    restore_mode: ALWAYS_OFF
+
+sensor:
+  # Zona 1: Barreras Infrarrojas Activas AIR (Perímetro Exterior)
+  - platform: adc
+    pin: GPIO34
+    name: "Tensión Zona 1 Barreras AIR"
+    id: adc_zona1_air
+    update_interval: 100ms
+    attenuation: 12db
+    filters:
+      - median:
+          window_size: 3
+          send_every: 2
+
+  # Zona 2: Contactos Magnéticos Reed Puertas Exteriores
+  - platform: adc
+    pin: GPIO35
+    name: "Tensión Zona 2 Puertas Reed"
+    id: adc_zona2_puertas
+    update_interval: 100ms
+    attenuation: 12db
+    filters:
+      - median:
+          window_size: 3
+          send_every: 2
+
+  # Zona 3: Contactos Magnéticos Ventanales
+  - platform: adc
+    pin: GPIO36
+    name: "Tensión Zona 3 Ventanas"
+    id: adc_zona3_ventanas
+    update_interval: 100ms
+    attenuation: 12db
+    filters:
+      - median:
+          window_size: 3
+          send_every: 2
+
+  # Zona 4: Detectores Acústicos de Rotura de Cristal
+  - platform: adc
+    pin: GPIO39
+    name: "Tensión Zona 4 Rotura Cristal"
+    id: adc_zona4_cristal
+    update_interval: 100ms
+    attenuation: 12db
+    filters:
+      - median:
+          window_size: 3
+          send_every: 2
+
+binary_sensor:
+  # Estado Zona 1: Alarma Barrera Infrarroja AIR
+  - platform: template
+    name: "Intrusión Perimetral Barrera AIR"
+    id: alarma_zona1_air
+    device_class: motion
+    lambda: |-
+      float v = id(adc_zona1_air).state;
+      return (v >= 1.95 && v <= 2.65); // R = 4.4k (Alarma)
+    on_press:
+      - logger.log: "¡INTRUSIÓN EN PERÍMETRO! Haz de barrera AIR cortado."
+      - homeassistant.event:
+          event: esphome.alerta_perimetral_air
+          data:
+            zona: "perimetro_exterior"
+
+  # Estado Sabotaje / Tamper Zona 1
+  - platform: template
+    name: "Sabotaje Tamper Barrera AIR"
+    id: tamper_zona1_air
+    device_class: problem
+    lambda: |-
+      float v = id(adc_zona1_air).state;
+      return (v > 2.85 || v < 0.4); // R = infinito o corto
+
+  # Estado Zona 2: Apertura Puerta Principal / Jardín
+  - platform: template
+    name: "Apertura Puertas Perimetrales"
+    id: alarma_zona2_puertas
+    device_class: door
+    lambda: |-
+      float v = id(adc_zona2_puertas).state;
+      return (v >= 1.95 && v <= 2.65);
+
+  # Estado Zona 4: Detección Rotura de Cristal
+  - platform: template
+    name: "Sensor Rotura de Cristal"
+    id: alarma_zona4_cristal
+    device_class: safety
+    lambda: |-
+      float v = id(adc_zona4_cristal).state;
+      return (v >= 1.95 && v <= 2.65);
+    on_press:
+      - logger.log: "¡CRISTAL ROTO DETECTADO! Frecuencia acústica de impacto confirmada."
+      - homeassistant.event:
+          event: esphome.alerta_rotura_cristal
+          data:
+            zona: "ventanal_salon_lucernario"
+
+# Disuasión Automática: Desactivación automática de sirena tras 3 minutos (Normativa acústica)
+interval:
+  - interval: 1s
+    then:
+      - lambda: |-
+          static uint32_t segundos_activa = 0;
+          if (id(salida_sirena_120db).state) {
+            segundos_activa++;
+            if (segundos_activa >= 180) { // Máximo 3 minutos según ordenanza de ruidos
+              ESP_LOGW("sirena", "Tiempo máximo de sirena alcanzado (180s). Apagando transductor.");
+              id(salida_sirena_120db)->turn_off();
+              segundos_activa = 0;
+            }
+          } else {
+            segundos_activa = 0;
+          }

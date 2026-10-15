@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 297" width="100%" height="100%" style="background-color: #171c26; font-family: monospace;">
+  <defs>
+    <style>
+      .marco { stroke: #454d66; stroke-width: 1.0; fill: none; }
+      .parcela { stroke: #5c677d; stroke-width: 1.4; fill: #1e2533; stroke-dasharray: 4,2; }
+      .vivienda { stroke: #8d99ae; stroke-width: 1.6; fill: #2b3445; }
+      .haz-air { stroke: #ef233c; stroke-width: 1.4; stroke-dasharray: 2,1; fill: none; }
+      .col-air { stroke: #d90429; stroke-width: 1.2; fill: #ff4d6d; }
+      .reed { stroke: #06d6a0; stroke-width: 1.2; fill: #1b4332; }
+      .rotura { stroke: #ffd166; stroke-width: 1.2; fill: #f3722c; }
+      .sirena { stroke: #7209b7; stroke-width: 1.4; fill: #f72585; }
+      .bloque { stroke: #4361ee; stroke-width: 1.2; fill: #1d2d44; }
+      .txt-title { fill: #ffffff; font-size: 4px; font-weight: bold; }
+      .txt-sub { fill: #00f0ff; font-size: 2.2px; font-weight: bold; }
+      .txt-body { fill: #cad2c5; font-size: 1.6px; }
+      .txt-alert { fill: #ff4d6d; font-size: 1.4px; font-weight: bold; }
+      .txt-ok { fill: #06d6a0; font-size: 1.3px; }
+    </style>
+  </defs>
+
+  <!-- Marco A3 -->
+  <rect x="5" y="5" width="410" height="287" class="marco"/>
+  <rect x="210" y="242" width="200" height="45" class="marco"/>
+  <text x="215" y="254" class="txt-title">OPEN-SOURCE-DOMOTICS</text>
+  <text x="215" y="262" class="txt-sub">PLANO DE SEGURIDAD PERIMETRAL, BARRERAS AIR Y SIRENA</text>
+  <text x="215" y="271" class="txt-body">Barreras AIR Haz Cuádruple 60m | Contactos Reed Ocultos | Rotura Cristal Dual</text>
+  <text x="215" y="279" class="txt-body">Sirena 120dB IP65 Autoalimentada | Lazo Supervisado DEOL 2x2.2kΩ | Alarmo HA</text>
+
+  <!-- Parcela y Anillo Infrarrojo -->
+  <g id="terreno">
+    <rect x="20.0" y="37.0" width="190.0" height="190.0" class="parcela"/>
+    <text x="25.0" y="33.0" class="txt-sub">VALLADO PERIMETRAL (20 x 20 m)</text>
+
+    <!-- Vivienda Centrada -->
+    <rect x="67.5" y="84.5" width="95.0" height="95.0" class="vivienda"/>
+    <text x="82.5" y="132.0" class="txt-sub">VIVIENDA (10x10 m)</text>
+
+    <!-- Haces AIR Perimetrales -->
+    <line x1="29.5" y1="217.5" x2="200.5" y2="217.5" class="haz-air"/>
+    <line x1="200.5" y1="217.5" x2="200.5" y2="46.5" class="haz-air"/>
+    <line x1="200.5" y1="46.5" x2="29.5" y2="46.5" class="haz-air"/>
+    <line x1="29.5" y1="46.5" x2="29.5" y2="217.5" class="haz-air"/>
+
+    <!-- Columnas AIR -->
+    <circle cx="29.5" cy="217.5" r="4" class="col-air"/>
+    <circle cx="200.5" cy="217.5" r="4" class="col-air"/>
+    <circle cx="200.5" cy="46.5" r="4" class="col-air"/>
+    <circle cx="29.5" cy="46.5" r="4" class="col-air"/>
+    <text x="19.5" y="225.5" class="txt-alert">AIR-01</text>
+    <text x="205.5" y="225.5" class="txt-alert">AIR-02</text>
+    <text x="205.5" y="38.5" class="txt-alert">AIR-03</text>
+    <text x="19.5" y="38.5" class="txt-alert">AIR-04</text>
+
+    <!-- Sensores Reed en accesos -->
+    <rect x="110.25" y="177.5" width="9.5" height="4" class="reed"/>
+    <text x="86.5" y="187.5" class="txt-ok">Puerta Principal</text>
+
+    <!-- Sensor Rotura Cristal -->
+    <circle cx="86.5" cy="155.75" r="3" class="rotura"/>
+    <text x="77.0" y="149.75" class="txt-alert">Rotura Cristal</text>
+
+    <!-- Sirena Exterior Strobe -->
+    <rect x="157.75" y="181.5" width="8" height="6" class="sirena"/>
+    <text x="138.75" y="189.5" class="txt-alert">SIRENA 120dB</text>
+  </g>
+
+  <!-- Lógica Alarmo (Derecha) -->
+  <g id="modos_alarmo">
+    <text x="215" y="45" class="txt-sub">SUPERVISIÓN DE LAZOS Y MODOS DE ALARMA</text>
+
+    <rect x="215" y="55" width="190" height="75" class="bloque" rx="2"/>
+    <text x="220" y="70" class="txt-sub">SUPERVISIÓN DE DOBLE FIN DE LÍNEA (DEOL):</text>
+    <text x="225" y="80" class="txt-body">• Reposo Normal: R = 2.2 kΩ (Lazo cerrado)</text>
+    <text x="225" y="88" class="txt-body">• Alarma Intrusión: R = 4.4 kΩ (Contacto abierto)</text>
+    <text x="225" y="96" class="txt-alert">• Sabotaje Tamper: R = ∞ (Cable cortado) o R = 0 Ω (Cortocircuito)</text>
+    <text x="225" y="104" class="txt-body">• Inmunidad electromagnética contra interferencias de radio</text>
+
+    <rect x="215" y="140" width="190" height="90" class="bloque" rx="2"/>
+    <text x="220" y="155" class="txt-sub">PERFILES DE SEGURIDAD EN HOME ASSISTANT:</text>
+    <text x="225" y="165" class="txt-body">• MODO FUERA DE CASA (Armado Total):</text>
+    <text x="230" y="173" class="txt-body">  Barreras exteriores + Puertas + Ventanas + Cámaras Frigate</text>
+    <text x="225" y="183" class="txt-body">• MODO NOCHE (Armado Perimetral):</text>
+    <text x="230" y="191" class="txt-body">  Barreras exteriores + Accesos cerrados (Libre paso interior)</text>
+    <text x="225" y="201" class="txt-alert">• RESPUESTA DISUASIVA AUTOMÁTICA:</text>
+    <text x="230" y="209" class="txt-body">  Sirena 120dB + Flash Strobe + Focos perimetrales intermitentes</text>
+  </g>
+</svg>

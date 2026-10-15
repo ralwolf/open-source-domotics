@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 297" width="100%" height="100%" style="background-color: #1a1e29; font-family: monospace;">
+  <defs>
+    <style>
+      .marco { stroke: #455066; stroke-width: 1.0; fill: none; }
+      .muros { stroke: #8d99ae; stroke-width: 1.6; fill: #242c3d; }
+      .tubo-af { stroke: #00b4d8; stroke-width: 2.0; fill: none; }
+      .tubo-acs { stroke: #e63946; stroke-width: 2.0; fill: none; }
+      .tubo-ret { stroke: #52b788; stroke-width: 1.6; stroke-dasharray: 4,2; fill: none; }
+      .saneamiento { stroke: #f77f00; stroke-width: 2.5; stroke-dasharray: 6,3; fill: none; }
+      .bloque { stroke: #4361ee; stroke-width: 1.2; fill: #192338; }
+      .txt-title { fill: #ffffff; font-size: 4px; font-weight: bold; }
+      .txt-sub { fill: #00f0ff; font-size: 2.2px; font-weight: bold; }
+      .txt-body { fill: #cad2c5; font-size: 1.6px; }
+      .txt-af { fill: #00b4d8; font-size: 1.4px; }
+      .txt-acs { fill: #e63946; font-size: 1.4px; }
+      .txt-ret { fill: #52b788; font-size: 1.4px; }
+    </style>
+  </defs>
+
+  <!-- Marco A3 -->
+  <rect x="5" y="5" width="410" height="287" class="marco"/>
+  <rect x="210" y="242" width="200" height="45" class="marco"/>
+  <text x="215" y="254" class="txt-title">OPEN-SOURCE-DOMOTICS</text>
+  <text x="215" y="262" class="txt-sub">RED HIDRÁULICA: AGUA FRÍA, ACS Y RETORNO</text>
+  <text x="215" y="271" class="txt-body">PEX-a D25/D20/D16 | Colector Manifold 1" | Bomba Circuladora 24V</text>
+  <text x="215" y="279" class="txt-body">Separación Aguas Grises y Negras | Conducción a Biodigestor Séptico</text>
+
+  <!-- Vivienda -->
+  <g id="red_hidraulica">
+    <rect x="25.0" y="42.0" width="180.0" height="180.0" class="muros"/>
+    <text x="30.0" y="38.0" class="txt-sub">VIVIENDA 10 x 10 m - DISTRIBUCIÓN HIDRÁULICA</text>
+
+    <!-- Cuarto Técnico -->
+    <rect x="97.0" y="105.0" width="45.0" height="45.0" fill="#1b2433" stroke="#00f0ff" stroke-width="1.2"/>
+    <text x="101.0" y="114.0" class="txt-sub">SALA TÉCNICA (ACS 500L)</text>
+
+    <!-- Tuberías -->
+    <line x1="105.0" y1="130.0" x2="55.0" y2="130.0" class="tubo-af"/>
+    <line x1="55.0" y1="130.0" x2="55.0" y2="78.0" class="tubo-af"/>
+    <text x="60.0" y="127.0" class="txt-af">Agua Fría PEX-a D25 (2.5 bar)</text>
+
+    <line x1="105.0" y1="133.0" x2="50.0" y2="133.0" class="tubo-acs"/>
+    <line x1="50.0" y1="133.0" x2="50.0" y2="78.0" class="tubo-acs"/>
+    <text x="60.0" y="138.0" class="txt-acs">ACS Solar PEX-a D20 (45°C)</text>
+
+    <line x1="45.0" y1="78.0" x2="45.0" y2="136.0" class="tubo-ret"/>
+    <line x1="45.0" y1="136.0" x2="105.0" y2="136.0" class="tubo-ret"/>
+    <text x="60.0" y="146.0" class="txt-ret">Anillo Retorno ACS D16 (Agua Caliente Inmediata)</text>
+  </g>
+
+  <!-- Memoria Técnica (Derecha) -->
+  <g id="memoria">
+    <text x="215" y="45" class="txt-sub">PARÁMETROS TÉCNICOS DE DISEÑO HIDRÁULICO</text>
+
+    <rect x="215" y="55" width="190" height="75" class="bloque" rx="2"/>
+    <text x="220" y="70" class="txt-sub">1. RED DE AGUA FRÍA Y PRESIÓN CONSTANTE:</text>
+    <text x="225" y="80" class="txt-body">• Alimentación: Cisterna pluvial 10kL + Red conmutada</text>
+    <text x="225" y="88" class="txt-body">• Grupo hidroneumático con variador de frecuencia (2.5 bar)</text>
+    <text x="225" y="96" class="txt-body">• Caudal simultáneo de cálculo: Qpico = 0.65 L/s</text>
+    <text x="225" y="104" class="txt-body">• Colector manifold con llaves de corte individuales por punto</text>
+
+    <rect x="215" y="140" width="190" height="90" class="bloque" rx="2"/>
+    <text x="220" y="155" class="txt-sub">2. RED DE AGUA CALIENTE SANITARIA SOLAR (ACS):</text>
+    <text x="225" y="165" class="txt-body">• Interacumulador solar de inercia 500 Litros (4 tubos de vacío)</text>
+    <text x="225" y="173" class="txt-body">• Válvula mezcladora termostática a 45°C (antiescaldamiento)</text>
+    <text x="225" y="181" class="txt-body">• Bomba de recirculación síncrona 24V de rotor húmedo</text>
+    <text x="225" y="189" class="txt-ret">• Ahorro de agua: 100% agua caliente instantánea en grifos</text>
+    <text x="225" y="197" class="txt-body">• Drenaje: Aguas negras a biodigestor, grises a biofiltro</text>
+  </g>
+</svg>

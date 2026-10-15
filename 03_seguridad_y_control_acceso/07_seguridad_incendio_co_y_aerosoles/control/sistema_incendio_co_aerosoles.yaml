@@ -1,0 +1,172 @@
+substitutions:
+  node_name: "central-incendio-extincion"
+  friendly_name: "Central de Incendio, CO y Extinción por Aerosoles"
+
+esphome:
+  name: ${node_name}
+  friendly_name: ${friendly_name}
+  comment: "Central autónoma de detección de fuego EN54, monóxido de carbono y descarga de aerosol Stat-X"
+  min_version: 2024.6.0
+
+esp32:
+  board: esp32-wroom-32e
+  framework:
+    type: esp-idf
+
+wdt:
+  timeout: 15s
+
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+  manual_ip:
+    static_ip: 10.30.0.90
+    gateway: 10.30.0.1
+    subnet: 255.255.255.0
+    dns1: 10.10.0.1
+  power_save_mode: none
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+  services:
+    - service: activar_simulacro_evacuacion
+      then:
+        - switch.turn_on: relay_sirena_strobe
+        - delay: 10s
+        - switch.turn_off: relay_sirena_strobe
+    - service: abortar_cuenta_atras_aerosol
+      then:
+        - script.stop: secuencia_descarga_aerosol
+        - logger.log: "Cuenta atrás de aerosol abortada manualmente vía Home Assistant."
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+logger:
+  level: INFO
+
+switch:
+  # Relé K1: Enclavamiento de Seguridad (Corta Electroválvulas de Gas y Apaga VMC)
+  - platform: gpio
+    name: "Corte de Seguridad Gas y Clima"
+    pin: GPIO25
+    id: relay_enclavamiento_gas_vmc
+    icon: "mdi:valve-closed"
+    restore_mode: ALWAYS_OFF
+
+  # Relé K2: Sirena Interior 110dB y Flash Strobe Exterior 24V
+  - platform: gpio
+    name: "Sirena y Strobe Evacuación"
+    pin: GPIO26
+    id: relay_sirena_strobe
+    icon: "mdi:alarm-light"
+    restore_mode: ALWAYS_OFF
+
+  # Disparo de Aerosol - Rama Alta (High-Side P-MOSFET)
+  - platform: gpio
+    pin: GPIO18
+    id: trigger_aerosol_high
+    restore_mode: ALWAYS_OFF
+
+  # Disparo de Aerosol - Rama Baja (Low-Side N-MOSFET)
+  - platform: gpio
+    pin: GPIO19
+    id: trigger_aerosol_low
+    restore_mode: ALWAYS_OFF
+
+binary_sensor:
+  # Pulsador Físico de Aborto / Pausa de Extinción (Pared exterior Sala IT)
+  - platform: gpio
+    name: "Pulsador Aborto Extinción"
+    pin:
+      number: GPIO27
+      mode: INPUT_PULLUP
+      inverted: true
+    id: boton_aborto_extincion
+    filters:
+      - delayed_on_off: 30ms
+    on_press:
+      - logger.log: "PULSADOR DE ABORTO PRESIONADO: Deteniendo secuencia de descarga de aerosol."
+      - script.stop: secuencia_descarga_aerosol
+
+  # Estado Lógico de Alarma de Incendio (Lazo Supervisado)
+  - platform: template
+    name: "Alarma Incendio Confirmada"
+    id: estado_alarma_fuego
+    device_class: smoke
+    lambda: |-
+      return id(voltaje_lazo_humo).state < 2.0 && id(voltaje_lazo_humo).state > 0.8;
+    on_press:
+      - logger.log: "¡¡¡FUEGO DETECTADO EN LAZO EN54!!! Activando protocolo de emergencia."
+      - switch.turn_on: relay_sirena_strobe
+      - switch.turn_on: relay_enclavamiento_gas_vmc
+      - homeassistant.event:
+          event: esphome.alarma_incendio_general
+          data:
+            zona: "vivienda_principal"
+            accion: "evacuacion_inmediata"
+
+  # Estado de Avería / Corte de Cable en Lazo Supervisado
+  - platform: template
+    name: "Avería en Lazo de Humo"
+    id: estado_averia_lazo
+    device_class: problem
+    lambda: |-
+      float v = id(voltaje_lazo_humo).state;
+      return (v > 2.85 || v < 0.5);
+
+sensor:
+  # Medición de Tensión en Lazo de Humo Supervisado (Divisor resistivo con EOL 4.7k)
+  - platform: adc
+    pin: GPIO34
+    name: "Tensión Lazo Humo EN54"
+    id: voltaje_lazo_humo
+    update_interval: 500ms
+    attenuation: 12db
+    filters:
+      - median:
+          window_size: 5
+          send_every: 3
+
+  # Sensor Electroquímico de Monóxido de Carbono (CO) Figaro TGS5042
+  - platform: adc
+    pin: GPIO35
+    name: "Concentración Monóxido de Carbono"
+    id: concentracion_co_ppm
+    unit_of_measurement: "ppm"
+    accuracy_decimals: 0
+    update_interval: 2s
+    attenuation: 12db
+    filters:
+      - multiply: 320.0  # Calibración de transimpedancia: 1V = 320 PPM CO
+    on_value:
+      - lambda: |-
+          if (x >= 70.0) {
+            ESP_LOGE("alerta_co", "NIVEL PELIGROSO DE MONÓXIDO DE CARBONO: %0.0f PPM!", x);
+            id(relay_sirena_strobe)->turn_on();
+            id(relay_enclavamiento_gas_vmc)->turn_on(); // Cortar suministro de gas preventivo
+          }
+
+# Script de Secuencia Controlada de Descarga de Aerosol (Rack IT / ESS)
+script:
+  - id: secuencia_descarga_aerosol
+    mode: restart
+    then:
+      - logger.log: "INICIANDO PROTOCOLO DE EXTINCIÓN POR AEROSOL (30s de pre-aviso)..."
+      - switch.turn_on: relay_sirena_strobe
+      - switch.turn_on: relay_enclavamiento_gas_vmc
+      - delay: 30s
+      - logger.log: "¡¡¡EJECUTANDO DESCARGA ELÉCTRICA EN CÁPSULAS STAT-X (Pulso 24V 2A)!!!"
+      - switch.turn_on: trigger_aerosol_high
+      - delay: 50ms
+      - switch.turn_on: trigger_aerosol_low
+      - delay: 2000ms  # Pulso de 2 segundos para quemar puente iniciador
+      - switch.turn_off: trigger_aerosol_low
+      - switch.turn_off: trigger_aerosol_high
+      - logger.log: "Descarga de aerosol completada. Aerosol de K2CO3 en suspensión."
+      - homeassistant.event:
+          event: esphome.descarga_aerosol_ejecutada
+          data:
+            zona: "rack_it_baterias"
