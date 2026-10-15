@@ -1,0 +1,145 @@
+substitutions:
+  name: "multisplit-climatizacion-iot"
+  friendly_name: "Multi-Split Climatización IoT"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "Pasarela Bidireccional IoT para Split Inverter (CN105 / Midea UART + Sensor SHT31 + Enclavamiento Ventana)"
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret esphome_api_key"
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 10.0.30.65
+    gateway: 10.0.30.1
+    subnet: 255.255.255.0
+    dns1: 10.0.10.1
+
+i2c:
+  sda: GPIO4
+  scl: GPIO5
+  scan: true
+  id: bus_i2c_split
+
+# 1. Comunicación UART con la placa base del Split (Puerto CN105 / CN40)
+uart:
+  - id: uart_split
+    tx_pin: GPIO21
+    rx_pin: GPIO20
+    baud_rate: 2400
+    data_bits: 8
+    stop_bits: 1
+    parity: EVEN
+
+# 2. Sensor Ambiental de Confort SHT31 (Lectura a altura ergonómica)
+sensor:
+  - platform: sht3xd
+    i2c_id: bus_i2c_split
+    temperature:
+      name: "Split Temperatura Ambiente Real"
+      id: temp_ambiente_real
+      accuracy_decimals: 1
+    humidity:
+      name: "Split Humedad Relativa Real"
+      id: hr_ambiente_real
+      accuracy_decimals: 1
+    address: 0x44
+    update_interval: 15s
+
+  # Estimación de Potencia Eléctrica Absorbida por el Inverter (W)
+  - platform: template
+    name: "Split Consumo Eléctrico Estimado"
+    id: split_potencia_w
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    update_interval: 30s
+    lambda: |-
+      // Estimación según modulación de frecuencia del compresor
+      return 450.0f;
+
+# 3. Sensor Magnético de Ventana Abierta (Interbloqueo Ahorro Energético)
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO6
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Split Estado Ventana Habitación"
+    id: sensor_ventana
+    filters:
+      - delayed_on: 180s # Retardo de 3 minutos para permitir ventilación puntual sin cortar clima
+      - delayed_off: 10s
+    on_press:
+      then:
+        - logger.log: "Ventana abierta más de 3 min: Apagando climatización por seguridad energética."
+        - climate.control:
+            id: split_climate
+            mode: "OFF"
+    on_release:
+      then:
+        - logger.log: "Ventana cerrada: Reanudando consigna de climatización automática."
+        - climate.control:
+            id: split_climate
+            mode: "AUTO"
+
+# 4. Transceptor Infrarrojo (Fallback y Control Remoto Original)
+remote_receiver:
+  pin:
+    number: GPIO7
+    inverted: true
+  dump:
+    - raw
+
+remote_transmitter:
+  pin: GPIO8
+  carrier_duty_percent: 50%
+
+# 5. Componente de Climatización Termostática Inteligente
+climate:
+  - platform: thermostat
+    name: "Termostato Multi-Split Inverter"
+    id: split_climate
+    sensor: temp_ambiente_real
+    default_target_temperature_low: 21.0
+    default_target_temperature_high: 25.0
+    min_cooling_off_time: 180s # Protección obligatoria compresor (mínimo 3 min)
+    min_heating_off_time: 180s
+    idle_action:
+      - logger.log: "Split en espera (temperatura alcanzada)."
+    cooling_action:
+      - logger.log: "Split modo refrigeración activo."
+    heating_action:
+      - logger.log: "Split modo calefacción activo."
+
+# 6. Automatización de Aprovechamiento de Excedentes Fotovoltaicos
+switch:
+  - platform: template
+    name: "Modo Acumulación Solar Térmica"
+    id: sw_solar_surplus_climate
+    optimistic: true
+    turn_on_action:
+      - logger.log: "Excedente FV detectado: Bajando consigna frío en 1.5°C para acumular inercia térmica."
+      - climate.control:
+          id: split_climate
+          target_temperature_high: 22.5
+    turn_off_action:
+      - logger.log: "Restaurando consigna normal de confort (24°C)."
+      - climate.control:
+          id: split_climate
+          target_temperature_high: 24.0

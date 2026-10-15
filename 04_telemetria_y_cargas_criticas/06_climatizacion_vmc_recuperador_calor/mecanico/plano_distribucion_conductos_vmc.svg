@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1100" width="100%" height="100%" style="background-color: #0d1117; font-family: 'DejaVu Sans', Helvetica, Arial, sans-serif;">
+  <defs>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#21262d" stroke-width="1"/>
+    </pattern>
+    <marker id="arrow_blue" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 Z" fill="#388bfd" />
+    </marker>
+    <marker id="arrow_red" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 Z" fill="#f85149" />
+    </marker>
+  </defs>
+
+  <rect width="1100" height="1100" fill="url(#grid)" />
+
+  <!-- Título y Carátula -->
+  <rect x="50" y="30" width="1000" height="60" fill="#161b22" stroke="#30363d" stroke-width="2" rx="6"/>
+  <text x="70" y="65" fill="#f0f6fc" font-size="20" font-weight="bold">PLANO DE DISTRIBUCIÓN DE CONDUCTOS Y CLIMATIZACIÓN VMC DE DOBLE FLUJO</text>
+  <text x="70" y="82" fill="#8b949e" font-size="12">Vivienda Bioclimática 10x10m | Unidad Recuperadora Entálpica 92% | Conductos Antibacterianos DN90 | Bypass Free-Cooling</text>
+
+  <!-- Muros Perimetrales (10x10m = 800x800 px) de (150, 150) a (950, 950) -->
+  <rect x="150" y="150" width="800" height="800" fill="none" stroke="#8b949e" stroke-width="4"/>
+
+  <!-- Muros Interiores -->
+  <!-- Sala IT Central (470, 470) a (630, 630) -->
+  <rect x="470" y="470" width="160" height="160" fill="#161b22" stroke="#484f58" stroke-width="2"/>
+  <text x="485" y="495" fill="#58a6ff" font-size="12" font-weight="bold">SALA IT TÉCNICA</text>
+  <text x="485" y="510" fill="#8b949e" font-size="10">Ubicación Unidad VMC</text>
+
+  <!-- Unidad VMC física en falso techo IT -->
+  <rect x="500" y="520" width="100" height="90" fill="#21262d" stroke="#58a6ff" stroke-width="2" rx="4"/>
+  <text x="515" y="565" fill="#58a6ff" font-size="11" font-weight="bold">UNIDAD VMC</text>
+  <text x="510" y="580" fill="#8b949e" font-size="9">Bypass 24V / F7</text>
+
+  <!-- Estancias -->
+  <!-- Dormitorio Principal (Noroeste) -->
+  <rect x="150" y="150" width="380" height="320" fill="none" stroke="#30363d" stroke-width="2"/>
+  <text x="170" y="180" fill="#c9d1d9" font-size="14" font-weight="bold">DORMITORIO PRINCIPAL (Seco)</text>
+  <text x="170" y="198" fill="#8b949e" font-size="11">Impulsión Aire Limpio: 45 m³/h | Bocas DN90</text>
+
+  <!-- Dormitorio Infantil / Estudio (Suroeste) -->
+  <rect x="150" y="570" width="320" height="380" fill="none" stroke="#30363d" stroke-width="2"/>
+  <text x="170" y="600" fill="#c9d1d9" font-size="14" font-weight="bold">DORMITORIO INFANTIL (Seco)</text>
+  <text x="170" y="618" fill="#8b949e" font-size="11">Impulsión Aire Limpio: 30 m³/h | Bocas DN90</text>
+
+  <!-- Salón / Comedor (Este - Noreste) -->
+  <rect x="530" y="150" width="420" height="380" fill="none" stroke="#30363d" stroke-width="2"/>
+  <text x="550" y="180" fill="#c9d1d9" font-size="14" font-weight="bold">SALÓN - COMEDOR (Seco)</text>
+  <text x="550" y="198" fill="#8b949e" font-size="11">Impulsión Aire Limpio: 60 m³/h | Bocas DN90</text>
+
+  <!-- Cocina (Sureste) -->
+  <rect x="630" y="600" width="320" height="350" fill="none" stroke="#30363d" stroke-width="2"/>
+  <text x="650" y="630" fill="#c9d1d9" font-size="14" font-weight="bold">COCINA (Húmeda)</text>
+  <text x="650" y="648" fill="#8b949e" font-size="11">Extracción Aire Viciado: 60 m³/h | Bocas DN90</text>
+
+  <!-- Baño Principal (Sur Central) -->
+  <rect x="470" y="700" width="160" height="250" fill="none" stroke="#30363d" stroke-width="2"/>
+  <text x="480" y="730" fill="#c9d1d9" font-size="13" font-weight="bold">BAÑO (Húmedo)</text>
+  <text x="480" y="748" fill="#8b949e" font-size="10">Extracción: 35 m³/h</text>
+
+  <!-- RED DE CONDUCTOS AZUL (IMPULSIÓN DE AIRE LIMPIO FILTRADO) -->
+  <!-- Silenciador acústico primario -->
+  <rect x="580" y="495" width="40" height="20" fill="#1f6feb" stroke="#58a6ff" stroke-width="1.5" rx="3"/>
+  <text x="583" y="508" fill="#ffffff" font-size="8">SILENC</text>
+
+  <!-- Tuberías de Impulsión (Azul) -->
+  <!-- A Salón -->
+  <path d="M 600 520 L 600 480 L 750 480 L 750 250" fill="none" stroke="#388bfd" stroke-width="4" stroke-dasharray="6,3" marker-end="url(#arrow_blue)"/>
+  <!-- Bocas de impulsión Salón -->
+  <circle cx="750" cy="250" r="14" fill="#1f6feb" stroke="#58a6ff" stroke-width="2"/>
+  <text x="735" y="240" fill="#58a6ff" font-size="10" font-weight="bold">IMP-01</text>
+
+  <!-- A Dormitorio Principal -->
+  <path d="M 520 520 L 520 450 L 320 450 L 320 250" fill="none" stroke="#388bfd" stroke-width="4" stroke-dasharray="6,3" marker-end="url(#arrow_blue)"/>
+  <!-- Boca Dormitorio Principal -->
+  <circle cx="320" cy="250" r="14" fill="#1f6feb" stroke="#58a6ff" stroke-width="2"/>
+  <text x="305" y="240" fill="#58a6ff" font-size="10" font-weight="bold">IMP-02</text>
+
+  <!-- A Dormitorio Infantil -->
+  <path d="M 500 550 L 400 550 L 400 750 L 280 750" fill="none" stroke="#388bfd" stroke-width="4" stroke-dasharray="6,3" marker-end="url(#arrow_blue)"/>
+  <circle cx="280" cy="750" r="14" fill="#1f6feb" stroke="#58a6ff" stroke-width="2"/>
+  <text x="265" y="740" fill="#58a6ff" font-size="10" font-weight="bold">IMP-03</text>
+
+  <!-- RED DE CONDUCTOS ROJA (EXTRACCIÓN DE AIRE VICIADO) -->
+  <!-- De Cocina -->
+  <path d="M 780 750 L 780 620 L 580 620 L 580 590" fill="none" stroke="#f85149" stroke-width="4" marker-end="url(#arrow_red)"/>
+  <circle cx="780" cy="750" r="14" fill="#da3633" stroke="#f85149" stroke-width="2"/>
+  <text x="765" y="780" fill="#f85149" font-size="10" font-weight="bold">EXT-01 (Cocina)</text>
+
+  <!-- De Baño -->
+  <path d="M 550 820 L 550 610" fill="none" stroke="#f85149" stroke-width="4" marker-end="url(#arrow_red)"/>
+  <circle cx="550" cy="820" r="14" fill="#da3633" stroke="#f85149" stroke-width="2"/>
+  <text x="535" y="850" fill="#f85149" font-size="10" font-weight="bold">EXT-02 (Baño)</text>
+
+  <!-- CONDUCTOS EXTERIORES DN160 AISLADOS -->
+  <!-- Toma de aire exterior fachada Norte -->
+  <path d="M 500 530 L 440 530 L 440 150" fill="none" stroke="#2ea043" stroke-width="6" stroke-linecap="round"/>
+  <text x="350" y="140" fill="#2ea043" font-size="11" font-weight="bold">TOMA AIRE EXTERIOR DN160 (Rejilla Fachada Norte)</text>
+
+  <!-- Expulsión a cubierta / fachada -->
+  <path d="M 600 550 L 660 550 L 660 150" fill="none" stroke="#8b949e" stroke-width="6" stroke-linecap="round"/>
+  <text x="670" y="140" fill="#8b949e" font-size="11" font-weight="bold">EXPULSIÓN AIRE VICIADO DN160 (Fachada)</text>
+
+  <!-- Cuadro de Leyenda y Especificaciones -->
+  <rect x="50" y="970" width="1000" height="100" fill="#161b22" stroke="#30363d" stroke-width="2" rx="6"/>
+  <text x="70" y="995" fill="#f0f6fc" font-size="12" font-weight="bold">PARÁMETROS DE DISEÑO HIGROTÉRMICO Y CONTROL:</text>
+  <text x="70" y="1015" fill="#388bfd" font-size="11">■ Impulsión Aire Nuevo (DN90): 135 m³/h total modulada por CO2 (&lt;800 ppm: Vel 1 (60 m³/h), 800-1100: Vel 2 (120 m³/h), &gt;1100: Boost (210 m³/h))</text>
+  <text x="70" y="1035" fill="#f85149" font-size="11">■ Extracción Húmeda (DN90): 95 m³/h base con Boost automático por humedad relativa en baño (&gt;70% HR activa Boost por 20 min)</text>
+  <text x="70" y="1055" fill="#2ea043" font-size="11">■ Bypass Free-Cooling: Apertura 100% de compuerta si T_exterior &lt; T_interior y T_interior &gt; 23°C (refrescamiento pasivo nocturno de verano)</text>
+</svg>

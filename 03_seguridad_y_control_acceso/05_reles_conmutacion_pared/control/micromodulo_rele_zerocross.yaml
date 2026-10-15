@@ -1,0 +1,186 @@
+substitutions:
+  name: "rele-pared-zerocross"
+  friendly_name: "Micromódulo Pared Zero-Cross"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "Micromódulo Inteligente Empotrable de Pared Dual con Conmutación Zero-Cross y Medición BL0942"
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret esphome_api_key"
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 10.0.30.60
+    gateway: 10.0.30.1
+    subnet: 255.255.255.0
+    dns1: 10.0.10.1
+
+# 1. Comunicación UART con chip de metrología energética BL0942
+uart:
+  rx_pin: GPIO20
+  tx_pin: GPIO21
+  baud_rate: 4800
+  stop_bits: 1
+  id: uart_bl0942
+
+# 2. Sensor de Detección de Cruce por Cero (Zero-Crossing Interrupt)
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO3
+      mode: INPUT_PULLUP
+      inverted: true
+    id: zc_detector
+    internal: true
+    filters:
+      - delayed_off: 5ms
+
+  # Entrada Física Pulsador / Conmutador S1
+  - platform: gpio
+    pin:
+      number: GPIO4
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Entrada Pulsador S1"
+    id: button_s1
+    filters:
+      - delayed_on: 25ms
+      - delayed_off: 25ms
+    on_click:
+      - min_length: 50ms
+        max_length: 450ms
+        then:
+          - if:
+              condition:
+                switch.is_on: sw_modo_desacoplado_s1
+              then:
+                - homeassistant.event:
+                    event: esphome.rele_click_s1
+                    data:
+                      click_type: "single"
+              else:
+                - switch.toggle: relay_ch1
+      - min_length: 500ms
+        max_length: 2500ms
+        then:
+          - homeassistant.event:
+              event: esphome.rele_click_s1
+              data:
+                click_type: "long_press"
+
+  # Entrada Física Pulsador / Conmutador S2
+  - platform: gpio
+    pin:
+      number: GPIO5
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Entrada Pulsador S2"
+    id: button_s2
+    filters:
+      - delayed_on: 25ms
+      - delayed_off: 25ms
+    on_click:
+      - min_length: 50ms
+        max_length: 450ms
+        then:
+          - if:
+              condition:
+                switch.is_on: sw_modo_desacoplado_s2
+              then:
+                - homeassistant.event:
+                    event: esphome.rele_click_s2
+                    data:
+                      click_type: "single"
+              else:
+                - switch.toggle: relay_ch2
+      - min_length: 500ms
+        max_length: 2500ms
+        then:
+          - homeassistant.event:
+              event: esphome.rele_click_s2
+              data:
+                click_type: "long_press"
+
+# 3. Metrología Eléctrica de Precisión BL0942 (Potencia, Voltaje, Corriente, Energía)
+sensor:
+  - platform: bl0942
+    uart_id: uart_bl0942
+    voltage:
+      name: "Tensión Red AC"
+      unit_of_measurement: "V"
+      accuracy_decimals: 1
+    current:
+      name: "Corriente Total Cargas"
+      unit_of_measurement: "A"
+      accuracy_decimals: 3
+    power:
+      name: "Potencia Activa Total"
+      unit_of_measurement: "W"
+      accuracy_decimals: 1
+      id: pot_activa
+    energy:
+      name: "Energía Eléctrica Acumulada"
+      unit_of_measurement: "kWh"
+      accuracy_decimals: 3
+    frequency:
+      name: "Frecuencia Red AC"
+      unit_of_measurement: "Hz"
+      accuracy_decimals: 1
+
+# 4. Salidas de Potencia: Relés de 16A Sincronizados Zero-Cross
+output:
+  - platform: gpio
+    pin: GPIO6
+    id: out_relay_ch1
+
+  - platform: gpio
+    pin: GPIO7
+    id: out_relay_ch2
+
+switch:
+  - platform: output
+    name: "Lámpara Canal 1 (L1)"
+    id: relay_ch1
+    output: out_relay_ch1
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: output
+    name: "Lámpara Canal 2 (L2)"
+    id: relay_ch2
+    output: out_relay_ch2
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  # Interruptor de Modo Desacoplado para bombillas inteligentes (Matter / Zigbee)
+  - platform: template
+    name: "Modo Desacoplado S1 (Smart Bulb)"
+    id: sw_modo_desacoplado_s1
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: template
+    name: "Modo Desacoplado S2 (Smart Bulb)"
+    id: sw_modo_desacoplado_s2
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+# 5. Indicador de Estado LED RGB
+status_led:
+  pin:
+    number: GPIO8
+    inverted: true

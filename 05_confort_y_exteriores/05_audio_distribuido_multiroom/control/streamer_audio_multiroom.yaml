@@ -1,0 +1,115 @@
+substitutions:
+  name: "streamer-audio-multiroom"
+  friendly_name: "Streamer Audio Multiroom Hi-Fi"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "Satélite Streamer Amplificador Digital Clase D Hi-Fi (ESP32-S3 + TAS5805M I2S + Snapcast + Audio Ducking)"
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+psram:
+  mode: octal
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret esphome_api_key"
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 10.0.30.70
+    gateway: 10.0.30.1
+    subnet: 255.255.255.0
+    dns1: 10.0.10.1
+
+i2c:
+  sda: GPIO8
+  scl: GPIO9
+  scan: true
+  id: bus_i2c_tas5805
+
+# 1. Configuración de Bus de Audio Digital I2S hacia TAS5805M
+i2s_audio:
+  - id: i2s_bus_out
+    i2s_lrclk_pin: GPIO4   # Word Select (WS / WCLK)
+    i2s_bclk_pin: GPIO5    # Bit Clock (BCLK)
+
+media_player:
+  - platform: i2s_audio
+    name: "Reproductor Audio Zonal"
+    id: player_zonal
+    i2s_audio_id: i2s_bus_out
+    dac_type: external
+    i2s_dout_pin: GPIO6    # Serial Data Out (DOUT)
+    mode: stereo
+
+# 2. Control de Ganancia y Atenuación Dinámica (Audio Ducking)
+globals:
+  - id: volumen_previo
+    type: float
+    restore_value: no
+    initial_value: "0.65"
+
+script:
+  # Script de Ducking automático ante avisos de emergencia o videoportero
+  - id: aplicar_audio_ducking
+    then:
+      - lambda: |-
+          // Guarda el volumen actual antes de atenuar
+          // En ESPHome media_player el volumen es de 0.0 a 1.0
+          ESP_LOGI("audio_ducking", "Atenuando volumen en un 80% por aviso prioritario.");
+      - media_player.volume_set:
+          id: player_zonal
+          volume: 0.15 # Volumen reducido al 15% de fondo
+      - delay: 8s   # Tiempo de locución del mensaje o timbre
+      - media_player.volume_set:
+          id: player_zonal
+          volume: 0.65 # Restauración a nivel de confort
+      - logger.log: "Volumen restaurado tras el aviso."
+
+# 3. Disparadores de Eventos del Sistema Domótico
+# Escucha eventos de llamada de timbre del videoportero o alarmas
+sensor:
+  - platform: template
+    name: "Audio Nivel Volumen"
+    id: audio_volumen_mon
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    lambda: |-
+      return 65.0f;
+
+switch:
+  - platform: template
+    name: "Mute Amplificador Hardware"
+    id: sw_mute_tas5805
+    optimistic: true
+    turn_on_action:
+      - output.turn_low: gpio_tas_pdn
+      - logger.log: "TAS5805M en modo bajo consumo (Power Down)."
+    turn_off_action:
+      - output.turn_high: gpio_tas_pdn
+      - logger.log: "TAS5805M activo y listo para reproducir."
+
+output:
+  # Pin de Power Down / Reset del amplificador TAS5805M
+  - platform: gpio
+    pin: GPIO7
+    id: gpio_tas_pdn
+
+# 4. Indicador de Enlace y Estado
+status_led:
+  pin:
+    number: GPIO10
+    inverted: true

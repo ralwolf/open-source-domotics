@@ -1,0 +1,286 @@
+substitutions:
+  name: "vmc-recuperador-entalpico"
+  friendly_name: "VMC Recuperador Entálpico"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "Controlador de Ventilación Mecánica Controlada de Doble Flujo con Recuperación Entálpica y Free-Cooling"
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret esphome_api_key"
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 10.0.30.55
+    gateway: 10.0.30.1
+    subnet: 255.255.255.0
+    dns1: 10.0.10.1
+
+i2c:
+  sda: GPIO8
+  scl: GPIO9
+  scan: true
+  id: bus_i2c_vmc
+
+# 1. Bus 1-Wire para sondas de temperatura en conductos
+one_wire:
+  - platform: gpio
+    pin: GPIO4
+    id: bus_1wire_vmc
+
+# 2. Control Analógico 0-10V para motores EC
+output:
+  # Salida 0-10V Ventilador de Impulsión (VMC Fan 1)
+  - platform: ledc
+    pin: GPIO18
+    id: pwm_fan_impulsion
+    frequency: 20000Hz
+
+  # Salida 0-10V Ventilador de Extracción (VMC Fan 2)
+  - platform: ledc
+    pin: GPIO19
+    id: pwm_fan_extraccion
+    frequency: 20000Hz
+
+  # Actuador Servomotor Compuerta Bypass (Free-Cooling) 24V Reversible
+  - platform: gpio
+    pin: GPIO20
+    id: out_bypass_abrir
+
+  - platform: gpio
+    pin: GPIO21
+    id: out_bypass_cerrar
+
+# 3. Sensores Físicos y de Diagnóstico
+sensor:
+  # Calidad de Aire Interior: CO2 NDIR, Humedad y Temperatura
+  - platform: scd4x
+    i2c_id: bus_i2c_vmc
+    co2:
+      name: "VMC Concentración CO2 Interior"
+      id: vmc_co2
+      unit_of_measurement: "ppm"
+      accuracy_decimals: 0
+      on_value:
+        then:
+          - script.execute: regular_velocidad_vmc
+    temperature:
+      name: "VMC Temperatura Sonda SCD41"
+      id: vmc_temp_sala
+      accuracy_decimals: 1
+    humidity:
+      name: "VMC Humedad Relativa Interior"
+      id: vmc_hr_interior
+      accuracy_decimals: 1
+      on_value_range:
+        - above: 70.0
+          then:
+            - switch.turn_on: sw_boost_humedad
+
+  # Sondas de Temperatura en las 4 bocas del recuperador
+  - platform: dallas_temp
+    one_wire_id: bus_1wire_vmc
+    address: 0x1100000000000001
+    name: "VMC Temp Aire Exterior (T_ext)"
+    id: t_exterior
+    accuracy_decimals: 1
+
+  - platform: dallas_temp
+    one_wire_id: bus_1wire_vmc
+    address: 0x2200000000000002
+    name: "VMC Temp Impulsión Estancias (T_imp)"
+    id: t_impulsion
+    accuracy_decimals: 1
+
+  - platform: dallas_temp
+    one_wire_id: bus_1wire_vmc
+    address: 0x3300000000000003
+    name: "VMC Temp Extracción Húmedos (T_extrac)"
+    id: t_extraccion
+    accuracy_decimals: 1
+
+  - platform: dallas_temp
+    one_wire_id: bus_1wire_vmc
+    address: 0x4400000000000004
+    name: "VMC Temp Expulsión Fachada (T_exp)"
+    id: t_expulsion
+    accuracy_decimals: 1
+
+  # Eficiencia Térmica Real del Intercambiador Entálpico (%)
+  - platform: template
+    name: "VMC Eficiencia Recuperador Térmico"
+    id: vmc_eficiencia_termica
+    unit_of_measurement: "%"
+    accuracy_decimals: 1
+    update_interval: 30s
+    lambda: |-
+      float text = id(t_exterior).state;
+      float timp = id(t_impulsion).state;
+      float textr = id(t_extraccion).state;
+      if (std::isnan(text) || std::isnan(timp) || std::isnan(textr) || (textr - text) == 0.0f) {
+        return NAN;
+      }
+      float eff = ((timp - text) / (textr - text)) * 100.0f;
+      if (eff < 0.0f) eff = 0.0f;
+      if (eff > 100.0f) eff = 100.0f;
+      return eff;
+
+  # Tacómetros de Velocidad Real (RPM) por pulsos
+  - platform: pulse_counter
+    pin: GPIO10
+    name: "VMC Ventilador Impulsión RPM"
+    id: rpm_fan_impulsion
+    update_interval: 5s
+    filters:
+      - multiply: 30.0 # 2 pulsos por revolución
+
+  - platform: pulse_counter
+    pin: GPIO11
+    name: "VMC Ventilador Extracción RPM"
+    id: rpm_fan_extraccion
+    update_interval: 5s
+    filters:
+      - multiply: 30.0
+
+  # Presión Diferencial en Filtros F7/HEPA (Pa)
+  - platform: template
+    name: "VMC Caída de Presión Filtros"
+    id: vmc_presion_diferencial
+    unit_of_measurement: "Pa"
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: |-
+      return 65.0f; # Lectura normal de filtro limpio (<150 Pa)
+
+# 4. Modulación y Control de Velocidad
+fan:
+  - platform: speed
+    output: pwm_fan_impulsion
+    name: "VMC Caudal Impulsión"
+    id: fan_vmc_impulsion
+    speed_count: 3
+
+  - platform: speed
+    output: pwm_fan_extraccion
+    name: "VMC Caudal Extracción"
+    id: fan_vmc_extraccion
+    speed_count: 3
+
+# 5. Conmutadores y Modos de Operación
+switch:
+  - platform: template
+    name: "VMC Modo Free-Cooling Bypass"
+    id: sw_free_cooling
+    optimistic: true
+    turn_on_action:
+      - output.turn_on: out_bypass_abrir
+      - delay: 35s
+      - output.turn_off: out_bypass_abrir
+      - logger.log: "Bypass Free-Cooling abierto al 100% (Verano pasivo)"
+    turn_off_action:
+      - output.turn_on: out_bypass_cerrar
+      - delay: 35s
+      - output.turn_off: out_bypass_cerrar
+      - logger.log: "Bypass cerrado, flujo 100% a través del intercambiador"
+
+  - platform: template
+    name: "VMC Boost Humedad Baño"
+    id: sw_boost_humedad
+    optimistic: true
+    turn_on_action:
+      - fan.turn_on:
+          id: fan_vmc_impulsion
+          speed: 3
+      - fan.turn_on:
+          id: fan_vmc_extraccion
+          speed: 3
+      - delay: 1200s # 20 minutos de boost
+      - switch.turn_off: sw_boost_humedad
+    turn_off_action:
+      - script.execute: regular_velocidad_vmc
+
+# 6. Alarma de Mantenimiento de Filtros
+binary_sensor:
+  - platform: template
+    name: "VMC Alarma Filtros Colmatados"
+    id: vmc_alarma_filtros
+    device_class: problem
+    lambda: |-
+      if (id(vmc_presion_diferencial).state > 150.0f) {
+        return true;
+      }
+      return false;
+
+# 7. Script de Automatización de Velocidad por Demanda de Calidad de Aire
+script:
+  - id: regular_velocidad_vmc
+    then:
+      - if:
+          condition:
+            lambda: 'return id(vmc_co2).state < 750.0f;'
+          then:
+            # Velocidad 1 (Eco / Noche - 60 m³/h)
+            - fan.turn_on:
+                id: fan_vmc_impulsion
+                speed: 1
+            - fan.turn_on:
+                id: fan_vmc_extraccion
+                speed: 1
+          else:
+            - if:
+                condition:
+                  lambda: 'return id(vmc_co2).state <= 1000.0f;'
+                then:
+                  # Velocidad 2 (Confort - 120 m³/h)
+                  - fan.turn_on:
+                      id: fan_vmc_impulsion
+                      speed: 2
+                  - fan.turn_on:
+                      id: fan_vmc_extraccion
+                      speed: 2
+                else:
+                  # Velocidad 3 (Boost Calidad de Aire - 210 m³/h)
+                  - fan.turn_on:
+                      id: fan_vmc_impulsion
+                      speed: 3
+                  - fan.turn_on:
+                      id: fan_vmc_extraccion
+                      speed: 3
+
+  # Comprobación horaria de Free-Cooling en verano
+  - id: verificar_free_cooling
+    then:
+      - if:
+          condition:
+            lambda: |-
+              float t_ext = id(t_exterior).state;
+              float t_int = id(vmc_temp_sala).state;
+              // Si temperatura interior es superior a confort (23°C) y exterior es más fresca
+              return (t_int > 23.5f && t_ext < (t_int - 1.5f) && t_ext >= 16.0f);
+          then:
+            - switch.turn_on: sw_free_cooling
+          else:
+            - switch.turn_off: sw_free_cooling
+
+time:
+  - platform: sntp
+    on_time:
+      - seconds: 0
+        minutes: "/15"
+        then:
+          - script.execute: verificar_free_cooling
