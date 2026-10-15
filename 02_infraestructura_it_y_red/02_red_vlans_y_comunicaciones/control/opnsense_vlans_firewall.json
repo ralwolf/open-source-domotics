@@ -1,0 +1,131 @@
+{
+  "opnsense": {
+    "version": "24.7",
+    "project": "open-source-domotics",
+    "interfaces": {
+      "wan": {
+        "interface": "igc0",
+        "descr": "WAN_FIBRA_FTTH",
+        "proto": "dhcp",
+        "blockbogons": "1",
+        "blockpriv": "1"
+      },
+      "wan2": {
+        "interface": "igc1",
+        "descr": "WAN_BACKUP_4G",
+        "proto": "dhcp",
+        "failover_priority": 2
+      },
+      "lan_trunk": {
+        "interface": "lagg0",
+        "members": ["igc2", "igc3"],
+        "proto": "lacp",
+        "descr": "LACP_CORE_SWITCH_TRUNK"
+      },
+      "vlan10": {
+        "tag": 10,
+        "parent": "lagg0",
+        "descr": "VLAN_GESTION_IT",
+        "ipv4": "192.168.10.1/24",
+        "dhcp_range": ["192.168.10.100", "192.168.10.200"]
+      },
+      "vlan20": {
+        "tag": 20,
+        "parent": "lagg0",
+        "descr": "VLAN_IT_CONFIABLE",
+        "ipv4": "192.168.20.1/24",
+        "dhcp_range": ["192.168.20.100", "192.168.20.240"]
+      },
+      "vlan30": {
+        "tag": 30,
+        "parent": "lagg0",
+        "descr": "VLAN_DOMOTICA_IOT",
+        "ipv4": "192.168.30.1/24",
+        "dhcp_range": ["192.168.30.100", "192.168.30.250"]
+      },
+      "vlan40": {
+        "tag": 40,
+        "parent": "lagg0",
+        "descr": "VLAN_CCTV_SEGURIDAD",
+        "ipv4": "192.168.40.1/24",
+        "dhcp_range": ["192.168.40.100", "192.168.40.200"]
+      },
+      "vlan50": {
+        "tag": 50,
+        "parent": "lagg0",
+        "descr": "VLAN_INVITADOS_GUEST",
+        "ipv4": "192.168.50.1/24",
+        "dhcp_range": ["192.168.50.100", "192.168.50.250"]
+      }
+    },
+    "firewall_rules": [
+      {
+        "id": "RULE-IOT-01",
+        "interface": "vlan30",
+        "action": "pass",
+        "proto": "tcp",
+        "source": "vlan30_net",
+        "destination": "192.168.20.10",
+        "dst_port": "1883",
+        "descr": "Permitir telemetría MQTT desde ESP32 hacia Home Assistant / Mosquitto"
+      },
+      {
+        "id": "RULE-IOT-02",
+        "interface": "vlan30",
+        "action": "pass",
+        "proto": "udp",
+        "source": "vlan30_net",
+        "destination": "192.168.30.1",
+        "dst_port": "123",
+        "descr": "Permitir sincronización horaria local NTP"
+      },
+      {
+        "id": "RULE-IOT-03",
+        "interface": "vlan30",
+        "action": "block",
+        "source": "vlan30_net",
+        "destination": "any",
+        "descr": "Aislamiento Zero-Trust: Bloqueo de salida a Internet WAN y otras VLANs para dispositivos IoT"
+      },
+      {
+        "id": "RULE-CCTV-01",
+        "interface": "vlan40",
+        "action": "pass",
+        "proto": "tcp",
+        "source": "vlan40_net",
+        "destination": "192.168.20.30",
+        "dst_port": "554,8554",
+        "descr": "Permitir flujo RTSP/WebRTC de cámaras PoE hacia Frigate NVR / go2rtc"
+      },
+      {
+        "id": "RULE-CCTV-02",
+        "interface": "vlan40",
+        "action": "block",
+        "source": "vlan40_net",
+        "destination": "any",
+        "descr": "Aislamiento Total: Cámaras y Videoportero sin acceso a WAN exterior para evitar filtraciones"
+      },
+      {
+        "id": "RULE-GUEST-01",
+        "interface": "vlan50",
+        "action": "pass",
+        "proto": "any",
+        "source": "vlan50_net",
+        "destination": "!RFC1918",
+        "descr": "Permitir solo navegación a Internet pública, bloqueando cualquier red privada interna"
+      }
+    ],
+    "services": {
+      "mdns_repeater": {
+        "enabled": true,
+        "interfaces": ["vlan20", "vlan30", "vlan40"],
+        "descr": "Descubrimiento mDNS entre Home Assistant (VLAN 20) y dispositivos ESPHome/WebRTC"
+      },
+      "unbound_dns": {
+        "enabled": true,
+        "dns_over_tls": true,
+        "custom_domain": "domotics.local"
+      }
+    }
+  }
+}

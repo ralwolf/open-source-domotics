@@ -30,6 +30,12 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 ---
 
 ## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
-- `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
-- `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).
+- `mecanico/`:
+  - [`rotor_archimedes_mk9.FCStd`](./mecanico/rotor_archimedes_mk9.FCStd): Modelo paramétrico 3D en FreeCAD 1.1+ del rotor helicoidal de Arquímedes ($\varnothing 1.50\text{ m}$, longitud $1.20\text{ m}$, ojiva frontal aerodinámica y brida de 6 pernos M10).
+  - [`rotor_archimedes_mk9.step`](./mecanico/rotor_archimedes_mk9.step): Exportación universal STEP AP214 del conjunto de rotor y eje.
+- `electrico/`:
+  - [`esquema_potencia_eolico.dxf`](./electrico/esquema_potencia_eolico.dxf): Plano CAD 2D del esquema unifilar de rectificación, MPPT y contactor de seguridad.
+  - [`esquema_potencia_eolico.svg`](./electrico/esquema_potencia_eolico.svg): Diagrama vectorial interactivo de potencia con generador PMSG 48V, rectificador Schottky, controlador MPPT y disipador dump-load de 1.5 kW.
+- `control/`:
+  - [`controlador_freno_eolico.yaml`](./control/controlador_freno_eolico.yaml): Firmware ESPHome para tacómetro RPM de rotor, anemómetro de mástil, sensor INA226 y disparo autónomo del freno de emergencia por cortocircuito ante ráfagas > 18 m/s.
+- [`NOTA_DE_DISENO.md`](./NOTA_DE_DISENO.md): Memoria de cálculo aerodinámico, empuje de viento ($1020\text{ N}$) y momento de vuelco en columna C-TURB.

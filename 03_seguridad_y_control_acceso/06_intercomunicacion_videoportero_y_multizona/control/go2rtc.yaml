@@ -1,0 +1,32 @@
+# ==============================================================================
+# CONFIGURACIÓN GO2RTC: STREAMING WEBRTC DÚPLEX Y BAJA LATENCIA (<200MS)
+# Proyecto: open-source-domotics (Videoportero e Intercomunicadores)
+# ==============================================================================
+
+api:
+  listen: ":1984"
+
+rtsp:
+  listen: ":8554"
+
+webrtc:
+  listen: ":8555"
+
+streams:
+  # Stream Videoportero Entrada con Audio Bidireccional
+  videoportero_entrada:
+    - esp32cam://192.168.40.5
+    - ffmpeg:http://192.168.40.5/audio#audio=opus
+    # Canal de retorno para hablar hacia el altavoz exterior
+    - exec:ffmpeg -re -i - -f s16le -ar 16000 -ac 1 tcp://192.168.40.5:6000
+
+  # Intercomunicador Bebé / Mascotas (Visión Nocturna 940nm)
+  intercom_bebe_940nm:
+    - esp32cam://192.168.40.6
+    - ffmpeg:http://192.168.40.6/audio#audio=opus
+
+  # Intercomunicadores Multi-Estancia (Cocina, Sala IT, Dormitorio Principal)
+  intercom_cocina:
+    - esp32cam://192.168.40.7
+  intercom_suite_principal:
+    - esp32cam://192.168.40.8

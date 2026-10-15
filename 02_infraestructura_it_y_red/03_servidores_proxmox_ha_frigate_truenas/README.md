@@ -29,4 +29,5 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 ## 5. Estructura de este Directorio
 - `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
 - `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
-- `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).
+- `control/`:
+  - [`docker-compose.yml`](./control/docker-compose.yml): Despliegue unificado del ecosistema de cómputo local (Home Assistant Core, Mosquitto MQTT, Frigate NVR con Coral TPU, go2rtc WebRTC y Zigbee2MQTT).

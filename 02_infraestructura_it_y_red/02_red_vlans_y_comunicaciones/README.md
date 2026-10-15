@@ -26,5 +26,9 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 
 ## 5. Estructura de este Directorio
 - `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
-- `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
-- `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).
+- `electrico/`:
+  - [`topologia_red_vlans.dxf`](./electrico/topologia_red_vlans.dxf): Plano CAD 2D normalizado de la arquitectura de red y enlaces LACP/Trunk 802.1Q.
+  - [`topologia_red_vlans.svg`](./electrico/topologia_red_vlans.svg): Diagrama vectorial interactivo de las 5 VLANs segregadas con direcciones IP, puertos y políticas Zero-Trust.
+- `control/`:
+  - [`opnsense_vlans_firewall.json`](./control/opnsense_vlans_firewall.json): Archivo de configuración estructurado para OPNsense con interfaces LACP, subredes DHCP y reglas de aislamiento para IoT y CCTV.
+- [`NOTA_DE_DISENO.md`](./NOTA_DE_DISENO.md): Memoria de cálculo y criterios normados de segmentación de tráfico y ciberseguridad.

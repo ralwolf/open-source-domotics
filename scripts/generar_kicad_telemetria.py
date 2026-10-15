@@ -323,3 +323,4 @@ if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     target_dir = os.path.join(base_dir, "04_telemetria_y_cargas_criticas/01_medicion_potencia_cuadro/electrico")
     generar_kicad_proyecto(target_dir)
+

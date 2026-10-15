@@ -1,0 +1,84 @@
+substitutions:
+  name: "intercom-monitor-bebe"
+  friendly_name: "Intercomunicador y Monitor Bebé 940nm"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+wifi:
+  ssid: "!secret wifi_cctv_ssid"
+  password: "!secret wifi_cctv_password"
+  manual_ip:
+    static_ip: 192.168.40.6
+    gateway: 192.168.40.1
+    subnet: 255.255.255.0
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret api_key"
+
+ota:
+  - platform: esphome
+
+# Cámara HD con visión nocturna 940nm (Completamente invisible al ojo humano para no perturbar el sueño)
+esp32_camera:
+  name: "Cámara Cuna Bebé / Mascota"
+  data_pins: [GPIO11, GPIO12, GPIO13, GPIO14, GPIO21, GPIO47, GPIO48, GPIO45]
+  vsync_pin: GPIO3
+  href_pin: GPIO46
+  pixel_clock_pin: GPIO10
+  external_clock:
+    pin: GPIO15
+    frequency: 20MHz
+  i2c_pins:
+    sda: GPIO4
+    scl: GPIO5
+  resolution: 1280x720
+  jpeg_quality: 10
+  max_framerate: 25fps
+
+# Audio I2S y Detección Acústica de Llanto
+i2s_audio:
+  - id: i2s_mic
+    i2s_lrclk_pin: GPIO42
+    i2s_bclk_pin: GPIO41
+
+microphone:
+  - platform: i2s_audio
+    id: mic_bebe
+    i2s_audio_id: i2s_mic
+    i2s_din_pin: GPIO2
+    adc_type: external
+    pdm: false
+    bits_per_sample: 32bit
+
+# Iluminador Infrarrojo 940nm (No emite punto rojo visible como los de 850nm)
+switch:
+  - platform: gpio
+    pin: GPIO7
+    id: ir_led_940nm
+    name: "Iluminador IR 940nm Invisible"
+    restore_mode: ALWAYS_ON
+
+# Sensor de Temperatura y Humedad Ambiente en Habitación Infantil (SHT40)
+i2c:
+  sda: GPIO8
+  scl: GPIO9
+
+sensor:
+  - platform: sht4x
+    temperature:
+      name: "Temperatura Habitación Infantil"
+    humidity:
+      name: "Humedad Habitación Infantil"
+    address: 0x44
+    update_interval: 10s

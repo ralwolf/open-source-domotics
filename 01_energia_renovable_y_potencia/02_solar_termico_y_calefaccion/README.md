@@ -31,6 +31,9 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 ---
 
 ## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
+- `mecanico/`:
+  - [`esquema_hidraulico_piso_radiante.dxf`](./mecanico/esquema_hidraulico_piso_radiante.dxf): Plano CAD 2D normalizado del esquema de principio hidráulico (P&ID) de la instalación solar térmica, tanque interacumulador de 500L, módulo ACS antiescaldadura y colector de suelo radiante de 6 zonas.
+  - [`esquema_hidraulico_piso_radiante.svg`](./mecanico/esquema_hidraulico_piso_radiante.svg): Vista vectorial interactiva a color del circuito hidráulico primario (glicol) y secundario (suelo radiante baja temperatura 35°C).
 - `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
-- `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).
+- `control/`:
+  - [`control_diferencial_solar.yaml`](./control/control_diferencial_solar.yaml): Firmware ESPHome para control diferencial solar $\Delta T$ con sondas PT1000, bomba de velocidad variable PWM, protección anti-heladas y control individual de 6 cabezales electrotérmicos de zona.

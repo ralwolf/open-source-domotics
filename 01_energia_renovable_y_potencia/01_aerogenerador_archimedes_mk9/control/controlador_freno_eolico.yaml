@@ -1,0 +1,113 @@
+substitutions:
+  name: "controlador-aerogenerador-mk9"
+  friendly_name: "Controlador Eólico Archimedes MK9"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 192.168.30.25
+    gateway: 192.168.30.1
+    subnet: 255.255.255.0
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret api_key"
+
+ota:
+  - platform: esphome
+
+# ---------------------------------------------------------------------------
+# SENSORES DE VELOCIDAD ANGULAR Y ANEMÓMETRO
+# ---------------------------------------------------------------------------
+sensor:
+  # Sensor Óptico / Inductivo de Tacómetro (Pulsos por vuelta en eje)
+  - platform: pulse_counter
+    pin: GPIO18
+    name: "Velocidad de Giro Rotor Archimedes"
+    id: rpm_rotor
+    unit_of_measurement: "RPM"
+    update_interval: 1s
+    filters:
+      - multiply: 60.0 # 1 pulso por revolución -> RPM
+
+  # Anemómetro de Cazoletas en Mástil (1 pulso/s = 1.75 m/s)
+  - platform: pulse_counter
+    pin: GPIO19
+    name: "Velocidad del Viento Mástil"
+    id: velocidad_viento
+    unit_of_measurement: "m/s"
+    update_interval: 1s
+    filters:
+      - multiply: 1.75
+
+  # Monitor de Tensión y Corriente DC Eólica (INA226 I2C)
+  - platform: ina226
+    address: 0x40
+    voltage:
+      name: "Tensión DC Eólica"
+      id: tension_dc_eolica
+    current:
+      name: "Corriente DC Eólica"
+      id: corriente_dc_eolica
+    power:
+      name: "Potencia Eólica Generada"
+      id: potencia_eolica_w
+    max_current: 50A
+    shunt_resistance: 0.002 ohm
+    update_interval: 1s
+
+# ---------------------------------------------------------------------------
+# ACTUADORES DE FRENADO ELECTRÓNICO Y MECÁNICO
+# ---------------------------------------------------------------------------
+switch:
+  # Contactor de Cortocircuito de Seguridad (Parada total)
+  - platform: gpio
+    pin: GPIO23
+    id: contactor_parada_emergencia
+    name: "Freno de Emergencia Cortocircuito AC"
+    icon: "mdi:hand-back-right-off"
+    restore_mode: ALWAYS_OFF
+
+# Salida PWM para derivación progresiva al Dump Load
+output:
+  - platform: ledc
+    pin: GPIO22
+    id: pwm_freno_dump_load
+    frequency: 1000Hz
+
+# ---------------------------------------------------------------------------
+# LÓGICA AUTÓNOMA DE PROTECCIÓN CONTRA SOBREVELOCIDAD Y VIENTOS HURACANADOS
+# ---------------------------------------------------------------------------
+interval:
+  - interval: 500ms
+    then:
+      # Nivel 1: Viento Alto (> 13 m/s) o RPM > 400 -> Activación Dump Load al 100%
+      - if:
+          condition:
+            lambda: 'return id(rpm_rotor).state > 400.0 || id(velocidad_viento).state > 13.0;'
+          then:
+            - output.set_level:
+                id: pwm_freno_dump_load
+                level: 100%
+            - logger.log: "PRE-ALERTA: Viento alto. Frenado por disipación en Dump Load activo."
+
+      # Nivel 2: Viento Crítico / Ráfaga (> 18 m/s / 65 km/h) -> Cortocircuito de seguridad
+      - if:
+          condition:
+            lambda: 'return id(rpm_rotor).state > 520.0 || id(velocidad_viento).state > 18.0;'
+          then:
+            - switch.turn_on: contactor_parada_emergencia
+            - logger.log: "PELIGRO: Ráfaga extrema (>18m/s). DISPARANDO FRENO DE EMERGENCIA POR CORTOCIRCUITO."

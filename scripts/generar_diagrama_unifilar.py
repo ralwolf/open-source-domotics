@@ -249,3 +249,4 @@ if __name__ == "__main__":
     dxf_dest = os.path.join(base_dir, "01_energia_renovable_y_potencia/07_tableros_distribucion_y_protecciones/electrico/cuadro_general_unifilar.dxf")
     svg_dest = os.path.join(base_dir, "01_energia_renovable_y_potencia/07_tableros_distribucion_y_protecciones/electrico/cuadro_general_unifilar.svg")
     generar_diagrama_unifilar(dxf_dest, svg_dest)
+

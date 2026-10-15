@@ -1,0 +1,144 @@
+substitutions:
+  name: "videoportero-entrada"
+  friendly_name: "Videoportero Entrada Principal"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+# Red cableada / WiFi con IP estática en VLAN 40 (Seguridad CCTV)
+wifi:
+  ssid: "!secret wifi_cctv_ssid"
+  password: "!secret wifi_cctv_password"
+  manual_ip:
+    static_ip: 192.168.40.5
+    gateway: 192.168.40.1
+    subnet: 255.255.255.0
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret api_key"
+
+ota:
+  - platform: esphome
+
+# ---------------------------------------------------------------------------
+# CÁMARA HD GRAN ANGULAR (DVP 160°)
+# ---------------------------------------------------------------------------
+esp32_camera:
+  name: "Cámara Videoportero Entrada"
+  data_pins: [GPIO11, GPIO12, GPIO13, GPIO14, GPIO21, GPIO47, GPIO48, GPIO45]
+  vsync_pin: GPIO3
+  href_pin: GPIO46
+  pixel_clock_pin: GPIO10
+  external_clock:
+    pin: GPIO15
+    frequency: 20MHz
+  i2c_pins:
+    sda: GPIO4
+    scl: GPIO5
+  resolution: 1280x720
+  jpeg_quality: 10
+  max_framerate: 25fps
+  idle_framerate: 5fps
+
+# ---------------------------------------------------------------------------
+# SUBSISTEMA DE AUDIO DIGITAL I2S (MICRÓFONO Y ALTAVOZ)
+# ---------------------------------------------------------------------------
+i2s_audio:
+  - id: i2s_in
+    i2s_lrclk_pin: GPIO42
+    i2s_bclk_pin: GPIO41
+  - id: i2s_out
+    i2s_lrclk_pin: GPIO39
+    i2s_bclk_pin: GPIO38
+
+microphone:
+  - platform: i2s_audio
+    id: mic_inmp441
+    i2s_audio_id: i2s_in
+    i2s_din_pin: GPIO2
+    adc_type: external
+    pdm: false
+    bits_per_sample: 32bit
+
+media_player:
+  - platform: i2s_audio
+    id: speaker_max98357a
+    name: "Altavoz Videoportero"
+    i2s_audio_id: i2s_out
+    i2s_dout_pin: GPIO40
+    dac_type: external
+    mode: mono
+
+# ---------------------------------------------------------------------------
+# BOTÓN DE TIMBRE PIEZOELÉCTRICO ANTIVANDÁLICO
+# ---------------------------------------------------------------------------
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    name: "Pulsador Timbre Entrada"
+    filters:
+      - delayed_on: 25ms
+      - delayed_off: 50ms
+    on_press:
+      - homeassistant.event:
+          event: esphome.doorbell_pressed
+          data:
+            location: "puerta_principal"
+      - media_player.play_media:
+          id: speaker_max98357a
+          media_url: "http://192.168.20.10:8123/local/audio/chime_dingdong.wav"
+      - light.turn_on:
+          id: led_anillo_boton
+          brightness: 100%
+
+# ---------------------------------------------------------------------------
+# CERRADURA ELÉCTRICA (12V 2A MOSPET DISPARO)
+# ---------------------------------------------------------------------------
+switch:
+  - platform: gpio
+    pin: GPIO1
+    id: rele_cerradura
+    name: "Apertura Cerradura Entrada"
+    icon: "mdi:lock-open-variant"
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - delay: 3000ms # Pulso de apertura de 3 segundos
+      - switch.turn_off: rele_cerradura
+
+# ---------------------------------------------------------------------------
+# ILUMINACIÓN Y VISIÓN NOCTURNA
+# ---------------------------------------------------------------------------
+light:
+  - platform: monochromatic
+    output: pwm_led_ring
+    id: led_anillo_boton
+    name: "Luz de Halo Botón Timbre"
+
+  - platform: binary_output
+    output: gpio_ir_cut
+    id: filtro_ir_cut
+    name: "Filtro Mecánico IR-Cut Día/Noche"
+
+output:
+  - platform: ledc
+    pin: GPIO6
+    id: pwm_led_ring
+
+  - platform: gpio
+    pin: GPIO8
+    id: gpio_ir_cut

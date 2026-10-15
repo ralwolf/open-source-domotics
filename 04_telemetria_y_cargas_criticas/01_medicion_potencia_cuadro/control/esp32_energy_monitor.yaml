@@ -206,3 +206,4 @@ interval:
           then:
             - switch.turn_off: rele_desconexion_cargas_secundarias
             - logger.log: "ALERTA: Sobrecarga en cuadro (>12kW). Desconectando cargas no críticas."
+

@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="100%" height="100%" style="background:#11111b; font-family: 'Segoe UI', system-ui, sans-serif;">
+  <defs>
+    <style>
+      .title { fill: #cdd6f4; font-size: 22px; font-weight: bold; }
+      .sub { fill: #a6adc8; font-size: 13px; }
+      .lbl { fill: #cdd6f4; font-size: 11px; }
+      .lbl-bold { fill: #ffffff; font-size: 12px; font-weight: bold; }
+      .lbl-sm { fill: #bac2de; font-size: 9.5px; }
+      .wire-wan { stroke: #f38ba8; stroke-width: 3; stroke-dasharray: 6 3; fill: none; }
+      .wire-trunk { stroke: #cdd6f4; stroke-width: 5; fill: none; }
+      .vlan-card { stroke-width: 2; rx: 8; }
+      .node-box { fill: #1e1e2e; stroke: #585b70; stroke-width: 2; rx: 6; }
+    </style>
+  </defs>
+
+  <!-- Marco -->
+  <rect x="15" y="15" width="1170" height="870" fill="none" stroke="#313244" stroke-width="2" rx="10"/>
+
+  <!-- Encabezado -->
+  <rect x="40" y="30" width="1120" height="70" fill="#181825" stroke="#45475a" stroke-width="1.5" rx="8"/>
+  <text x="60" y="60" class="title">OPEN-SOURCE-DOMOTICS | TOPOLOGÍA DE RED Y SEGREGACIÓN DE VLANS (IEEE 802.1Q)</text>
+  <text x="60" y="84" class="sub">Arquitectura Zero-Trust con OPNsense, Switch PoE+, Proxmox VE, Frigate NVR, TrueNAS y Home Assistant</text>
+
+  <!-- Nodos WAN -->
+  <rect x="180" y="130" width="220" height="60" class="node-box" stroke="#f38ba8"/>
+  <text x="200" y="155" class="lbl-bold" style="fill:#f38ba8;">WAN 1: Fibra Óptica FTTH</text>
+  <text x="200" y="175" class="lbl-sm">ONT GPON 1000/1000 Mbps (DHCP)</text>
+
+  <rect x="450" y="130" width="220" height="60" class="node-box" stroke="#fab387"/>
+  <text x="470" y="155" class="lbl-bold" style="fill:#fab387;">WAN 2: Starlink / 4G Respaldo</text>
+  <text x="470" y="175" class="lbl-sm">Multi-WAN Failover Automático</text>
+
+  <!-- Enlaces a Firewall -->
+  <line x1="290" y1="190" x2="290" y2="230" class="wire-wan"/>
+  <line x1="560" y1="190" x2="560" y2="230" class="wire-wan"/>
+  <line x1="290" y1="230" x2="425" y2="230" class="wire-wan"/>
+  <line x1="560" y1="230" x2="425" y2="230" class="wire-wan"/>
+  <line x1="425" y1="230" x2="425" y2="260" class="wire-wan"/>
+
+  <!-- ROUTER FIREWALL OPNSENSE -->
+  <rect x="250" y="260" width="350" height="90" class="node-box" stroke="#89b4fa" stroke-width="2.5"/>
+  <text x="270" y="290" class="lbl-bold" style="fill:#89b4fa; font-size:15px;">FIREWALL APPLIANCE: OPNsense 24.x</text>
+  <text x="270" y="310" class="lbl-sm">Intel N100 4-Core / 16GB RAM / 4x 2.5GbE Intel i226-V</text>
+  <text x="270" y="328" class="lbl-sm">• Enrutamiento Inter-VLAN • WireGuard VPN • DNS Unbound con DoT</text>
+  <text x="270" y="343" class="lbl-sm">• Reglas estrictas: Domótica y CCTV sin salida a Internet (Solo NTP local)</text>
+
+  <!-- Troncal al Switch -->
+  <line x1="425" y1="350" x2="425" y2="400" class="wire-trunk"/>
+  <rect x="300" y="365" width="250" height="22" fill="#11111b" stroke="#cdd6f4" rx="4"/>
+  <text x="315" y="380" class="lbl-bold" style="fill:#cdd6f4; font-size:10px;">LACP BOND 2x 2.5GbE (Trunk 802.1Q)</text>
+
+  <!-- SWITCH CORE POE+ -->
+  <rect x="40" y="400" width="1120" height="85" class="node-box" stroke="#a6e3a1" stroke-width="2.5"/>
+  <text x="70" y="430" class="lbl-bold" style="fill:#a6e3a1; font-size:16px;">SWITCH GESTIONABLE CORE POE+ 24 PUERTOS GIGABIT + 2x 10G SFP+</text>
+  <text x="70" y="450" class="lbl">Presupuesto PoE: 370W (IEEE 802.3af/at) | IGMP Snooping v3 para Multicast de Vídeo CCTV | Port Isolation</text>
+  <text x="70" y="470" class="lbl-sm">Puertos 1-8: CCTV PoE (VLAN 40) | 9-14: APs WiFi + Domótica (VLAN 30) | 15-20: Servidores LACP (VLAN 10/20) | 21-24: Puestos IT</text>
+
+  <!-- LÍNEAS DE DERIVACIÓN A CADA VLAN -->
+  <!-- VLAN 10 -->
+  <line x1="150" y1="485" x2="150" y2="530" stroke="#a6e3a1" stroke-width="3"/>
+  <rect x="45" y="530" width="210" height="320" fill="#181825" stroke="#a6e3a1" class="vlan-card"/>
+  <text x="60" y="560" class="lbl-bold" style="fill:#a6e3a1; font-size:14px;">VLAN 10: GESTIÓN</text>
+  <text x="60" y="580" class="lbl-sm" style="fill:#a6e3a1; font-weight:bold;">Subred: 192.168.10.0/24</text>
+  <text x="60" y="605" class="lbl">• OPNsense WebGUI (192.168.10.1)</text>
+  <text x="60" y="625" class="lbl">• Switch Core Admin (192.168.10.2)</text>
+  <text x="60" y="645" class="lbl">• PDU Inteligente (192.168.10.5)</text>
+  <text x="60" y="665" class="lbl">• Proxmox VE Host (192.168.10.10)</text>
+  <text x="60" y="685" class="lbl">• Tarjeta Red UPS NMC (192.168.10.15)</text>
+  <text x="60" y="715" class="lbl-sm" style="fill:#a6adc8;">Aislamiento total. Solo accesible desde IPs de administradores con llave SSH o VPN.</text>
+
+  <!-- VLAN 20 -->
+  <line x1="380" y1="485" x2="380" y2="530" stroke="#89b4fa" stroke-width="3"/>
+  <rect x="275" y="530" width="210" height="320" fill="#181825" stroke="#89b4fa" class="vlan-card"/>
+  <text x="290" y="560" class="lbl-bold" style="fill:#89b4fa; font-size:14px;">VLAN 20: IT &amp; CONFIABLE</text>
+  <text x="290" y="580" class="lbl-sm" style="fill:#89b4fa; font-weight:bold;">Subred: 192.168.20.0/24</text>
+  <text x="290" y="605" class="lbl">• Home Assistant Core (.20.10)</text>
+  <text x="290" y="625" class="lbl">• TrueNAS ZFS SMB/NFS (.20.20)</text>
+  <text x="290" y="645" class="lbl">• Frigate NVR Web App (.20.30)</text>
+  <text x="290" y="665" class="lbl">• PCs / Workstations Oficina</text>
+  <text x="290" y="685" class="lbl">• Laptops y Celulares Personales</text>
+  <text x="290" y="715" class="lbl-sm" style="fill:#a6adc8;">Acceso completo bidireccional hacia domótica mediante reglas seguras de Firewall.</text>
+
+  <!-- VLAN 30 -->
+  <line x1="610" y1="485" x2="610" y2="530" stroke="#f9e2af" stroke-width="3"/>
+  <rect x="505" y="530" width="210" height="320" fill="#181825" stroke="#f9e2af" class="vlan-card"/>
+  <text x="520" y="560" class="lbl-bold" style="fill:#f9e2af; font-size:14px;">VLAN 30: DOMÓTICA IOT</text>
+  <text x="520" y="580" class="lbl-sm" style="fill:#f9e2af; font-weight:bold;">Subred: 192.168.30.0/24</text>
+  <text x="520" y="605" class="lbl">• ESP32 Telemetría Energía (.30.45)</text>
+  <text x="520" y="625" class="lbl">• Shelly Pro Carril DIN (.30.50+)</text>
+  <text x="520" y="645" class="lbl">• Zigbee2MQTT PoE Coordinator</text>
+  <text x="520" y="665" class="lbl">• Actuadores Válvulas Agua/Gas</text>
+  <text x="520" y="685" class="lbl">• Climatización e Inversores</text>
+  <text x="520" y="715" class="lbl-sm" style="fill:#f38ba8; font-weight:bold;">BLOQUEO WAN TOTAL.</text>
+  <text x="520" y="730" class="lbl-sm" style="fill:#a6adc8;">Solo habla MQTT localmente con el Broker en Proxmox. Sin nube ni telemetría externa.</text>
+
+  <!-- VLAN 40 -->
+  <line x1="840" y1="485" x2="840" y2="530" stroke="#f38ba8" stroke-width="3"/>
+  <rect x="735" y="530" width="210" height="320" fill="#181825" stroke="#f38ba8" class="vlan-card"/>
+  <text x="750" y="560" class="lbl-bold" style="fill:#f38ba8; font-size:14px;">VLAN 40: CCTV Y FÍSICA</text>
+  <text x="750" y="580" class="lbl-sm" style="fill:#f38ba8; font-weight:bold;">Subred: 192.168.40.0/24</text>
+  <text x="750" y="605" class="lbl">• Videoportero Entrada SIP (.40.5)</text>
+  <text x="750" y="625" class="lbl">• Cámaras PoE Frigate (.40.11-18)</text>
+  <text x="750" y="645" class="lbl">• Intercomunicador Bebé 940nm</text>
+  <text x="750" y="665" class="lbl">• Pantallas de Pared WebRTC</text>
+  <text x="750" y="685" class="lbl">• Cerraduras Biométricas PoE</text>
+  <text x="750" y="715" class="lbl-sm" style="fill:#f38ba8; font-weight:bold;">AISLAMIENTO DE PUERTOS.</text>
+  <text x="750" y="730" class="lbl-sm" style="fill:#a6adc8;">Cámaras no pueden verse entre sí. Solo entregan flujo RTSP a Frigate/go2rtc.</text>
+
+  <!-- VLAN 50 -->
+  <line x1="1070" y1="485" x2="1070" y2="530" stroke="#b4befe" stroke-width="3"/>
+  <rect x="965" y="530" width="195" height="320" fill="#181825" stroke="#b4befe" class="vlan-card"/>
+  <text x="980" y="560" class="lbl-bold" style="fill:#b4befe; font-size:14px;">VLAN 50: INVITADOS</text>
+  <text x="980" y="580" class="lbl-sm" style="fill:#b4befe; font-weight:bold;">Subred: 192.168.50.0/24</text>
+  <text x="980" y="605" class="lbl">• WiFi SSID "Domotics-Guest"</text>
+  <text x="980" y="625" class="lbl">• Client Isolation activado</text>
+  <text x="980" y="645" class="lbl">• DNS con filtrado AdGuard</text>
+  <text x="980" y="665" class="lbl">• Sin acceso a LANs internas</text>
+  <text x="980" y="685" class="lbl">• Limitador de Ancho de Banda</text>
+  <text x="980" y="715" class="lbl-sm" style="fill:#a6adc8;">Tráfico confinado exclusivamente a navegación web hacia el exterior.</text>
+
+</svg>

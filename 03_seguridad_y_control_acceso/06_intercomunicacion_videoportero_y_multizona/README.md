@@ -113,6 +113,15 @@ graph TD
 ---
 
 ## 5. Estructura de este Directorio
-- `mecanico/`: Diseños CAD para carcasas de empotrar de videoportero, soportes angulados de pantallas de escritorio, montajes de cuna/pared y obturadores de privacidad.
-- `electrico/`: Diagramas unifilares de conexionado PoE, diagramas de relé de cerradura con protección de pico inductivo, esquemas de amplificación de audio y fuentes de alimentación.
-- `control/`: Configuraciones del servidor SIP/Asterisk, archivos de configuración `go2rtc.yaml`, tarjetas Lovelace para los dashboards táctiles de intercomunicación y automatizaciones de audio en Home Assistant.
+- `mecanico/`:
+  - [`videoportero_carcasa.FCStd`](./mecanico/videoportero_carcasa.FCStd): Modelo paramétrico 3D en FreeCAD 1.1+ de la carcasa antivandálica exterior con visera antilluvia a 15°, orificio de lente M12, botón de 19 mm y rejilla acústica.
+  - [`videoportero_carcasa.step`](./mecanico/videoportero_carcasa.step): Modelo universal STEP AP214 para mecanizado CNC en aluminio o impresión 3D en PETG/ABS.
+- `electrico/`:
+  - [`videoportero_esp32s3.kicad_pro`](./electrico/videoportero_esp32s3.kicad_pro) y [`videoportero_esp32s3.kicad_sch`](./electrico/videoportero_esp32s3.kicad_sch): Proyecto y esquemático en KiCad 10.0 con ESP32-S3, cámara DVP, audio I2S (INMP441 + MAX98357A), driver MOSFET para cerradura 12V 2A y PoE.
+  - [`videoportero_esp32s3.svg`](./electrico/esquema_svg/videoportero_esp32s3.svg): Exportación vectorial de alta definición del circuito electrónico.
+  - [`BOM.md`](./electrico/BOM.md): Lista completa de materiales y componentes para ensamble del videoportero.
+- `control/`:
+  - [`esp32s3_doorbell.yaml`](./control/esp32s3_doorbell.yaml): Firmware ESPHome para videoportero de entrada con cámara, audio dúplex I2S, timbre y control de cerradura.
+  - [`go2rtc.yaml`](./control/go2rtc.yaml): Streaming WebRTC de ultrabaja latencia (<200 ms) y transcodificación de audio bidireccional hacia Home Assistant.
+  - [`intercom_baby_monitor.yaml`](./control/intercom_baby_monitor.yaml): Firmware ESPHome para monitor de cuna y mascotas con LEDs IR de 940 nm invisibles, micrófono I2S y sensor higrotérmico SHT40.
+- [`NOTA_DE_DISENO.md`](./NOTA_DE_DISENO.md): Memoria de cálculo de enlaces SIP/WebRTC, anchos de banda, SPL acústico y aislamiento IP65.

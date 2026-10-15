@@ -1,0 +1,126 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "a40a50d0-23d8-440b-8bac-856291c17f0a")
+	(paper "A3")
+	(title_block
+		(title "ESP32-S3 Smart Video Doorbell & Access Control")
+		(date "2026-10-14")
+		(rev "1.0")
+		(company "Open Source Domotics")
+		(comment 1 "Full-Duplex I2S Audio + DVP Camera + NFC PN532 + 12V 2A Lock Driver + PoE")
+		(comment 2 "Hardware 100% Abierto y Reproducible en KiCad")
+	)
+	(lib_symbols)
+	(text "SECCIÓN 1: ALIMENTACIÓN POE (IEEE 802.3af 48V -> 12V / 5V / 3.3V)"
+		(at 30 25 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "4d75a7a3-b39e-48c8-982b-b62efc434d67")
+	)
+	(text "J1: Conector RJ45 blindado con transformador PoE (MagJack 10/100)\nU1: Módulo PoE Aislado Si3402-B / Silvertel Ag9905 (Entrada 36-57V -> Salida 5V 2A / 10W)\nU2: Regulador LDO AMS1117-3.3V (Alimentación MCU y sensores analógicos)\nU3: Step-Up Boost o Inyector 12V para bobina de cerradura de impacto\nC1: 470uF 25V Low-ESR | C2, C3: 100nF Cerámicos | D1: Diodo Schottky SS34"
+		(at 30 35 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "12e68ff7-5b00-4414-8b71-cd816f9acaa4")
+	)
+	(text "SECCIÓN 2: MICROCONTROLADOR ESP32-S3 Y CONECTIVIDAD"
+		(at 160 25 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "31fad4fc-a0b2-4e3e-a7ce-6d0a73681671")
+	)
+	(text "U4: ESP32-S3-WROOM-1 (16MB Flash, 8MB Octal PSRAM)\n- Bus DVP Cámara: Y2-Y9 (GPIO 11, 12, 13, 14, 21, 47, 48, 45), VSYNC, HREF, PCLK, XCLK (GPIO 15)\n- Bus I2C SCCB Cámara & NFC: SDA (GPIO 4), SCL (GPIO 5)\n- Audio I2S Micrófono: SCK (GPIO 41), WS (GPIO 42), SD_IN (GPIO 2)\n- Audio I2S Altavoz: BCLK (GPIO 38), LRCLK (GPIO 39), DIN (GPIO 40)\n- Botón Timbre: GPIO 0 (Entrada digital filtrada con antirrebote por hardware)\n- Gatillo Cerradura: GPIO 1 (Salida hacia optoacoplador y MOSFET)\n- LED Iluminación Botón: GPIO 6 (PWM para atenuación nocturna)\n- Sensor PIR / Radar mmWave: GPIO 7 (Detección de presencia exterior a 3 metros)"
+		(at 160 35 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "5d527a42-6062-47b9-a3dc-756d0a9d70d8")
+	)
+	(text "SECCIÓN 3: ETAPA DE AUDIO BIDIRECCIONAL I2S (FULL-DUPLEX CON CANCELACIÓN DE ECO)"
+		(at 30 115 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "50cb88cb-6879-4c61-9d4d-cdbe489fa946")
+	)
+	(text "U5: Micrófono MEMS Digital I2S INMP441 / ICS-43434 (SNR 65 dBA, Sensibilidad -26 dBFS)\n- Conectado directamente a bus I2S de grabación del ESP32-S3\n\nU6: Amplificador de Audio Digital I2S Clase D MAX98357A (Mono 3.2W en 4 Ohm, 92% eficiencia)\n- Entrada directa PCM I2S sin ruido analógico de masa ni zumbidos\n- J2: Conector hacia Altavoz Mylar Impermeable 4 Ohm / 3W de 40mm diámetro (90 dB SPL a 1m)"
+		(at 30 125 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "3c7daaa6-bd9c-41c5-be92-c16149689019")
+	)
+	(text "SECCIÓN 4: CÁMARA GRAN ANGULAR Y VISIÓN NOCTURNA"
+		(at 160 115 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "fbf1fab5-448d-4480-ad3d-2b07739caf99")
+	)
+	(text "J3: Conector FPC 24 pines para sensor de imagen OV2640 / OV5640 (Gran Angular 160 D-FOV)\n- Lente M12 con filtro mecánico conmutable IR-CUT motorizado (solenoide biestable 5V)\n- Control IR-CUT: GPIO 8 y GPIO 9 mediante puente H miniatura (TC78H660FNG)\n- D2, D3: LEDs Infrarrojos 850nm / 940nm de alta potencia con disipador térmico SMD\n- Sensor LDR (Fotorresistencia): Detección automática del nivel crepuscular"
+		(at 160 125 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "57c92992-8fea-405c-b9c0-dae5b73d471c")
+	)
+	(text "SECCIÓN 5: ACCESO SEGURO, CERRADURA ELÉCTRICA Y RFID/NFC"
+		(at 30 190 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "8e07a1f3-9dbd-434a-bac3-149f8eb0c0c1")
+	)
+	(text "OK1: Optoacoplador PC817 para aislamiento galvanico completo entre lógica y cerradura\nQ1: MOSFET N-Channel de Potencia IRLZ44N (Vds 55V, Id 47A, Rds_on 0.022 Ohm, Logic-Level)\nD4: Diodo Supresor Flyback 1N5408 / SB560 en paralelo con la cerradura (absorción de picos inductivos)\nJ4: Bornera enchufable 5.08mm para electrocerradura 12V 2A (Normalmente Abierta o Cerrada)\nU7: Módulo Lector NFC/RFID PN532 (Antena integrada en PCB frontal para tarjetas ISO14443A/Mifare y Apple/Google Pay)"
+		(at 30 200 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "1c1b05ed-515b-4f6d-ba26-4698cda9bd43")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+)

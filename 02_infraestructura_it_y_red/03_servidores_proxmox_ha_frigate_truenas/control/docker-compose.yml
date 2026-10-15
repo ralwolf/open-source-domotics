@@ -1,0 +1,101 @@
+version: "3.9"
+
+services:
+  # ---------------------------------------------------------------------------
+  # 1. BROKER MQTT LOCAL (Mosquitto)
+  # ---------------------------------------------------------------------------
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: mosquitto_broker
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "8883:8883"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    networks:
+      domotics_net:
+        ipv4_address: 192.168.20.15
+
+  # ---------------------------------------------------------------------------
+  # 2. HOME ASSISTANT CORE
+  # ---------------------------------------------------------------------------
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: homeassistant
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    volumes:
+      - ./homeassistant_config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    environment:
+      - TZ=America/Mexico_City
+
+  # ---------------------------------------------------------------------------
+  # 3. FRIGATE NVR (Detección de Objetos en Cámaras PoE + Coral Edge TPU)
+  # ---------------------------------------------------------------------------
+  frigate:
+    image: ghcr.io/blakeblackshear/frigate:stable
+    container_name: frigate_nvr
+    restart: unless-stopped
+    privileged: true
+    shm_size: "256mb"
+    devices:
+      - /dev/bus/usb:/dev/bus/usb             # Google Coral USB Accelerator
+      - /dev/dri/renderD128:/dev/dri/renderD128 # Intel VAAPI / QuickSync HW decoding
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./frigate.yml:/config/config.yml:ro
+      - /mnt/truenas_storage/frigate_recordings:/media/frigate
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    ports:
+      - "5000:5000"
+      - "8554:8554" # RTSP feeds re-stream
+      - "8555:8555/tcp" # WebRTC
+      - "8555:8555/udp"
+    networks:
+      domotics_net:
+        ipv4_address: 192.168.20.30
+
+  # ---------------------------------------------------------------------------
+  # 4. GO2RTC (Streaming WebRTC de Ultra-Baja Latencia para Intercomunicadores)
+  # ---------------------------------------------------------------------------
+  go2rtc:
+    image: alexxit/go2rtc:latest
+    container_name: go2rtc
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./go2rtc.yaml:/config/go2rtc.yaml:ro
+
+  # ---------------------------------------------------------------------------
+  # 5. ZIGBEE2MQTT (Coordinador PoE de Red Mesh Zigbee 3.0)
+  # ---------------------------------------------------------------------------
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt:latest
+    container_name: zigbee2mqtt
+    restart: unless-stopped
+    volumes:
+      - ./zigbee2mqtt_data:/app/data
+    ports:
+      - "8080:8080" # Frontend Web
+    environment:
+      - TZ=America/Mexico_City
+    networks:
+      domotics_net:
+        ipv4_address: 192.168.20.40
+
+networks:
+  domotics_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.20.0/24
+          gateway: 192.168.20.1

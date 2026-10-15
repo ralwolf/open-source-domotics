@@ -26,6 +26,9 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 ---
 
 ## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
+- `mecanico/`:
+  - [`elevacion_rack_19u.dxf`](./mecanico/elevacion_rack_19u.dxf): Plano CAD 2D normalizado EIA-310-D del alzado frontal del Rack de 19" (15U).
+  - [`elevacion_rack_19u.svg`](./mecanico/elevacion_rack_19u.svg): Vista vectorial interactiva de la distribución física de unidades (UPS, PDU, TrueNAS, Proxmox, Switch PoE+, OPNsense, Patch Panel y extractores).
 - `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
-- `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).
+- `control/`:
+  - [`upsmon.conf`](./control/upsmon.conf): Configuración del cliente NUT para monitorización y apagado escalonado limpio ante cortes de energía prolongados.

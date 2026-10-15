@@ -1,0 +1,144 @@
+substitutions:
+  name: "controlador-solar-termico"
+  friendly_name: "Controlador Solar Térmico y Suelo Radiante"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 192.168.30.22
+    gateway: 192.168.30.1
+    subnet: 255.255.255.0
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret api_key"
+
+ota:
+  - platform: esphome
+
+# ---------------------------------------------------------------------------
+# SONDAS DE TEMPERATURA DE ALTA PRECISIÓN (PT1000 MAX31865 / DALLAS DS18B20)
+# ---------------------------------------------------------------------------
+spi:
+  clk_pin: GPIO18
+  mosi_pin: GPIO23
+  miso_pin: GPIO19
+
+sensor:
+  # Sonda Colector Solar en Cubierta (Resistente hasta 200°C)
+  - platform: max31865
+    name: "Temperatura Colector Solar Cubierta"
+    id: temp_colector
+    cs_pin: GPIO5
+    rtd_nominal_resistance: 1000 ohm
+    reference_resistance: 4300 ohm
+    rtd_wires: 3
+    update_interval: 2s
+
+  # Sonda Acumulador Solar Inferior
+  - platform: max31865
+    name: "Temperatura Tanque Inercia Inferior"
+    id: temp_tanque_inferior
+    cs_pin: GPIO17
+    rtd_nominal_resistance: 1000 ohm
+    reference_resistance: 4300 ohm
+    rtd_wires: 3
+    update_interval: 2s
+
+  # Sonda Impulsión Suelo Radiante
+  - platform: max31865
+    name: "Temperatura Impulsión Suelo Radiante"
+    id: temp_suelo_impulsion
+    cs_pin: GPIO16
+    rtd_nominal_resistance: 1000 ohm
+    reference_resistance: 4300 ohm
+    rtd_wires: 3
+    update_interval: 2s
+
+# ---------------------------------------------------------------------------
+# ACTUADORES: BOMBA SOLAR PWM Y VÁLVULAS DE ZONA SUELO RADIANTE
+# ---------------------------------------------------------------------------
+output:
+  - platform: ledc
+    pin: GPIO4
+    id: pwm_bomba_solar
+    frequency: 1000Hz
+
+switch:
+  - platform: gpio
+    pin: GPIO25
+    id: rele_bomba_suelo_radiante
+    name: "Bomba Circuladora Suelo Radiante"
+
+  # 6 Electroválvulas de Zona (Cabezales electrotérmicos 24V NC)
+  - platform: gpio
+    pin: GPIO26
+    name: "Válvula Zona 1 - Salón / Comedor"
+    id: val_zona1_salon
+
+  - platform: gpio
+    pin: GPIO27
+    name: "Válvula Zona 2 - Cocina"
+    id: val_zona2_cocina
+
+  - platform: gpio
+    pin: GPIO14
+    name: "Válvula Zona 3 - Suite Principal"
+    id: val_zona3_suite
+
+  - platform: gpio
+    pin: GPIO12
+    name: "Válvula Zona 4 - Recámara Infantil"
+    id: val_zona4_infantil
+
+  - platform: gpio
+    pin: GPIO13
+    name: "Válvula Zona 5 - Baños"
+    id: val_zona5_banos
+
+  - platform: gpio
+    pin: GPIO15
+    name: "Válvula Zona 6 - Oficina / IT"
+    id: val_zona6_oficina
+
+# ---------------------------------------------------------------------------
+# LÓGICA DE CONTROL DIFERENCIAL SOLAR AUTÓNOMA
+# ---------------------------------------------------------------------------
+interval:
+  - interval: 2s
+    then:
+      - lambda: |-
+          float t_col = id(temp_colector).state;
+          float t_tanque = id(temp_tanque_inferior).state;
+          float delta_t = t_col - t_tanque;
+
+          // 1. Protección Anti-Heladas (t_col < 3°C)
+          if (t_col < 3.0) {
+            id(pwm_bomba_solar).set_level(0.3); // 30% circulación mínima
+            ESP_LOGW("SOLAR", "Alerta Anti-Heladas: Bomba solar activa al 30%%");
+            return;
+          }
+
+          // 2. Control Diferencial Solar Normal
+          if (delta_t >= 6.0 && t_tanque < 85.0) {
+            // Modulación de velocidad según delta T (entre 40% y 100%)
+            float duty = 0.4 + (delta_t - 6.0) * 0.05;
+            if (duty > 1.0) duty = 1.0;
+            id(pwm_bomba_solar).set_level(duty);
+            ESP_LOGI("SOLAR", "Ganancia Solar: Delta T=%.1f C, Bomba al %.0f%%", delta_t, duty * 100.0);
+          } else if (delta_t <= 2.0 || t_tanque >= 90.0) {
+            id(pwm_bomba_solar).set_level(0.0); // Apagar bomba
+          }
