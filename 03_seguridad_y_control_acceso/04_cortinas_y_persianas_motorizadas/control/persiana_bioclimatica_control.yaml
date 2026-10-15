@@ -1,0 +1,167 @@
+substitutions:
+  node_name: "controlador-persiana-salon"
+  friendly_name: "Persiana Bioclimática Salón"
+
+esphome:
+  name: ${node_name}
+  friendly_name: ${friendly_name}
+  comment: "Controlador de persiana enrollable con interbloqueo físico, anti-atrapamiento y seguimiento bioclimático solar"
+  min_version: 2024.6.0
+
+esp32:
+  board: esp32-wroom-32e
+  framework:
+    type: esp-idf
+
+wdt:
+  timeout: 15s
+
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+  manual_ip:
+    static_ip: 10.30.0.80
+    gateway: 10.30.0.1
+    subnet: 255.255.255.0
+    dns1: 10.10.0.1
+  power_save_mode: none
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+logger:
+  level: INFO
+
+sun:
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  id: sol_local
+
+switch:
+  # Relé K1: Encendido General de Energía 230VAC (Power ON/OFF)
+  - platform: gpio
+    pin: GPIO18
+    id: relay_power
+    restore_mode: ALWAYS_OFF
+
+  # Relé K2: Selector de Dirección SPDT (OFF = Bajar, ON = Subir)
+  - platform: gpio
+    pin: GPIO19
+    id: relay_direction
+    restore_mode: ALWAYS_OFF
+
+cover:
+  - platform: time_based
+    name: "Persiana Salón Fachada Sur"
+    id: persiana_salon
+    device_class: shutter
+    open_action:
+      - switch.turn_off: relay_power
+      - delay: 200ms
+      - switch.turn_on: relay_direction   # Dirección Subir
+      - delay: 300ms
+      - switch.turn_on: relay_power       # Aplicar energía
+    open_duration: 22s
+
+    close_action:
+      - switch.turn_off: relay_power
+      - delay: 200ms
+      - switch.turn_off: relay_direction  # Dirección Bajar
+      - delay: 300ms
+      - switch.turn_on: relay_power       # Aplicar energía
+    close_duration: 20s
+
+    stop_action:
+      - switch.turn_off: relay_power
+      - delay: 100ms
+      - switch.turn_off: relay_direction
+
+binary_sensor:
+  # Entrada Pulsador de Pared: Subir (Optoacoplador PC817 en GPIO22)
+  - platform: gpio
+    name: "Pulsador Pared Subir"
+    pin:
+      number: GPIO22
+      mode: INPUT_PULLUP
+      inverted: true
+    filters:
+      - delayed_on_off: 50ms
+    on_press:
+      - if:
+          condition:
+            cover.is_opening: persiana_salon
+          then:
+            - cover.stop: persiana_salon
+          else:
+            - cover.open: persiana_salon
+
+  # Entrada Pulsador de Pared: Bajar (Optoacoplador PC817 en GPIO23)
+  - platform: gpio
+    name: "Pulsador Pared Bajar"
+    pin:
+      number: GPIO23
+      mode: INPUT_PULLUP
+      inverted: true
+    filters:
+      - delayed_on_off: 50ms
+    on_press:
+      - if:
+          condition:
+            cover.is_closing: persiana_salon
+          then:
+            - cover.stop: persiana_salon
+          else:
+            - cover.close: persiana_salon
+
+sensor:
+  # Sensor de Corriente Hall ACS712 para Detección de Obstáculos / Anti-Atrapamiento
+  - platform: adc
+    pin: GPIO34
+    name: "Corriente Motor Persiana"
+    id: corriente_motor
+    update_interval: 100ms
+    attenuation: 12db
+    filters:
+      - multiply: 1.65  # Calibración ACS712-05B (185 mV/A)
+    on_value:
+      - lambda: |-
+          // Si el motor está activo y la corriente supera 1.4A sostenidos, hay un obstáculo mecánico
+          if (id(relay_power).state && x > 1.4) {
+            ESP_LOGE("persiana", "SOBRECORRIENTE DETECTADA (%0.2f A)! Posible obstáculo o bloqueo.", x);
+            id(persiana_salon)->stop();
+          }
+
+# Automatización Bioclimática Solar Local
+interval:
+  - interval: 10min
+    then:
+      - lambda: |-
+          float elev = id(sol_local).elevation();
+          float azim = id(sol_local).azimuth();
+
+          // La fachada Sur está orientada a 180° (incidencia directa entre 135° y 225°)
+          bool sol_incide_fachada_sur = (azim >= 135.0 && azim <= 225.0);
+
+          // Lógica de Verano (protección contra sobrecalentamiento):
+          // Si es mediodía y el sol incide directamente con elevación > 30°,
+          // bajar persiana al 75% para rechazar calor radiante y mantener micro-ventilación.
+          if (elev > 30.0 && sol_incide_fachada_sur) {
+            if (id(persiana_salon)->position > 0.3) {
+              ESP_LOGI("bioclimatica", "Sol directo en fachada Sur (Elev: %0.1f°, Azim: %0.1f°). Posicionando al 25%% cerrado.", elev, azim);
+              auto call = id(persiana_salon)->make_call();
+              call.set_position(0.25);
+              call.perform();
+            }
+          }
+
+          // Cierre crepuscular de aislamiento térmico:
+          // Al ponerse el sol (elevación < -1.0°), cerrar 100% para retener calor nocturno
+          if (elev < -1.0 && id(persiana_salon)->position > 0.05) {
+            ESP_LOGI("bioclimatica", "Atardecer. Cerrando persiana completamente para aislamiento térmico nocturno.");
+            id(persiana_salon)->close();
+          }

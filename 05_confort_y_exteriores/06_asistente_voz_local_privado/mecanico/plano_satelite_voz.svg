@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 297" width="100%" height="100%" style="background-color: #1a1c23; font-family: monospace;">
+  <defs>
+    <style>
+      .marco { stroke: #454d66; stroke-width: 1.0; fill: none; }
+      .chasis { stroke: #70798c; stroke-width: 1.5; fill: #2d3142; }
+      .difusor { stroke: #48cae4; stroke-width: 1.2; fill: rgba(72, 202, 228, 0.3); }
+      .mic { stroke: #f28482; stroke-width: 1.2; fill: #e76f51; }
+      .rejilla { stroke: #84a59d; stroke-width: 1.0; fill: none; stroke-dasharray: 2,1; }
+      .bloque { stroke: #457b9d; stroke-width: 1.2; fill: #1d3557; }
+      .cable { stroke: #e9c46a; stroke-width: 1.2; stroke-dasharray: 3,2; fill: none; }
+      .txt-title { fill: #ffffff; font-size: 4px; font-weight: bold; }
+      .txt-sub { fill: #00f5d4; font-size: 2.2px; font-weight: bold; }
+      .txt-body { fill: #d8e2dc; font-size: 1.6px; }
+      .txt-cota { fill: #f4a261; font-size: 1.8px; }
+      .txt-alert { fill: #e63946; font-size: 1.5px; font-weight: bold; }
+    </style>
+  </defs>
+
+  <!-- Marco A3 -->
+  <rect x="5" y="5" width="410" height="287" class="marco"/>
+  <rect x="210" y="242" width="200" height="45" class="marco"/>
+  <text x="215" y="254" class="txt-title">OPEN-SOURCE-DOMOTICS</text>
+  <text x="215" y="262" class="txt-sub">SATÉLITE DE VOZ LOCAL Y PRIVADO (ESP32-S3 + I2S DÚPLEX)</text>
+  <text x="215" y="271" class="txt-body">Matriz 2x INMP441 (45mm) | Altavoz 40mm 3W | DAC MAX98357A | 12x WS2812B</text>
+  <text x="215" y="279" class="txt-body">openWakeWord + Whisper STT + Piper TTS 100% Local en Proxmox VE</text>
+
+  <!-- Vista Alzado Frontal -->
+  <g id="alzado">
+    <text x="75" y="45" class="txt-sub">ALZADO FRONTAL (ESC. 1:1)</text>
+    
+    <!-- Botón Mute -->
+    <rect x="104.0" y="59.0" width="12" height="3" class="mic" rx="1"/>
+    <text x="92.0" y="56.0" class="txt-alert">MUTE PRIVACIDAD</text>
+
+    <!-- Carcasa Troncocónica -->
+    <polygon points="65.0,117.0 72.5,62.0 147.5,62.0 155.0,117.0" class="chasis"/>
+
+    <!-- Difusor LED inferior -->
+    <rect x="64.0" y="112.0" width="92" height="4" class="difusor" rx="1"/>
+
+    <!-- Micrófonos I2S -->
+    <circle cx="87.5" cy="92.0" r="2.5" class="mic"/>
+    <circle cx="132.5" cy="92.0" r="2.5" class="mic"/>
+    <text x="72.0" y="99.0" class="txt-body">MIC-L (I2S)</text>
+    <text x="118.0" y="99.0" class="txt-body">MIC-R (I2S)</text>
+
+    <!-- Cotas -->
+    <line x1="65.0" y1="125.0" x2="155.0" y2="125.0" stroke="#f4a261" stroke-width="0.8"/>
+    <text x="95.0" y="131.0" class="txt-cota">Ø 90.0 mm</text>
+  </g>
+
+  <!-- Vista Planta Superior Rejilla -->
+  <g id="planta">
+    <text x="65" y="195" class="txt-sub">PLANTA SUPERIOR - REJILLA ACÚSTICA</text>
+    <circle cx="110.0" cy="227.0" r="37.5" class="chasis"/>
+    <circle cx="110.0" cy="227.0" r="28.0" class="rejilla"/>
+    <circle cx="110.0" cy="227.0" r="20.0" class="rejilla"/>
+    <circle cx="110.0" cy="227.0" r="12.0" class="rejilla"/>
+    <circle cx="110.0" cy="227.0" r="6.0" class="mic"/>
+  </g>
+
+  <!-- Diagrama de Arquitectura Wyoming Local (Derecha) -->
+  <g id="pipeline">
+    <text x="230" y="45" class="txt-sub">ARQUITECTURA DE VOZ 100% LOCAL Y PRIVADA</text>
+
+    <!-- Satélite -->
+    <rect x="230" y="60" width="85" height="42" class="bloque" rx="2"/>
+    <text x="235" y="73" class="txt-sub">SATÉLITE ESP32-S3 (Borde)</text>
+    <text x="235" y="82" class="txt-body">• Captura estéreo I2S 16 kHz</text>
+    <text x="235" y="90" class="txt-body">• openWakeWord local ("Ok Nabu")</text>
+    <text x="235" y="98" class="txt-body">• Feedback anillo LED WS2812B</text>
+
+    <!-- Conexión Stream -->
+    <line x1="272" y1="102" x2="272" y2="125" class="cable"/>
+    <text x="277" y="116" class="txt-cota">RAW Audio</text>
+
+    <!-- Servidor Proxmox -->
+    <rect x="230" y="125" width="85" height="50" class="bloque" rx="2"/>
+    <text x="235" y="138" class="txt-sub">PROXMOX VE (Servidor)</text>
+    <text x="235" y="147" class="txt-body">• Whisper STT (Español)</text>
+    <text x="235" y="155" class="txt-body">• Home Assistant Intents Engine</text>
+    <text x="235" y="163" class="txt-body">• Piper TTS (Síntesis voz local)</text>
+    <text x="235" y="171" class="txt-alert">✓ CERO DATOS A LA NUBE</text>
+
+    <!-- Respuesta Altavoz -->
+    <line x1="315" y1="150" x2="335" y2="150" class="cable"/>
+    <line x1="335" y1="150" x2="335" y2="80" class="cable"/>
+    <line x1="335" y1="80" x2="315" y2="80" class="cable"/>
+    <text x="340" y="115" class="txt-cota">TTS I2S</text>
+  </g>
+</svg>

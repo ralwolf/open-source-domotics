@@ -1,0 +1,190 @@
+substitutions:
+  node_name: "satelite-voz-local-estudio"
+  friendly_name: "Satélite de Voz Local Estudio"
+
+esphome:
+  name: ${node_name}
+  friendly_name: ${friendly_name}
+  comment: "Satélite de voz 100% privado con ESP32-S3, micrófono dual I2S, altavoz 3W y openWakeWord local"
+  min_version: 2024.6.0
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+wdt:
+  timeout: 15s
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+  manual_ip:
+    static_ip: 10.30.0.70
+    gateway: 10.30.0.1
+    subnet: 255.255.255.0
+    dns1: 10.10.0.1
+  power_save_mode: none
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+logger:
+  level: INFO
+
+# Bus de Audio I2S compartido para Captura (Micrófonos) y Reproducción (DAC Amplificador)
+i2s_audio:
+  - id: bus_i2s_input
+    i2s_lrclk_pin: GPIO15
+    i2s_bclk_pin: GPIO14
+  - id: bus_i2s_output
+    i2s_lrclk_pin: GPIO17
+    i2s_bclk_pin: GPIO16
+
+# Entrada de Audio: Micrófono MEMS I2S INMP441 (16 kHz, 16-bit mono)
+microphone:
+  - platform: i2s_audio
+    id: mic_satelite
+    i2s_audio_id: bus_i2s_input
+    i2s_din_pin: GPIO13
+    adc_type: external
+    pdm: false
+    channel: left
+
+# Salida de Audio: Amplificador DAC I2S MAX98357A (Altavoz de 40mm 3W)
+speaker:
+  - platform: i2s_audio
+    id: altavoz_satelite
+    i2s_audio_id: bus_i2s_output
+    i2s_dout_pin: GPIO18
+    dac_type: external
+    channel: mono
+
+# Reproductor Multimedia para notificaciones y música local
+media_player:
+  - platform: speaker
+    name: "Altavoz Satélite Voz"
+    id: reproductor_audio
+    speaker: altavoz_satelite
+
+# Detección de Palabra de Activación Local en el Borde (openWakeWord en ESP32-S3)
+micro_wake_word:
+  models:
+    - model: "okay_nabu"
+
+# Asistente de Voz Integrado con Home Assistant (Wyoming Protocol: Whisper + Piper)
+voice_assistant:
+  id: va_satelite
+  microphone: mic_satelite
+  speaker: altavoz_satelite
+  micro_wake_word_id: okay_nabu
+  noise_suppression_level: 2
+  auto_gain: 31dB
+  volume_multiplier: 2.0
+  on_wake_word_detected:
+    - logger.log: "Wake-word local detectada! Activando escucha..."
+    - light.turn_on:
+        id: anillo_led_rgb
+        effect: "Pulso Cian Escuchando"
+  on_listening:
+    - logger.log: "Escuchando instrucción de voz del usuario..."
+    - light.turn_on:
+        id: anillo_led_rgb
+        brightness: 1.0
+        red: 0.0
+        green: 0.9
+        blue: 1.0
+  on_thinking:
+    - logger.log: "Procesando audio localmente con Whisper STT en Proxmox..."
+    - light.turn_on:
+        id: anillo_led_rgb
+        effect: "Cometa Azul Procesando"
+  on_replying:
+    - logger.log: "Reproduciendo respuesta sintetizada con Piper TTS..."
+    - light.turn_on:
+        id: anillo_led_rgb
+        effect: "Respiración Verde Respuesta"
+  on_end:
+    - logger.log: "Ciclo de diálogo finalizado. Retornando a reposo."
+    - light.turn_on:
+        id: anillo_led_rgb
+        brightness: 0.15
+        red: 1.0
+        green: 0.7
+        blue: 0.4
+  on_error:
+    - logger.log: "Error en pipeline de voz local."
+    - light.turn_on:
+        id: anillo_led_rgb
+        brightness: 1.0
+        red: 1.0
+        green: 0.0
+        blue: 0.0
+    - delay: 1500ms
+    - light.turn_off: anillo_led_rgb
+
+# Anillo de 12 LEDs RGB WS2812B (Feedback Visual)
+light:
+  - platform: esp32_rmt_led_strip
+    rgb_order: GRB
+    pin: GPIO48
+    num_leds: 12
+    id: anillo_led_rgb
+    name: "Anillo LED Satélite Voz"
+    default_transition_length: 200ms
+    effects:
+      - pulse:
+          name: "Pulso Cian Escuchando"
+          transition_length: 250ms
+          update_interval: 500ms
+          min_brightness: 40%
+          max_brightness: 100%
+      - strobe:
+          name: "Cometa Azul Procesando"
+          colors:
+            - state: true
+              brightness: 100%
+              red: 0%
+              green: 40%
+              blue: 100%
+              duration: 200ms
+            - state: false
+              duration: 100ms
+      - pulse:
+          name: "Respiración Verde Respuesta"
+          transition_length: 500ms
+          update_interval: 1000ms
+          min_brightness: 30%
+          max_brightness: 100%
+
+binary_sensor:
+  # Interruptor Físico de Privacidad / Mute de Hardware
+  - platform: gpio
+    name: "Mute Privacidad Físico"
+    pin:
+      number: GPIO47
+      mode: INPUT_PULLUP
+      inverted: true
+    id: switch_mute_hardware
+    filters:
+      - delayed_on_off: 50ms
+    on_press:
+      - logger.log: "MODO PRIVACIDAD ACTIVADO: Micrófono silenciado por hardware."
+      - light.turn_on:
+          id: anillo_led_rgb
+          brightness: 0.8
+          red: 1.0
+          green: 0.0
+          blue: 0.0
+    on_release:
+      - logger.log: "Modo Privacidad Desactivado: Micrófono habilitado para escucha local."
+      - light.turn_off: anillo_led_rgb

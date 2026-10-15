@@ -1,0 +1,129 @@
+(kicad_sch
+  (version 20231120)
+  (generator "open-source-domotics-gen")
+  (generator_version "10.0")
+  (uuid "984309ea-d8f7-4f37-9107-9fea6a199531")
+  (paper "A3")
+  (title_block
+    (title "CONTROLADOR DE PERSIANAS CON INTERBLOQUEO POR HARDWARE")
+    (date "2026-10-15")
+    (rev "v1.0")
+    (company "open-source-domotics (Hardware Libre)")
+    (comment 1 "Interbloqueo SPDT Imposible de Cortocircuito + Snubber RC")
+    (comment 2 "Entradas Pulsador de Pared Aisladas + Medición Corriente Anti-Atrapamiento")
+  )
+
+  (wire (pts (xy 30.0 50.0) (xy 70.0 50.0))
+    (stroke (width 0) (type default))
+    (uuid "9829ee35-2100-4a93-8030-ee706719ee0b")
+  )
+  (text "ALIMENTACION_230VAC"
+    (at 30.0 48.0 0)
+    (effects (font (size 1.5 1.5)))
+    (uuid "60f81adc-7101-4b59-b5a5-17e3ef5e914c")
+  )
+
+  (symbol
+    (lib_id "Converter_ACDC:HLK-PM01")
+    (at 80.0 65.0 0)
+    (unit 1)
+    (uuid "ef76b629-2d4c-4b3c-a2df-5025ae0c4d0a")
+    (property "Reference" "PS1" (at 80.0 50.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "HLK-PM01_230VAC_to_5V" (at 80.0 53.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Converter_ACDC:Converter_ACDC_HiLink_HLK-PMxx" (at 80.0 65.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Regulator_Linear:AMS1117-3.3")
+    (at 120.0 65.0 0)
+    (unit 1)
+    (uuid "17497543-39c7-4e94-a857-232886ac48d5")
+    (property "Reference" "U1" (at 120.0 52.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AMS1117-3.3" (at 120.0 55.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-223-3_TabPin2" (at 120.0 65.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "RF_Module:ESP32-WROOM-32E")
+    (at 180.0 75.0 0)
+    (unit 1)
+    (uuid "4819a3b6-1c16-4ed0-82c8-b5ad4ce3465e")
+    (property "Reference" "U2" (at 180.0 42.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ESP32-WROOM-32E" (at 180.0 45.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-WROOM-32E" (at 180.0 75.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Relay:Relay_SPST")
+    (at 260.0 60.0 0)
+    (unit 1)
+    (uuid "1b609d70-566e-45be-9e3d-76dc069bd23f")
+    (property "Reference" "K1" (at 260.0 48.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "RELE_POWER_ON_OFF_10A" (at 260.0 51.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5Q-1" (at 260.0 60.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Relay:Relay_SPDT")
+    (at 260.0 95.0 0)
+    (unit 1)
+    (uuid "4387e80f-5c5f-44d9-8869-4657875255db")
+    (property "Reference" "K2" (at 260.0 82.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "RELE_INTERLOCK_SUBIR_BAJAR" (at 260.0 85.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5Q-1" (at 260.0 95.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Sensor_Current:ACS712xLCTR-05B")
+    (at 320.0 60.0 0)
+    (unit 1)
+    (uuid "32acdd64-96b4-4906-b392-65d3926edba8")
+    (property "Reference" "U3" (at 320.0 48.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ACS712_Medicion_Corriente_5A" (at 320.0 51.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 320.0 60.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Isolator:PC817")
+    (at 120.0 120.0 0)
+    (unit 1)
+    (uuid "0a5329b7-d419-4d76-a7a1-1b54452222e5")
+    (property "Reference" "U4" (at 120.0 108.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "OPTO_PULSADOR_SUBIR" (at 120.0 111.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_DIP:DIP-4_W7.62mm" (at 120.0 120.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Isolator:PC817")
+    (at 120.0 145.0 0)
+    (unit 1)
+    (uuid "1877acd7-6674-480f-acb1-7241344c3a8b")
+    (property "Reference" "U5" (at 120.0 133.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "OPTO_PULSADOR_BAJAR" (at 120.0 136.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_DIP:DIP-4_W7.62mm" (at 120.0 145.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x04")
+    (at 380.0 80.0 0)
+    (unit 1)
+    (uuid "2cbc79a8-0558-4df0-9372-0d6e026fa27b")
+    (property "Reference" "J1" (at 380.0 68.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNA_MOTOR_TUBULAR_4HILOS" (at 380.0 71.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-4_P5.08mm" (at 380.0 80.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x03")
+    (at 60.0 130.0 0)
+    (unit 1)
+    (uuid "fb9ebf36-f40f-4753-ab17-76f6594ecef3")
+    (property "Reference" "J2" (at 60.0 118.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNA_PULSADOR_DOBLE_PARED" (at 60.0 121.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-3_P5.08mm" (at 60.0 130.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

@@ -1,0 +1,263 @@
+substitutions:
+  node_name: "controlador-piscina-automatizada"
+  friendly_name: "Controlador Químico y Filtración Piscina"
+
+esphome:
+  name: ${node_name}
+  friendly_name: ${friendly_name}
+  comment: "Controlador autónomo de piscina: pH, ORP/Redox, Filtración Solar y Dosificación Peristáltica"
+  min_version: 2024.6.0
+
+esp32:
+  board: esp32-wroom-32e
+  framework:
+    type: esp-idf
+
+wdt:
+  timeout: 15s
+
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+  manual_ip:
+    static_ip: 10.30.0.60
+    gateway: 10.30.0.1
+    subnet: 255.255.255.0
+    dns1: 10.10.0.1
+  power_save_mode: none
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+  services:
+    - service: forzar_dosificacion_ph
+      variables:
+        segundos: int
+      then:
+        - if:
+            condition:
+              binary_sensor.is_on: sensor_flujo_agua
+            then:
+              - switch.turn_on: dosificador_ph_menos
+              - delay: !lambda "return segundos * 1000;"
+              - switch.turn_off: dosificador_ph_menos
+            else:
+              - logger.log: "ERROR: No se puede dosificar pH sin flujo de agua en la tubería!"
+    - service: forzar_dosificacion_cloro
+      variables:
+        segundos: int
+      then:
+        - if:
+            condition:
+              binary_sensor.is_on: sensor_flujo_agua
+            then:
+              - switch.turn_on: dosificador_cloro
+              - delay: !lambda "return segundos * 1000;"
+              - switch.turn_off: dosificador_cloro
+            else:
+              - logger.log: "ERROR: No se puede dosificar Cloro sin flujo de agua en la tubería!"
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+logger:
+  level: INFO
+
+# Bus I2C para convertidor ADC aislado ADS1115
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+  id: bus_i2c
+
+ads1115:
+  - address: 0x48
+    i2c_id: bus_i2c
+    id: ads_piscina
+
+# Bus 1-Wire para sensor de temperatura sumergido DS18B20
+one_wire:
+  - platform: gpio
+    pin: GPIO4
+    id: bus_1wire
+
+switch:
+  # Relé Bomba de Recirculación y Filtración (1 CV / 230VAC)
+  - platform: gpio
+    name: "Bomba Filtración Piscina"
+    pin: GPIO26
+    id: relay_bomba_filtracion
+    icon: "mdi:pump"
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - logger.log: "Bomba de filtración iniciada. Verificando flujo en 90 segundos..."
+      - delay: 90s
+      - if:
+          condition:
+            binary_sensor.is_off: sensor_flujo_agua
+          then:
+            - logger.log: "ALARMA CRÍTICA: Fallo de cebado / Sin flujo de agua! Apagando bomba para evitar marcha en seco."
+            - switch.turn_off: relay_bomba_filtracion
+            - homeassistant.event:
+                event: esphome.alarma_piscina_marcha_seco
+                data:
+                  dispositivo: "bomba_piscina"
+                  alerta: "marcha_en_seco_detectada"
+
+  # MOSFET Driver Bomba Peristáltica pH- (24VDC 1.5 L/h)
+  - platform: gpio
+    name: "Bomba Peristáltica pH-"
+    pin: GPIO25
+    id: dosificador_ph_menos
+    icon: "mdi:flask-round-bottom"
+    restore_mode: ALWAYS_OFF
+
+  # MOSFET Driver Bomba Peristáltica Cloro Líquido / Desinfectante (24VDC 1.5 L/h)
+  - platform: gpio
+    name: "Bomba Peristáltica Cloro"
+    pin: GPIO33
+    id: dosificador_cloro
+    icon: "mdi:water-opacity"
+    restore_mode: ALWAYS_OFF
+
+  # Relé Electroválvula Llenado Automático de Nivel (24VAC / Agua de Cisterna/Red)
+  - platform: gpio
+    name: "Electroválvula Llenado Piscina"
+    pin: GPIO32
+    id: relay_llenado_agua
+    icon: "mdi:water-plus"
+    restore_mode: ALWAYS_OFF
+
+binary_sensor:
+  # Interruptor de Flujo Magnético (Flow-Switch DN50) - INTERBLOQUEO OBLIGATORIO
+  - platform: gpio
+    name: "Flujo de Agua en Tubería"
+    pin:
+      number: GPIO27
+      mode: INPUT_PULLUP
+      inverted: true
+    id: sensor_flujo_agua
+    device_class: running
+    filters:
+      - delayed_on_off: 200ms
+    on_release:
+      # Si el flujo se detiene por cualquier causa, apagar inmediatamente las dosificadoras químicas
+      - logger.log: "Flujo detenido. Interbloqueo químico activado: Desactivando dosificadoras."
+      - switch.turn_off: dosificador_ph_menos
+      - switch.turn_off: dosificador_cloro
+
+  # Boya de Nivel de Agua en Skimmer (Detección de nivel bajo crítico)
+  - platform: gpio
+    name: "Nivel de Agua Skimmer Normal"
+    pin:
+      number: GPIO14
+      mode: INPUT_PULLUP
+      inverted: false
+    id: sensor_nivel_skimmer
+    device_class: problem
+    filters:
+      - delayed_on_off: 500ms
+    on_press:
+      - logger.log: "Nivel de agua bajo detectado en el skimmer. Activando llenado automático..."
+      - switch.turn_on: relay_llenado_agua
+    on_release:
+      - logger.log: "Nivel de agua restablecido en skimmer. Cerrando válvula de llenado."
+      - switch.turn_off: relay_llenado_agua
+
+sensor:
+  # Sonda de Temperatura Digital DS18B20 en vaina de titanio/inox
+  - platform: dallas_temp
+    one_wire_id: bus_1wire
+    name: "Temperatura Agua Piscina"
+    id: temp_agua
+    update_interval: 30s
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+
+  # Canal 0 ADS1115: Sonda de pH de Alta Impedancia Aislada
+  - platform: ads1115
+    multiplexer: 'A0_GND'
+    gain: 4.096
+    ads1115_id: ads_piscina
+    name: "Tensión Electrodo pH"
+    id: volt_ph
+    update_interval: 10s
+    unit_of_measurement: "V"
+    accuracy_decimals: 3
+
+  # Sensor de pH Calibrado
+  - platform: template
+    name: "pH Agua Piscina"
+    id: ph_valor
+    unit_of_measurement: "pH"
+    accuracy_decimals: 2
+    lambda: |-
+      float v = id(volt_ph).state;
+      // Calibración estándar de sonda de pH de 2 puntos:
+      // pH 7.00 = 2.50V (referencia virtual centro AFE)
+      // Pendiente Nernst: -59.16 mV / pH a 25°C
+      float ph = 7.0 - ((v - 2.50) / 0.18);
+      if (ph < 0.0) ph = 0.0;
+      if (ph > 14.0) ph = 14.0;
+      return ph;
+    update_interval: 10s
+
+  # Canal 1 ADS1115: Sonda Redox ORP (Potencial de Oxidación-Reducción)
+  - platform: ads1115
+    multiplexer: 'A1_GND'
+    gain: 2.048
+    ads1115_id: ads_piscina
+    name: "Potencial Redox ORP"
+    id: orp_valor
+    unit_of_measurement: "mV"
+    accuracy_decimals: 0
+    filters:
+      - multiply: 1000.0  # Conversión a milivoltios
+      - median:
+          window_size: 5
+          send_every: 5
+    update_interval: 10s
+
+# Lógica Autónoma de Dosificación Química (Cada 15 minutos durante la filtración activa)
+interval:
+  - interval: 15min
+    then:
+      - lambda: |-
+          // Regla 1: Solo dosificar si la bomba está encendida y hay flujo confirmado
+          if (!id(sensor_flujo_agua).state) {
+            return;
+          }
+
+          float ph = id(ph_valor).state;
+          float orp = id(orp_valor).state;
+
+          // Regla 2: Regulación de pH (Objetivo: 7.20 a 7.40)
+          // Si el pH supera 7.45, inyectar dosis controlada de reductor pH- (ácido)
+          if (ph > 7.45 && !id(dosificador_ph_menos)->state) {
+            ESP_LOGW("quimica_piscina", "pH elevado (%0.2f > 7.45). Inyectando reductor pH- por 25s...", ph);
+            id(dosificador_ph_menos)->turn_on();
+          }
+
+          // Regla 3: Regulación de Cloro / Desinfectante (Objetivo: 680 a 750 mV)
+          // Si el potencial ORP cae por debajo de 650 mV, inyectar cloro
+          if (orp < 650.0 && !id(dosificador_cloro)->state) {
+            ESP_LOGW("quimica_piscina", "Potencial Redox bajo (%0.0f mV < 650 mV). Inyectando Cloro por 30s...", orp);
+            id(dosificador_cloro)->turn_on();
+          }
+
+  # Temporizador de seguridad de corte de pulso dosificador (máximo 45 segundos)
+  - interval: 45s
+    then:
+      - if:
+          condition:
+            switch.is_on: dosificador_ph_menos
+          then:
+            - switch.turn_off: dosificador_ph_menos
+            - logger.log: "Fin de pulso de inyección de pH-."
+      - if:
+          condition:
+            switch.is_on: dosificador_cloro
+          then:
+            - switch.turn_off: dosificador_cloro
+            - logger.log: "Fin de pulso de inyección de Cloro."

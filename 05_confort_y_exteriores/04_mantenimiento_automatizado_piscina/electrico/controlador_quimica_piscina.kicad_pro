@@ -1,0 +1,54 @@
+{
+  "boards": [],
+  "meta": {
+    "filename": "controlador_quimica_piscina.kicad_pro",
+    "version": 3
+  },
+  "net_settings": {
+    "classes": [
+      {
+        "clearance": 0.25,
+        "diff_pair_gap": 0.25,
+        "diff_pair_width": 0.35,
+        "name": "Default",
+        "track_width": 0.3,
+        "via_diameter": 0.8,
+        "via_drill": 0.4
+      },
+      {
+        "clearance": 0.8,
+        "diff_pair_gap": 0.3,
+        "diff_pair_width": 0.5,
+        "name": "Mains_230VAC_Isolation",
+        "track_width": 1.5,
+        "via_diameter": 2.0,
+        "via_drill": 1.0
+      },
+      {
+        "clearance": 0.5,
+        "diff_pair_gap": 0.25,
+        "diff_pair_width": 0.35,
+        "name": "Analog_Isolated_pH_ORP",
+        "track_width": 0.4,
+        "via_diameter": 0.8,
+        "via_drill": 0.4
+      }
+    ],
+    "meta": {
+      "version": 4
+    }
+  },
+  "schematic": {
+    "annotate_start_num": 0,
+    "bom_export_filename": "${PROJECTNAME}.csv",
+    "meta": {
+      "version": 1
+    }
+  },
+  "sheets": [
+    [
+      "3b06777e-6449-440b-9222-2b7c9b5a5bb2",
+      ""
+    ]
+  ]
+}

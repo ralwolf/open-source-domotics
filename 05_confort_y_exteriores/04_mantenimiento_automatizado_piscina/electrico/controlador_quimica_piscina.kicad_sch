@@ -1,0 +1,189 @@
+(kicad_sch
+  (version 20231120)
+  (generator "open-source-domotics-gen")
+  (generator_version "10.0")
+  (uuid "3b06777e-6449-440b-9222-2b7c9b5a5bb2")
+  (paper "A3")
+  (title_block
+    (title "CONTROLADOR DE FILTRACION Y DOSIFICACION QUIMICA DE PISCINA")
+    (date "2026-10-15")
+    (rev "v1.0")
+    (company "open-source-domotics (Hardware Libre)")
+    (comment 1 "Front-End Aislado Galvánicamente pH y Redox (ORP) con ADS1115 16-bit")
+    (comment 2 "Interbloqueo Flow-Switch + Bombas Peristálticas 24V + Relé Bomba 1CV 230V")
+  )
+
+  (wire (pts (xy 30.0 45.0) (xy 70.0 45.0))
+    (stroke (width 0) (type default))
+    (uuid "7e310347-c7b2-4019-91fb-33bee19bded7")
+  )
+  (text "ALIMENTACION_24VDC"
+    (at 30.0 43.0 0)
+    (effects (font (size 1.5 1.5)))
+    (uuid "7e9a31fa-ac80-49ff-87b3-a02e969f98a8")
+  )
+
+  (symbol
+    (lib_id "Regulator_Switching:MP1584")
+    (at 80.0 55.0 0)
+    (unit 1)
+    (uuid "fe32b77f-a040-4832-9868-3c08503515b2")
+    (property "Reference" "U1" (at 80.0 42.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MP1584_24V_to_5V" (at 80.0 45.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Converter_DCDC:Converter_DCDC_MP1584_Mini" (at 80.0 55.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Converter_DCDC:B0505S-1WR3")
+    (at 80.0 85.0 0)
+    (unit 1)
+    (uuid "196314de-1c81-46f9-9195-4cc7bbdaf459")
+    (property "Reference" "U2" (at 80.0 72.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "B0505S_Aislamiento_1kV" (at 80.0 75.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Converter_DCDC:Converter_DCDC_Mornsun_B_S-1WR3" (at 80.0 85.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "RF_Module:ESP32-WROOM-32E")
+    (at 150.0 70.0 0)
+    (unit 1)
+    (uuid "d0cbd646-2a1b-4cc5-8395-ad8103e2bf42")
+    (property "Reference" "U3" (at 150.0 40.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ESP32-WROOM-32E" (at 150.0 43.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-WROOM-32E" (at 150.0 70.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Amplifier_Operational:LMC6001")
+    (at 220.0 60.0 0)
+    (unit 1)
+    (uuid "74803bc8-3171-4d28-9a1b-2df0c93fdcb1")
+    (property "Reference" "U4" (at 220.0 48.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "LMC6001_pH_Ib_25fA" (at 220.0 51.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 220.0 60.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Amplifier_Operational:LMC6001")
+    (at 220.0 90.0 0)
+    (unit 1)
+    (uuid "63f77463-c61c-4f18-87c2-d0110c9b9922")
+    (property "Reference" "U5" (at 220.0 78.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "LMC6001_ORP_Ib_25fA" (at 220.0 81.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 220.0 90.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Analog_ADC:ADS1115IDGS")
+    (at 220.0 125.0 0)
+    (unit 1)
+    (uuid "f2f75f48-658c-4d19-8b1d-98b415b7b2e8")
+    (property "Reference" "U6" (at 220.0 112.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ADS1115_16Bit_I2C" (at 220.0 115.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm" (at 220.0 125.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector:BNC")
+    (at 275.0 60.0 0)
+    (unit 1)
+    (uuid "abdfb9c1-9387-4e3e-a549-e23f352fcc14")
+    (property "Reference" "J1" (at 275.0 50.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BNC_ELECTRODO_PH" (at 275.0 53.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_Coaxial:BNC_Amphenol_B6252HB-NPP3G-50_Horizontal" (at 275.0 60.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector:BNC")
+    (at 275.0 90.0 0)
+    (unit 1)
+    (uuid "b89b6c87-5dab-44c8-8dde-f9560f980fad")
+    (property "Reference" "J2" (at 275.0 80.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BNC_ELECTRODO_ORP" (at 275.0 83.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_Coaxial:BNC_Amphenol_B6252HB-NPP3G-50_Horizontal" (at 275.0 90.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Transistor_FET:AOD4184A")
+    (at 330.0 60.0 0)
+    (unit 1)
+    (uuid "fd3d4512-d0b2-4a18-9f99-efb39c6742db")
+    (property "Reference" "Q1" (at 330.0 48.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AOD4184A_DOSI_PH" (at 330.0 51.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:TO-252-2" (at 330.0 60.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Transistor_FET:AOD4184A")
+    (at 330.0 90.0 0)
+    (unit 1)
+    (uuid "005ec96f-5275-49bf-b2c7-6a4f60e63290")
+    (property "Reference" "Q2" (at 330.0 78.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AOD4184A_DOSI_CLORO" (at 330.0 81.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:TO-252-2" (at 330.0 90.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Relay:Relay_SPST")
+    (at 330.0 125.0 0)
+    (unit 1)
+    (uuid "1535c04d-663f-4a68-a170-72b5380c06e0")
+    (property "Reference" "K1" (at 330.0 112.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "RELE_BOMBA_1CV_16A" (at 330.0 115.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5Q-1" (at 330.0 125.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 380.0 60.0 0)
+    (unit 1)
+    (uuid "996138d2-04d1-4da4-988d-766d0b714990")
+    (property "Reference" "J3" (at 380.0 50.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "SALIDA_DOSI_PH_24V" (at 380.0 53.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 380.0 60.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 380.0 90.0 0)
+    (unit 1)
+    (uuid "675d9993-14f2-4bf0-917f-2006deaa7174")
+    (property "Reference" "J4" (at 380.0 80.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "SALIDA_DOSI_CL_24V" (at 380.0 83.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 380.0 90.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 380.0 125.0 0)
+    (unit 1)
+    (uuid "9cb6c235-c50d-4bd5-8342-c6c225a495b4")
+    (property "Reference" "J5" (at 380.0 115.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "SALIDA_CONTACTOR_BOMBA" (at 380.0 118.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 380.0 125.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 100.0 130.0 0)
+    (unit 1)
+    (uuid "df589818-f229-4f22-85d7-e758e2bbfdd6")
+    (property "Reference" "J6" (at 100.0 120.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ENTRADA_FLOW_SWITCH" (at 100.0 123.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 100.0 130.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x03")
+    (at 100.0 155.0 0)
+    (unit 1)
+    (uuid "ad63e865-95b3-4120-ac95-d6ae6eb8c5c5")
+    (property "Reference" "J7" (at 100.0 145.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "SONDA_TEMP_DS18B20" (at 100.0 148.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-3_P5.08mm" (at 100.0 155.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

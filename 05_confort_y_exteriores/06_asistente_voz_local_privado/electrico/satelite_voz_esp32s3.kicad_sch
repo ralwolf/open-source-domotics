@@ -1,0 +1,119 @@
+(kicad_sch
+  (version 20231120)
+  (generator "open-source-domotics-gen")
+  (generator_version "10.0")
+  (uuid "06caa135-0640-4051-8310-06034ab5aabb")
+  (paper "A3")
+  (title_block
+    (title "SATELITE DE VOZ PRIVADO ESP32-S3 (AUDIO I2S DUPLEX)")
+    (date "2026-10-15")
+    (rev "v1.0")
+    (company "open-source-domotics (Hardware Libre)")
+    (comment 1 "Matriz 2x INMP441 I2S + DAC Amplificador MAX98357A 3.2W")
+    (comment 2 "Corte Analógico de Mute de Hardware + 12x LED NeoPixel WS2812B")
+  )
+
+  (wire (pts (xy 35.0 50.0) (xy 75.0 50.0))
+    (stroke (width 0) (type default))
+    (uuid "9c5338e4-db76-46b1-b1c0-00e3a08d4445")
+  )
+  (text "ALIMENTACION_5VDC_USBC"
+    (at 35.0 48.0 0)
+    (effects (font (size 1.5 1.5)))
+    (uuid "8903d07d-f3bc-442b-ba83-96c0712cb7d3")
+  )
+
+  (symbol
+    (lib_id "Regulator_Linear:AP2112K-3.3")
+    (at 85.0 65.0 0)
+    (unit 1)
+    (uuid "9570bc1b-32ed-47ad-92c7-7f16a180df2a")
+    (property "Reference" "U1" (at 85.0 52.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AP2112K_3V3_600mA_UltraLowNoise" (at 85.0 55.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-23-5" (at 85.0 65.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "RF_Module:ESP32-S3-WROOM-1")
+    (at 160.0 75.0 0)
+    (unit 1)
+    (uuid "dee39139-16d3-4e08-9468-dd530f27dd5d")
+    (property "Reference" "U2" (at 160.0 42.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ESP32-S3-WROOM-1-N8R8" (at 160.0 45.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-S3-WROOM-1" (at 160.0 75.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Audio:INMP441")
+    (at 230.0 55.0 0)
+    (unit 1)
+    (uuid "f13c0825-d533-4ea6-b9fb-6aea822b5fd1")
+    (property "Reference" "MK1" (at 230.0 42.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "INMP441_MEMS_MIC_LEFT" (at 230.0 45.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Audio:INMP441_Breakout" (at 230.0 55.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Audio:INMP441")
+    (at 230.0 85.0 0)
+    (unit 1)
+    (uuid "1a645b6c-02fc-4632-9e2e-ab4c65920e26")
+    (property "Reference" "MK2" (at 230.0 72.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "INMP441_MEMS_MIC_RIGHT" (at 230.0 75.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Audio:INMP441_Breakout" (at 230.0 85.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Audio_Amplifier:MAX98357A")
+    (at 230.0 125.0 0)
+    (unit 1)
+    (uuid "6393bb45-141d-4c39-8a8e-50f4fbdc880d")
+    (property "Reference" "U3" (at 230.0 112.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MAX98357A_I2S_DAC_AMP_3W" (at 230.0 115.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_DFN_QFN:TQFN-16-1EP_3x3mm_P0.5mm_EP1.7x1.7mm" (at 230.0 125.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 290.0 125.0 0)
+    (unit 1)
+    (uuid "c1f578d7-f6ae-4010-b3ba-68135077b9bd")
+    (property "Reference" "J1" (at 290.0 115.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "CONECTOR_ALTAVOZ_40MM" (at 290.0 118.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" (at 290.0 125.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "LED:WS2812B")
+    (at 160.0 135.0 0)
+    (unit 1)
+    (uuid "1de33097-c0b3-461f-b530-18ef75bfb5e6")
+    (property "Reference" "D1" (at 160.0 122.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "WS2812B_Ring_12LEDs" (at 160.0 125.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm" (at 160.0 135.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Switch:SW_Push")
+    (at 100.0 120.0 0)
+    (unit 1)
+    (uuid "fa6be71b-dc9a-464e-9f37-834f9e1e56fe")
+    (property "Reference" "SW1" (at 100.0 108.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MUTE_HARDWARE_SWITCH" (at 100.0 111.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Button_Switch_SMD:SW_Push_1P1T_NO_6x6mm_H9.5mm" (at 100.0 120.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector:USB_C_Receptacle_USB2.0")
+    (at 35.0 70.0 0)
+    (unit 1)
+    (uuid "e82b74e6-4d57-4203-8b39-7f51d811ab53")
+    (property "Reference" "J2" (at 35.0 58.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "USB_C_ALIMENTACION_5V" (at 35.0 61.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_USB:USB_C_Receptacle_Palconn_UTC16-G" (at 35.0 70.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)
