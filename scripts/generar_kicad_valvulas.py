@@ -234,3 +234,4 @@ if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     target_dir = os.path.join(base_dir, "03_seguridad_y_control_acceso/03_actuadores_valvulas_gas_agua/electrico")
     generar_kicad_valvulas(target_dir)
+

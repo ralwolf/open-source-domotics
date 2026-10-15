@@ -123,3 +123,4 @@ switch:
     name: "Esterilizador Lámpara UV-C"
     icon: "mdi:lightbulb-cfl"
     restore_mode: ALWAYS_ON
+

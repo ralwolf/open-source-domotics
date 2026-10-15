@@ -1,0 +1,111 @@
+substitutions:
+  device_name: "contador-rayos-iot"
+  friendly_name: "Contador de Rayos y Telemetría DPS"
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+  comment: "Monitor de Impactos Atmosféricos y Estado de Descargadores de Sobretensión DPS"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Red IoT Segregada (VLAN 30 IoT - Cero Acceso a Internet)
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+  manual_ip:
+    static_ip: 192.168.30.58
+    gateway: 192.168.30.1
+    subnet: 255.255.255.0
+    dns1: 192.168.30.1
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+
+logger:
+  level: INFO
+
+# Sensor de Pulsos de Descarga Atmosférica (Bobina Rogowski + Comparador LM393)
+sensor:
+  - platform: pulse_counter
+    pin:
+      number: GPIO4
+      mode: INPUT_PULLDOWN
+    name: "Tasa de Descargas Atmosféricas"
+    id: lightning_strikes_rate
+    update_interval: 10s
+    total:
+      name: "Total Impactos de Rayo Registrados"
+      id: total_lightning_strikes
+      state_class: total_increasing
+      accuracy_decimals: 0
+      icon: "mdi:flash-alert"
+
+  # Tensión de Batería Li-Ion 18650 del Equipo en Exterior
+  - platform: adc
+    pin: GPIO35
+    name: "Tensión Batería 18650 Contador"
+    attenuation: 12db
+    update_interval: 60s
+    filters:
+      - multiply: 2.0 # Divisor resistivo 100k/100k
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    device_class: battery
+
+# Sensores Binarios de Diagnóstico de Cartuchos DPS (Contactos Auxiliares)
+binary_sensor:
+  # DPS Clase I (Cabecera TGBT - 25 kA 10/350µs)
+  - platform: gpio
+    pin:
+      number: GPIO18
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Estado DPS Clase I Cabecera"
+    id: dps_clase_1_fault
+    device_class: problem
+    on_press:
+      then:
+        - logger.log: "URGENTE: Cartucho de sobretensión DPS Clase I disparado. Requiere sustitución."
+        - homeassistant.event:
+            event: esphome.dps_clase1_tripped
+            data:
+              title: "Alerta de Protección Eléctrica"
+              message: "El protector de sobretensión Tipo 1 ha absorbido una descarga y debe reemplazarse."
+
+  # DPS Clase II (Distribución - 40 kA 8/20µs)
+  - platform: gpio
+    pin:
+      number: GPIO19
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Estado DPS Clase II Distribución"
+    id: dps_clase_2_fault
+    device_class: problem
+    on_press:
+      then:
+        - logger.log: "AVISO: Cartucho DPS Clase II disparado. Sustituir varistor modular."
+
+# Detección Inmediata de Impacto de Rayo Directo
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO21
+      mode: INPUT_PULLDOWN
+    name: "Alerta Impacto de Rayo Directo"
+    device_class: safety
+    on_press:
+      then:
+        - logger.log: "CRÍTICO: Impacto de rayo directo detectado en el mástil del pararrayos."
+        - homeassistant.event:
+            event: esphome.lightning_strike_detected
+            data:
+              title: "Impacto Atmosférico Detectado"
+              message: "Se ha registrado una descarga en la bajante exterior. Comprobar cartuchos DPS y vía de chispas."

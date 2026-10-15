@@ -19,6 +19,10 @@ Diseño y trazado de los sistemas de conducción de cableado (conduit, bandejas 
 - **Identificación y Código de Colores:**
   - Marcaje unificado en borneros y conductores en ambos extremos con etiquetas termoencogibles numeradas según plano unifilar.
 
-## 4. Contenido del Directorio
-- `trazado_canalizaciones/`: Planos de tendido de tuberías por techos, pisos y muros, ubicación de cajas de registro, cuadros secundarios y pasamuros cortafuegos.
-- `normativas_y_calculos/`: Tablas de cálculo de sección de tuberías conduit según número y calibre de cables, y tabla de compatibilidad electromagnética.
+## 4. Contenido y Entregables del Directorio
+- **`trazado_canalizaciones/`**:
+  - [`plano_canalizaciones_segregadas.dxf`](trazado_canalizaciones/plano_canalizaciones_segregadas.dxf): Plano CAD 2D completo de la vivienda ($10 \times 10\text{ m}$) con segregación física de rutas de Fuerza AC 230V (PVC Cédula 40 1" / EMT), Red de Datos UTP Cat6A / PoE ($\ge 30\text{ cm}$ en corrugado LSZH 25mm), Bus de Sensores / Modbus RS-485 apantallado (20mm), cruces perpendiculares a 90° y ubicación de cajas de registro normalizadas CR-01 a CR-06.
+  - [`plano_canalizaciones_segregadas.svg`](trazado_canalizaciones/plano_canalizaciones_segregadas.svg): Render vectorial con código de colores normalizado y tabla de compatibilidad electromagnética.
+- **`NOTA_DE_DISENO.md`**: Ficha técnica y criterios de ocupación máxima (<40%), radio de curvatura ($R \ge 6 \times D$) y tendido según ANSI/TIA-569-E y REBT ITC-BT-21.
+- **`normativas_y_calculos/`**: Criterios de compatibilidad electromagnética (EMC) y cálculo de atenuación en Cat6A.
+

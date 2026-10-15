@@ -183,3 +183,4 @@ if __name__ == "__main__":
     dxf_target = os.path.join(base_dir, "03_seguridad_y_control_acceso/03_actuadores_valvulas_gas_agua/mecanico/esquema_corte_valvulas_gas_agua.dxf")
     svg_target = os.path.join(base_dir, "03_seguridad_y_control_acceso/03_actuadores_valvulas_gas_agua/mecanico/esquema_corte_valvulas_gas_agua.svg")
     generar_esquema_valvulas_corte(dxf_target, svg_target)
+

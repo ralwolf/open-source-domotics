@@ -1,0 +1,201 @@
+substitutions:
+  device_name: "controlador-biogas-generador"
+  friendly_name: "Controlador Biogás & Generador Dual"
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+  comment: "Monitoreo de Gasómetro de Biogás, Válvula ATEX y Arranque Automático ATS Generador 5kW"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Red IoT Segregada (VLAN 30 IoT - Cero Acceso a Internet)
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+  manual_ip:
+    static_ip: 192.168.30.57
+    gateway: 192.168.30.1
+    subnet: 255.255.255.0
+    dns1: 192.168.30.1
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+
+logger:
+  level: INFO
+
+# Salidas de Relés para Arranque del Motor y Válvula de Biogás
+switch:
+  - platform: gpio
+    pin: GPIO23
+    id: valve_biogas_atex
+    name: "Electroválvula Biogás ATEX"
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    pin: GPIO19
+    id: gen_ignition
+    name: "Ignición Generador (Run/Stop)"
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    pin: GPIO18
+    id: gen_starter_relay
+    name: "Motor de Arranque 12V"
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    pin: GPIO5
+    id: gen_choke_solenoid
+    name: "Choke / Cebador de Aire"
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    pin: GPIO17
+    id: ats_transfer_cmd
+    name: "Comando Conmutador ATS"
+    restore_mode: ALWAYS_OFF
+
+# Sensores Analógicos de Presión, Gas y Tensión Generador
+sensor:
+  # 1. Transmisor Piezorresistivo de Presión de Biogás (0 - 50 mbar)
+  - platform: adc
+    pin: GPIO36
+    name: "Presión Gasómetro de Biogás"
+    id: biogas_pressure_mbar
+    attenuation: 12db
+    update_interval: 5s
+    filters:
+      # Calibración de bucle 4-20mA (0.6V a 3.0V con shunt 150R)
+      - calibrate_linear:
+          - 0.60 -> 0.0
+          - 3.00 -> 50.0
+      - clamp:
+          min_value: 0.0
+          max_value: 50.0
+    unit_of_measurement: "mbar"
+    accuracy_decimals: 1
+
+  # 2. Sensor de Detección de Fugas de Metano (MQ-4)
+  - platform: adc
+    pin: GPIO39
+    name: "Concentración Metano Caseta (MQ-4)"
+    id: methane_concentration
+    attenuation: 12db
+    update_interval: 2s
+    unit_of_measurement: "ppm"
+    filters:
+      - calibrate_linear:
+          - 0.40 -> 200.0
+          - 2.50 -> 5000.0
+
+  # 3. Sensor Tensión AC Salida Generador (ZMPT101B)
+  - platform: adc
+    pin: GPIO34
+    name: "Tensión Generador AC"
+    id: gen_voltage_ac
+    attenuation: 12db
+    update_interval: 1s
+    filters:
+      - calibrate_linear:
+          - 0.0 -> 0.0
+          - 2.4 -> 230.0
+    unit_of_measurement: "V"
+    accuracy_decimals: 0
+
+  # 4. Tensión Batería de Arranque 12V
+  - platform: adc
+    pin: GPIO35
+    name: "Tensión Batería Motor 12V"
+    attenuation: 12db
+    update_interval: 30s
+    filters:
+      - multiply: 5.0 # Divisor resistivo 40k/10k
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+
+  # Entidad Importada desde Home Assistant: SoC Banco LiFePO4
+  - platform: homeassistant
+    id: ess_battery_soc
+    entity_id: sensor.banco_baterias_lifepo4_soc
+    internal: true
+
+# Sensor Binario de Alarma de Metano
+binary_sensor:
+  - platform: template
+    name: "Alarma Fuga de Gas Metano"
+    device_class: gas
+    lambda: |-
+      return (id(methane_concentration).state > 1000.0);
+    on_press:
+      then:
+        - switch.turn_off: valve_biogas_atex
+        - switch.turn_off: gen_ignition
+        - switch.turn_off: gen_starter_relay
+        - logger.log: "EMERGENCIA: Fuga crítica de metano. Suministro cortado e ignición apagada."
+
+# Script de Secuencia de Arranque Automático del Generador Dual
+script:
+  - id: start_generator_sequence
+    mode: restart
+    then:
+      - logger.log: "Iniciando secuencia de arranque de generador con biogás..."
+      # 1. Abrir válvula de gas ATEX
+      - switch.turn_on: valve_biogas_atex
+      - delay: 1s
+      # 2. Habilitar cebador de aire e ignición
+      - switch.turn_on: gen_choke_solenoid
+      - switch.turn_on: gen_ignition
+      - delay: 500ms
+      # 3. Pulso de motor de arranque (Starter) por 3.5 segundos
+      - switch.turn_on: gen_starter_relay
+      - delay: 3500ms
+      - switch.turn_off: gen_starter_relay
+      # 4. Abrir cebador de aire progresivamente
+      - delay: 2s
+      - switch.turn_off: gen_choke_solenoid
+      - delay: 5s
+      # 5. Comprobar si el motor encendió verificando generación de 230V AC
+      - if:
+          condition:
+            lambda: 'return id(gen_voltage_ac).state > 180.0;'
+          then:
+            - logger.log: "Generador encendido y estabilizado. Conmutando ATS a carga de emergencia."
+            - switch.turn_on: ats_transfer_cmd
+          else:
+            - logger.log: "Fallo de encendido en primer intento. Apagando ignición de seguridad."
+            - switch.turn_off: gen_ignition
+            - switch.turn_off: valve_biogas_atex
+
+  - id: stop_generator_sequence
+    then:
+      - logger.log: "Deteniendo generador..."
+      - switch.turn_off: ats_transfer_cmd
+      - delay: 2s
+      - switch.turn_off: valve_biogas_atex
+      - delay: 3s
+      - switch.turn_off: gen_ignition
+
+# Automatización de Contingencia por Baja Carga ESS
+interval:
+  - interval: 1min
+    then:
+      - lambda: |-
+          // Si el SoC de baterías LiFePO4 cae por debajo del 18%, arrancar generador automáticamente
+          if (id(ess_battery_soc).state < 18.0 && !id(gen_ignition).state) {
+            ESP_LOGW("biogas", "Batería baja (<18%). Lanzando arranque de apoyo por generador.");
+            id(start_generator_sequence).execute();
+          }
+          // Si las baterías alcanzaron el 85% de carga, detener generador
+          if (id(ess_battery_soc).state > 85.0 && id(gen_ignition).state) {
+            ESP_LOGI("biogas", "Batería recuperada (>85%). Apagando generador.");
+            id(stop_generator_sequence).execute();
+          }

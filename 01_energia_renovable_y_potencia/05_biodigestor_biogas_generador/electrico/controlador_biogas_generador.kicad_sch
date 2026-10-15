@@ -1,0 +1,119 @@
+(kicad_sch
+  (version 20231120)
+  (generator "open-source-domotics-gen")
+  (generator_version "10.0")
+  (uuid "9699b664-9769-4fb4-b4be-ac7101a88c93")
+  (paper "A3")
+  (title_block
+    (title "CONTROLADOR INTELIGENTE DE BIOGÁS Y ARRANQUE AUTOMÁTICO GENERADOR DUAL (ATS)")
+    (date "2026-10-15")
+    (rev "v1.0")
+    (company "open-source-domotics (Hardware Libre)")
+    (comment 1 "Telemetría Presión 0-50mbar + Sensor CH4/H2S + Secuencia Start/Choke/Run + Válvula ATEX")
+    (comment 2 "Arranque autónomo por baja tensión de baterías LiFePO4 o contingencia de red")
+  )
+
+  (wire (pts (xy 40.0 50.0) (xy 75.0 50.0))
+    (stroke (width 0) (type default))
+    (uuid "6bb19251-e204-4ba5-b251-d9a91e1ef211")
+  )
+  (text "ALIMENTACION_12VDC_BAT"
+    (at 40.0 48.0 0)
+    (effects (font (size 1.5 1.5)))
+    (uuid "d9eefbfa-4caf-46a8-844d-7082e2bab358")
+  )
+
+  (symbol
+    (lib_id "Regulator_Linear:AMS1117-3.3")
+    (at 85.0 65.0 0)
+    (unit 1)
+    (uuid "cbf6297d-6785-4d46-a76e-272a31539b0a")
+    (property "Reference" "U2" (at 85.0 52.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AMS1117-3.3 (12V -> 3.3V 1A)" (at 85.0 78.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-223-3_TabPin2" (at 85.0 65.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "RF_Module:ESP32-WROOM-32E")
+    (at 180.0 110.0 0)
+    (unit 1)
+    (uuid "0715982d-9d33-4213-9220-9f2effa84ddb")
+    (property "Reference" "U1" (at 180.0 80.0 0) (effects (font (size 1.5 1.5))))
+    (property "Value" "ESP32-WROOM-32E (16MB Flash)" (at 180.0 142.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-WROOM-32E" (at 180.0 110.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Sensor_Gas:MQ-4")
+    (at 85.0 130.0 0)
+    (unit 1)
+    (uuid "456cb61b-915b-4b0d-8bc6-7afcf561aea2")
+    (property "Reference" "S1" (at 85.0 118.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MQ-4 (Detector Metano CH4)" (at 85.0 142.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Sensor:MQ-4" (at 85.0 130.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Sensor_Current:ZMPT101B")
+    (at 85.0 180.0 0)
+    (unit 1)
+    (uuid "d42b249b-7b72-4c09-a5d0-94511f3b5fef")
+    (property "Reference" "T1" (at 85.0 168.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ZMPT101B (Transformador Tensión AC 230V)" (at 85.0 192.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Transformer_THT:Transformer_ZMPT101B" (at 85.0 180.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Relay:G5LE-1")
+    (at 280.0 65.0 0)
+    (unit 1)
+    (uuid "a6f6352b-ff96-430e-b347-1d5a8877bef3")
+    (property "Reference" "K1" (at 280.0 52.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "Relé 1: Ignición / Run Generador" (at 280.0 78.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5LE-1" (at 280.0 65.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Relay:G5LE-1")
+    (at 280.0 110.0 0)
+    (unit 1)
+    (uuid "0c8d985d-e621-4b11-ac61-be2dabdb54cf")
+    (property "Reference" "K2" (at 280.0 98.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "Relé 2: Solenoide Starter Motor (Pulso 4s)" (at 280.0 122.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5LE-1" (at 280.0 110.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Relay:G5LE-1")
+    (at 280.0 155.0 0)
+    (unit 1)
+    (uuid "2da732f7-9080-48e7-9efb-ea523786ac73")
+    (property "Reference" "K3" (at 280.0 142.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "Relé 3: Choke Cebador Motorizado" (at 280.0 168.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5LE-1" (at 280.0 155.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Relay:G5LE-1")
+    (at 280.0 200.0 0)
+    (unit 1)
+    (uuid "6fbc92df-d570-438a-8988-de1a1b4d7cb4")
+    (property "Reference" "K4" (at 280.0 188.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "Relé 4: Válvula de Corte Biogás ATEX 12V" (at 280.0 212.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5LE-1" (at 280.0 200.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Connector:Screw_Terminal_01x08")
+    (at 350.0 130.0 0)
+    (unit 1)
+    (uuid "ee985561-a6c2-45bc-a078-0ab513e48768")
+    (property "Reference" "J1" (at 350.0 100.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNERO GENERADOR (IGN+, IGN-, START, CHOKE, GAS_EV+, GAS_EV-, ATS_CMD, GND)" (at 350.0 160.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-8_P5.08mm" (at 350.0 130.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

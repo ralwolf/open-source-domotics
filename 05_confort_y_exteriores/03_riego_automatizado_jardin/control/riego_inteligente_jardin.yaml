@@ -217,3 +217,4 @@ interval:
               ESP_LOGW("riego", "Ciclo de riego abortado: Nivel de cisterna pluvial insuficiente (<15%)");
             }
           }
+

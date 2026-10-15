@@ -123,3 +123,4 @@ switch:
       name: "Permitir Descarga Batería"
     balancer:
       name: "Balanceador Activo 2A"
+

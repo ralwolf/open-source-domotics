@@ -331,3 +331,4 @@ if __name__ == "__main__":
     dxf_out = "/home/ral/Documents/GitHub/open-source-domotics/00_diseno_arquitectonico_y_estructural/02_estructura_pilares_y_losas/planos_y_calculos/plano_estructura_pilares_losas.dxf"
     svg_out = "/home/ral/Documents/GitHub/open-source-domotics/00_diseno_arquitectonico_y_estructural/02_estructura_pilares_y_losas/planos_y_calculos/plano_estructura_pilares_losas.svg"
     generar_plano_estructura(dxf_out, svg_out)
+

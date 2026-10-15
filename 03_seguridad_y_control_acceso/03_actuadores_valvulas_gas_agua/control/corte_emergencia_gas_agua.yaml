@@ -119,3 +119,4 @@ binary_sensor:
           event: esphome.gas_leak_critical
           data:
             message: "Fuga de gas detectada. Suministro cortado automáticamente."
+

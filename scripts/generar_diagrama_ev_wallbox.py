@@ -372,3 +372,4 @@ if __name__ == "__main__":
     dxf_out = "/home/ral/Documents/GitHub/open-source-domotics/01_energia_renovable_y_potencia/09_cargador_vehiculo_electrico_ev/electrico/esquema_ev_wallbox.dxf"
     svg_out = "/home/ral/Documents/GitHub/open-source-domotics/01_energia_renovable_y_potencia/09_cargador_vehiculo_electrico_ev/electrico/esquema_ev_wallbox.svg"
     generar_diagrama_ev_wallbox(dxf_out, svg_out)
+

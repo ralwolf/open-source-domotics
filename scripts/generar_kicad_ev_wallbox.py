@@ -277,3 +277,4 @@ if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     target_dir = os.path.join(base_dir, "01_energia_renovable_y_potencia/09_cargador_vehiculo_electrico_ev/electrico")
     generar_kicad_ev_wallbox(target_dir)
+

@@ -197,3 +197,4 @@ if __name__ == "__main__":
     dxf_target = os.path.join(base_dir, "00_diseno_arquitectonico_y_estructural/07_captacion_pluvial_cisterna_y_potabilizacion/mecanico/esquema_captacion_potabilizacion_pluvial.dxf")
     svg_target = os.path.join(base_dir, "00_diseno_arquitectonico_y_estructural/07_captacion_pluvial_cisterna_y_potabilizacion/mecanico/esquema_captacion_potabilizacion_pluvial.svg")
     generar_esquema_pluvial(dxf_target, svg_target)
+

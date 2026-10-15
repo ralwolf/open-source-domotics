@@ -267,3 +267,4 @@ if __name__ == "__main__":
     dxf_out = "/home/ral/Documents/GitHub/open-source-domotics/05_confort_y_exteriores/03_riego_automatizado_jardin/mecanico/esquema_hidraulico_riego.dxf"
     svg_out = "/home/ral/Documents/GitHub/open-source-domotics/05_confort_y_exteriores/03_riego_automatizado_jardin/mecanico/esquema_hidraulico_riego.svg"
     generar_esquema_riego(dxf_out, svg_out)
+

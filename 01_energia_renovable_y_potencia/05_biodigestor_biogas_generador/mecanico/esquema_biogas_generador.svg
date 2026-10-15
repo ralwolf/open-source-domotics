@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 850" width="100%" height="100%" style="background-color: #0c141f; font-family: monospace, sans-serif;">
+  <rect x="20" y="20" width="1160" height="810" fill="none" stroke="#1e293b" stroke-width="2" rx="8" />
+
+  <!-- Cajetin -->
+  <rect x="680" y="730" width="480" height="80" fill="#152132" stroke="#eab308" stroke-width="2" rx="4" />
+  <text x="700" y="755" fill="#facc15" font-size="16" font-weight="bold">OPEN-SOURCE-DOMOTICS</text>
+  <text x="700" y="775" fill="#f8fafc" font-size="13" font-weight="bold">P&amp;ID BIODIGESTOR SÉPTICO, BIOGÁS Y GENERADOR DUAL</text>
+  <text x="700" y="795" fill="#94a3b8" font-size="11">Depuración H2S + Trampa Condensado + Parallamas + Motogenerador 5 kW</text>
+
+  <!-- Entrada Aguas Negras -->
+  <g transform="translate(40, 200)">
+    <rect x="0" y="0" width="110" height="120" fill="#1e293b" stroke="#64748b" stroke-width="2" rx="6" />
+    <text x="12" y="25" fill="#f8fafc" font-size="12" font-weight="bold">ENTRADA AFLUENTE</text>
+    <text x="12" y="45" fill="#94a3b8" font-size="11">Aguas Negras</text>
+    <text x="12" y="65" fill="#94a3b8" font-size="11">+ Residuos Org.</text>
+    <text x="12" y="90" fill="#cbd5e1" font-size="11">PVC 110 mm</text>
+  </g>
+
+  <path d="M 150 260 L 210 260" stroke="#64748b" stroke-width="8" fill="none" />
+
+  <!-- Reactor Biodigestor -->
+  <g transform="translate(210, 140)">
+    <rect x="0" y="0" width="160" height="260" fill="#1e293b" stroke="#10b981" stroke-width="2.5" rx="8" />
+    <text x="15" y="30" fill="#34d399" font-size="14" font-weight="bold">BIODIGESTOR</text>
+    <text x="15" y="55" fill="#f8fafc" font-size="12">Anaeróbico 1500 L</text>
+    <text x="15" y="80" fill="#94a3b8" font-size="11">Cámara de Digestión</text>
+    <text x="15" y="100" fill="#94a3b8" font-size="11">Temperatura óptima: 35°C</text>
+    
+    <path d="M 20 180 L 140 180" stroke="#334155" stroke-width="2" />
+    <text x="15" y="210" fill="#cbd5e1" font-size="11">Fondo cónico lodos</text>
+    <text x="15" y="235" fill="#22c55e" font-size="10">Salida Biol Fertilizante</text>
+  </g>
+
+  <!-- Salida Biogas Superior -->
+  <path d="M 290 140 L 290 90 L 410 90" stroke="#eab308" stroke-width="6" fill="none" />
+  <text x="300" y="80" fill="#facc15" font-size="11" font-weight="bold">Línea Biogás Bruto (CH4 65%)</text>
+
+  <!-- Trampa de Condensado -->
+  <g transform="translate(410, 40)">
+    <rect x="0" y="0" width="90" height="110" fill="#1e293b" stroke="#38bdf8" stroke-width="2" rx="6" />
+    <text x="10" y="25" fill="#38bdf8" font-size="11" font-weight="bold">TRAMPA AGUA</text>
+    <text x="10" y="45" fill="#f8fafc" font-size="10">Condensados</text>
+    <text x="10" y="70" fill="#94a3b8" font-size="10">Sifón U</text>
+    <text x="10" y="95" fill="#22c55e" font-size="9">Purga manual</text>
+  </g>
+
+  <path d="M 500 90 L 550 90" stroke="#eab308" stroke-width="6" fill="none" />
+
+  <!-- Filtro Desulfurador H2S -->
+  <g transform="translate(550, 40)">
+    <rect x="0" y="0" width="110" height="110" fill="#1e293b" stroke="#f59e0b" stroke-width="2" rx="6" />
+    <text x="10" y="25" fill="#fbbf24" font-size="11" font-weight="bold">DESULFURADOR</text>
+    <text x="10" y="45" fill="#f8fafc" font-size="10">Viruta Fe2O3</text>
+    <text x="10" y="70" fill="#94a3b8" font-size="10">Elimina H2S</text>
+    <text x="10" y="95" fill="#4ade80" font-size="9">&lt; 10 ppm (anti-ácido)</text>
+  </g>
+
+  <path d="M 660 90 L 710 90" stroke="#eab308" stroke-width="6" fill="none" />
+
+  <!-- Gasometro Flexible -->
+  <g transform="translate(710, 40)">
+    <rect x="0" y="0" width="130" height="110" fill="#1e293b" stroke="#a855f7" stroke-width="2" rx="6" />
+    <text x="12" y="25" fill="#c084fc" font-size="12" font-weight="bold">GASÓMETRO</text>
+    <text x="12" y="45" fill="#f8fafc" font-size="11">Pulmón 2000 L</text>
+    <text x="12" y="70" fill="#94a3b8" font-size="10">Presión: 20 mbar</text>
+    <text x="12" y="95" fill="#cbd5e1" font-size="10">Membrana estanca</text>
+  </g>
+
+  <path d="M 840 90 L 890 90" stroke="#eab308" stroke-width="6" fill="none" />
+
+  <!-- Valvulas de Seguridad y Parallamas -->
+  <g transform="translate(890, 40)">
+    <rect x="0" y="0" width="120" height="110" fill="#1e293b" stroke="#ef4444" stroke-width="2" rx="6" />
+    <text x="10" y="25" fill="#f87171" font-size="11" font-weight="bold">SEGURIDAD</text>
+    <text x="10" y="45" fill="#f8fafc" font-size="10">Parallamas Inox</text>
+    <text x="10" y="65" fill="#facc15" font-size="10">Alivio: 35 mbar</text>
+    <text x="10" y="85" fill="#ef4444" font-size="10">EV Corte ATEX</text>
+    <text x="10" y="100" fill="#94a3b8" font-size="9">NC Fail-safe</text>
+  </g>
+
+  <path d="M 1010 90 L 1050 90 L 1050 280 L 980 280" stroke="#eab308" stroke-width="6" fill="none" />
+
+  <!-- Motogenerador Dual 5 kW -->
+  <g transform="translate(760, 230)">
+    <rect x="0" y="0" width="220" height="170" fill="#1e293b" stroke="#f43f5e" stroke-width="2.5" rx="8" />
+    <text x="15" y="30" fill="#fb7185" font-size="14" font-weight="bold">GENERADOR DUAL 5 kW</text>
+    <text x="15" y="55" fill="#f8fafc" font-size="12">Biogás + Gasolina</text>
+    <text x="15" y="75" fill="#94a3b8" font-size="11">Motor 4T OHV 389cc</text>
+    <text x="15" y="95" fill="#94a3b8" font-size="11">Carburador bi-combustible</text>
+    <text x="15" y="120" fill="#cbd5e1" font-size="11">Salida: 230V~ 50Hz</text>
+    <text x="15" y="145" fill="#22c55e" font-size="11">Arranque automático 12V</text>
+  </g>
+
+  <!-- Linea AC hacia Tablero ATS -->
+  <path d="M 760 315 L 680 315" stroke="#38bdf8" stroke-width="4" fill="none" />
+
+  <!-- Tablero ATS -->
+  <g transform="translate(500, 240)">
+    <rect x="0" y="0" width="180" height="150" fill="#0f172a" stroke="#38bdf8" stroke-width="2" rx="6" />
+    <text x="15" y="30" fill="#38bdf8" font-size="13" font-weight="bold">TABLERO ATS</text>
+    <text x="15" y="55" fill="#f8fafc" font-size="11">Transferencia Automática</text>
+    <text x="15" y="75" fill="#94a3b8" font-size="10">Inversor Solar &lt;-&gt; Generador</text>
+    <text x="15" y="100" fill="#e2e8f0" font-size="10">Enclavamiento Eléc. / Mec.</text>
+    <text x="15" y="125" fill="#4ade80" font-size="10">Arranque por contacto seco</text>
+  </g>
+
+  <!-- Cuadro Inferior: Logica del Controlador ESP32 -->
+  <g transform="translate(40, 480)">
+    <rect x="0" y="0" width="600" height="220" fill="#152132" stroke="#10b981" stroke-width="2" rx="6" />
+    <text x="25" y="35" fill="#34d399" font-size="15" font-weight="bold">CONTROLADOR INTELIGENTE BIOGÁS &amp; ATS (ESP32 / VLAN 30)</text>
+    
+    <text x="25" y="70" fill="#cbd5e1" font-size="11">• Transmisor de presión 0-50 mbar con lectura analógica 4-20mA</text>
+    <text x="25" y="95" fill="#cbd5e1" font-size="11">• Detector de gas metano MQ-4 calibrado en cámara con aislamiento galvánico</text>
+    <text x="25" y="120" fill="#cbd5e1" font-size="11">• Secuencia de arranque: Ignición ON -&gt; Choke motorizado -&gt; Pulso Starter 4s</text>
+    <text x="25" y="145" fill="#cbd5e1" font-size="11">• Interbloqueo de seguridad: Corte instantáneo de gas ante llama apagada</text>
+    <text x="25" y="170" fill="#cbd5e1" font-size="11">• Algoritmo ESS Low Battery: Arranca grupo si SoC de baterías LiFePO4 &lt; 20%</text>
+    <text x="25" y="195" fill="#38bdf8" font-size="11">• Estimación volumétrica de biometano generado y horas de autonomía en HA</text>
+  </g>
+</svg>

@@ -1,0 +1,109 @@
+(kicad_sch
+  (version 20231120)
+  (generator "open-source-domotics-gen")
+  (generator_version "10.0")
+  (uuid "487559ef-3ed1-4367-9875-72469c6f90f6")
+  (paper "A3")
+  (title_block
+    (title "CONTADOR IOT DE DESCARGAS ATMOSFÉRICAS Y TELEMETRÍA DPS")
+    (date "2026-10-15")
+    (rev "v1.0")
+    (company "open-source-domotics (Hardware Libre)")
+    (comment 1 "Bobina Rogowski / Transformador de corriente de pulso + Comparador ultra-rápido")
+    (comment 2 "Monitoreo de estado de cartuchos de sobretensión Tipo 1 y 2 en cuadro TGBT")
+  )
+
+  (wire (pts (xy 40.0 50.0) (xy 75.0 50.0))
+    (stroke (width 0) (type default))
+    (uuid "0cc852f5-fdaa-49f3-a698-aa87a2bce40f")
+  )
+  (text "ALIMENTACION_BATERIA_18650"
+    (at 40.0 48.0 0)
+    (effects (font (size 1.5 1.5)))
+    (uuid "b71e0576-f48f-49ae-8319-209d0a6c4adc")
+  )
+
+  (symbol
+    (lib_id "Battery_Management:TP4056")
+    (at 85.0 65.0 0)
+    (unit 1)
+    (uuid "c9103c06-92f6-44f8-996e-ad4c98bdf401")
+    (property "Reference" "U2" (at 85.0 52.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "TP4056 (Cargador Solar/USB Batería Li-Ion)" (at 85.0 78.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 85.0 65.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Regulator_Linear:AMS1117-3.3")
+    (at 130.0 65.0 0)
+    (unit 1)
+    (uuid "8203238c-47d7-423d-841a-c8ab3218ab9c")
+    (property "Reference" "U3" (at 130.0 52.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AMS1117-3.3 (LDO 3.3V 1A)" (at 130.0 78.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-223-3_TabPin2" (at 130.0 65.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "RF_Module:ESP32-WROOM-32E")
+    (at 200.0 110.0 0)
+    (unit 1)
+    (uuid "55195593-b663-4244-8b89-88d4af5a90b3")
+    (property "Reference" "U1" (at 200.0 80.0 0) (effects (font (size 1.5 1.5))))
+    (property "Value" "ESP32-WROOM-32E (16MB Flash)" (at 200.0 142.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-WROOM-32E" (at 200.0 110.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Comparator:LM393")
+    (at 85.0 140.0 0)
+    (unit 1)
+    (uuid "d2d44ad1-b52d-4d20-aea4-6327a00284a3")
+    (property "Reference" "U4" (at 85.0 128.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "LM393 (Discriminador Rápido Impulso >500A)" (at 85.0 152.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 85.0 140.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Isolator:PC817")
+    (at 290.0 75.0 0)
+    (unit 1)
+    (uuid "1866eabf-eeef-4dc1-8a35-3087727002c1")
+    (property "Reference" "OK1" (at 290.0 62.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "PC817 (Supervisión Contacto DPS Clase 1)" (at 290.0 88.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_DIP:DIP-4_W7.62mm" (at 290.0 75.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Isolator:PC817")
+    (at 290.0 125.0 0)
+    (unit 1)
+    (uuid "72bdfdd6-021f-45cb-8c39-9e03ef32ff6e")
+    (property "Reference" "OK2" (at 290.0 112.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "PC817 (Supervisión Contacto DPS Clase 2)" (at 290.0 138.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_DIP:DIP-4_W7.62mm" (at 290.0 125.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Connector:Screw_Terminal_01x04")
+    (at 40.0 140.0 0)
+    (unit 1)
+    (uuid "cfeb32af-22f6-41a9-bf7a-acba2cb2f236")
+    (property "Reference" "J1" (at 40.0 118.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ENTRADA BOBINA ROGOWSKI (SIG+, SIG-, GND, SHIELD)" (at 40.0 162.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-4_P5.08mm" (at 40.0 140.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Connector:Screw_Terminal_01x06")
+    (at 360.0 100.0 0)
+    (unit 1)
+    (uuid "1715b76d-b267-4cea-82a3-b28df564536e")
+    (property "Reference" "J2" (at 360.0 70.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNERO TELEMETRÍA DPS (DPS1_NO, DPS1_COM, DPS2_NO, DPS2_COM, ALARM, GND)" (at 360.0 130.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-6_P3.81mm" (at 360.0 100.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

@@ -279,3 +279,4 @@ text_sensor:
     name: "Estado IEC 61851"
     lambda: |-
       return id(charging_state);
+

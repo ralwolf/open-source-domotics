@@ -187,3 +187,4 @@ if __name__ == "__main__":
     dxf_target = os.path.join(base_dir, "01_energia_renovable_y_potencia/03_solar_fotovoltaica/electrico/esquema_fotovoltaico_ess.dxf")
     svg_target = os.path.join(base_dir, "01_energia_renovable_y_potencia/03_solar_fotovoltaica/electrico/esquema_fotovoltaico_ess.svg")
     generar_diagrama_solar_ess(dxf_target, svg_target)
+
