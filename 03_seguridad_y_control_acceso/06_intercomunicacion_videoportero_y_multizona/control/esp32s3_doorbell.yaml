@@ -142,3 +142,4 @@ output:
   - platform: gpio
     pin: GPIO8
     id: gpio_ir_cut
+

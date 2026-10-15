@@ -195,3 +195,4 @@ if __name__ == "__main__":
     dxf_target = os.path.join(base_dir, "02_infraestructura_it_y_red/01_rack_servidores_y_ups/mecanico/elevacion_rack_19u.dxf")
     svg_target = os.path.join(base_dir, "02_infraestructura_it_y_red/01_rack_servidores_y_ups/mecanico/elevacion_rack_19u.svg")
     generar_rack_19u(dxf_target, svg_target)
+

@@ -82,3 +82,4 @@ sensor:
       name: "Humedad Habitación Infantil"
     address: 0x44
     update_interval: 10s
+

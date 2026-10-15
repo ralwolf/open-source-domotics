@@ -27,6 +27,10 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 ---
 
 ## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
+- `mecanico/`:
+  - [`gabinete_baterias_lifepo4_16s.FCStd`](./mecanico/gabinete_baterias_lifepo4_16s.FCStd): Modelo paramétrico 3D en FreeCAD 1.1+ del banco LiFePO4 16S (14.3 kWh) con celdas prismáticas EVE LF280K, placas de compresión de 8 mm con varillas M8 (300 kgf), barras colectoras y fusible Clase T.
+  - [`gabinete_baterias_lifepo4_16s.step`](./mecanico/gabinete_baterias_lifepo4_16s.step): Exportación universal STEP AP214 para fabricación y montaje en rack.
 - `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
-- `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).
+- `control/`:
+  - [`bms_lifepo4_monitor.yaml`](./control/bms_lifepo4_monitor.yaml): Firmware ESPHome para monitorización del Smart BMS JK / Daly con balanceador activo 2A, lecturas de las 16 celdas individuales, $\Delta V$, temperatura NTC y SoC %.
+- [`NOTA_DE_DISENO.md`](./NOTA_DE_DISENO.md): Memoria de cálculo de capacidad útil (14.3 kWh al 90% DoD), corrientes máximas (200A) y dimensionamiento de cables 50 mm².

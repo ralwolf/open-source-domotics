@@ -111,3 +111,4 @@ interval:
           then:
             - switch.turn_on: contactor_parada_emergencia
             - logger.log: "PELIGRO: Ráfaga extrema (>18m/s). DISPARANDO FRENO DE EMERGENCIA POR CORTOCIRCUITO."
+

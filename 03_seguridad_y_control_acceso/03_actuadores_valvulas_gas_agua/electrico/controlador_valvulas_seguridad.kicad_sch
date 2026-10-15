@@ -1,0 +1,105 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "1c5e724c-c1e0-44d2-b99b-8c5877d0f2f1")
+	(paper "A3")
+	(title_block
+		(title "Emergency Gas & Water Shutoff Controller with Battery Backup")
+		(date "2026-10-14")
+		(rev "1.0")
+		(company "Open Source Domotics")
+		(comment 1 "Zero-Latency Hardware Interruption + Dual 12V 5A Actuator Drivers + 85dB Siren")
+		(comment 2 "Hardware 100% Abierto y Reproducible en KiCad")
+	)
+	(lib_symbols)
+	(text "SECCIÓN 1: ALIMENTACIÓN 12VDC CON RESPALDO DE BATERÍA DE LITIO (UPS MINI)"
+		(at 30 25 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "9cf8449f-63a9-4c7a-9cdc-50751926719c")
+	)
+	(text "J1: Entrada 12VDC 2A Jack o Bornera\nU1: Cargador BMS y Step-Up 12V con celda Li-Ion 18650 3.7V 3000mAh (Garantiza cierre de válvulas en apagón)\nU2: Regulador LDO AMS1117-3.3V (Alimentación MCU y sensores analógicos)\nC1: 470uF 25V Low-ESR | C2, C3: 100nF Cerámico | D1: Diodo Schottky SS34"
+		(at 30 35 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "b6ea001f-f6e7-4272-b69d-946573afad48")
+	)
+	(text "SECCIÓN 2: MICROCONTROLADOR ESP32 Y CONECTIVIDAD"
+		(at 160 25 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "2dccdc54-c767-4737-88d4-ed45435d0cb5")
+	)
+	(text "U3: ESP32-WROOM-32E (4MB Flash)\n- Pin IO14: Disparo Válvula de Gas (Corte instantáneo <1s)\n- Pin IO12: Cierre Válvula de Agua (Motorizada DN25)\n- Pin IO13: Activación Zumbador / Sirena 85 dB\n- Pin IO34: Sensor Fuga Agua Cocina (Optoacoplado)\n- Pin IO35: Sensor Fuga Agua Lavandería/Baños\n- Pin IO32: Sensor Detector de Gas Metano/GLP (Entrada analógica/digital)\n- Pin IO2: LED de Estado del Sistema (Verde: OK / Rojo: Fuga Detectada)"
+		(at 160 35 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "4b3b3a28-5a05-4883-88a6-cc42f0fc4528")
+	)
+	(text "SECCIÓN 3: ETAPA DE DISPARO DE ELECTROVÁLVULAS DE GAS Y AGUA"
+		(at 30 115 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "905c5bf8-fb89-462f-a683-41d6676a89ba")
+	)
+	(text "OK1, OK2: Optoacopladores PC817 para aislamiento galvánico completo entre ESP32 y actuadores\nQ1, Q2: MOSFETs de Potencia Logic-Level IRLZ44N (Vds 55V, Id 47A, Rds_on 0.022 Ohm)\nD2, D3: Diodos Flyback de Protección 1N5408 en paralelo con las bobinas de las válvulas\nJ2: Bornera 12V 2A para Electroválvula de Gas (Disparo biestable por pulso)\nJ3: Bornera 12V 2A para Válvula Motorizada de Agua (DN25 1 pulgada con retorno por condensador)"
+		(at 30 125 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "5b31205c-fb3d-4074-877e-19f9b38ca35f")
+	)
+	(text "SECCIÓN 4: SENSORES DE INUNDACIÓN Y DETECCIÓN DE GAS"
+		(at 160 115 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "87d244c6-7f1c-4011-89ff-0fa59fc58c08")
+	)
+	(text "J4: Entrada Cable Conductor Resistivo Sensor de Agua Cocina (Detección por conductividad)\nJ5: Entrada Cable Conductor Sensor de Agua Lavandería y Cuarto Técnico\nJ6: Conector para Módulo Sensor de Gas Metano / GLP (MQ-4 / Figaro TGS2611)\n- Circuito comparador con histéresis (LM393) para evitar falsos positivos por humedad ambiental"
+		(at 160 125 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+			)
+			(justify left)
+		)
+		(uuid "dc1c4786-f411-4f95-804e-a996d395b06d")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+)

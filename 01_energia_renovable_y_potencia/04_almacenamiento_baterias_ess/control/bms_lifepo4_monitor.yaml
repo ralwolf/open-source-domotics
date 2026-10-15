@@ -1,0 +1,125 @@
+substitutions:
+  name: "monitor-bateria-lifepo4-ess"
+  friendly_name: "Monitor Batería LiFePO4 16S ESS"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 192.168.30.28
+    gateway: 192.168.30.1
+    subnet: 255.255.255.0
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret api_key"
+
+ota:
+  - platform: esphome
+
+# Puerto UART conectado al puerto RS-485 / TTL del Smart BMS (JK / Daly)
+uart:
+  id: uart_bms
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 115200
+
+# Integración nativa con Smart BMS JK (Jikong Active Balance BMS)
+# Protocolo robusto con balanceador activo 2A integrado
+# (Componente nativo ESPHome jk_bms)
+jk_bms:
+  uart_id: uart_bms
+
+sensor:
+  - platform: jk_bms
+    total_voltage:
+      name: "Tensión Total Banco ESS"
+    current:
+      name: "Corriente Banco ESS"
+    power:
+      name: "Potencia Banco ESS"
+    charging_power:
+      name: "Potencia de Carga"
+    discharging_power:
+      name: "Potencia de Descarga"
+    capacity_remaining:
+      name: "Capacidad Restante Ah"
+    charging_cycles:
+      name: "Ciclos de Carga Completados"
+    total_battery_capacity_setting:
+      name: "Capacidad Nominal (280 Ah)"
+    min_cell_voltage:
+      name: "Voltaje Mínimo Celda"
+    max_cell_voltage:
+      name: "Voltaje Máximo Celda"
+    min_voltage_cell:
+      name: "Número de Celda Más Baja"
+    max_voltage_cell:
+      name: "Número de Celda Más Alta"
+    delta_cell_voltage:
+      name: "Desbalance de Celdas Delta-V"
+      unit_of_measurement: "V"
+      accuracy_decimals: 3
+
+    # Temperaturas de Seguridad NTC
+    power_tube_temperature:
+      name: "Temperatura MOSFETs BMS"
+    temperature_sensor_1:
+      name: "Temperatura Celdas Grupo 1"
+    temperature_sensor_2:
+      name: "Temperatura Celdas Grupo 2"
+
+    # Voltajes Individuales de las 16 Celdas en Serie (LF280K)
+    cell_voltage_1:
+      name: "Celda 01 Voltaje"
+    cell_voltage_2:
+      name: "Celda 02 Voltaje"
+    cell_voltage_3:
+      name: "Celda 03 Voltaje"
+    cell_voltage_4:
+      name: "Celda 04 Voltaje"
+    cell_voltage_5:
+      name: "Celda 05 Voltaje"
+    cell_voltage_6:
+      name: "Celda 06 Voltaje"
+    cell_voltage_7:
+      name: "Celda 07 Voltaje"
+    cell_voltage_8:
+      name: "Celda 08 Voltaje"
+    cell_voltage_9:
+      name: "Celda 09 Voltaje"
+    cell_voltage_10:
+      name: "Celda 10 Voltaje"
+    cell_voltage_11:
+      name: "Celda 11 Voltaje"
+    cell_voltage_12:
+      name: "Celda 12 Voltaje"
+    cell_voltage_13:
+      name: "Celda 13 Voltaje"
+    cell_voltage_14:
+      name: "Celda 14 Voltaje"
+    cell_voltage_15:
+      name: "Celda 15 Voltaje"
+    cell_voltage_16:
+      name: "Celda 16 Voltaje"
+
+switch:
+  - platform: jk_bms
+    charging:
+      name: "Permitir Carga Batería"
+    discharging:
+      name: "Permitir Descarga Batería"
+    balancer:
+      name: "Balanceador Activo 2A"

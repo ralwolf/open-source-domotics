@@ -1,0 +1,121 @@
+substitutions:
+  name: "controlador-corte-gas-agua"
+  friendly_name: "Controlador Corte Emergencia Gas y Agua"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 192.168.30.29
+    gateway: 192.168.30.1
+    subnet: 255.255.255.0
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret api_key"
+
+ota:
+  - platform: esphome
+
+# ---------------------------------------------------------------------------
+# SALIDAS DE CONTROL: VÁLVULAS Y SIRENA
+# ---------------------------------------------------------------------------
+switch:
+  # Válvula de Gas (Disparo biestable por pulso de 500ms hacia electroimán)
+  - platform: gpio
+    pin: GPIO14
+    id: disparo_valvula_gas
+    name: "Disparo Electroválvula Gas"
+    icon: "mdi:gas-burner"
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - delay: 500ms
+      - switch.turn_off: disparo_valvula_gas
+
+  # Válvula de Agua (Biestable / Retorno automático motorizado)
+  - platform: gpio
+    pin: GPIO12
+    id: valvula_agua_general
+    name: "Válvula General de Agua"
+    icon: "mdi:water-pump"
+    restore_mode: ALWAYS_ON
+
+  # Sirena Acústica In Situ (85 dB)
+  - platform: gpio
+    pin: GPIO13
+    id: sirena_alarma
+    name: "Sirena Alarma In Situ"
+    icon: "mdi:alarm-light"
+    restore_mode: ALWAYS_OFF
+
+# ---------------------------------------------------------------------------
+# SENSORES DE FUGA DE AGUA Y DETECTOR DE GAS
+# ---------------------------------------------------------------------------
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO34
+      mode:
+        input: true
+    name: "Sensor Fuga Agua Cocina"
+    id: sensor_agua_cocina
+    filters:
+      - delayed_on: 100ms # Antirrebote rápido
+    on_press:
+      - switch.turn_off: valvula_agua_general
+      - switch.turn_on: sirena_alarma
+      - homeassistant.event:
+          event: esphome.leak_detected
+          data:
+            type: "water"
+            location: "cocina"
+
+  - platform: gpio
+    pin:
+      number: GPIO35
+      mode:
+        input: true
+    name: "Sensor Fuga Agua Lavandería y Cuarto Técnico"
+    id: sensor_agua_lavanderia
+    filters:
+      - delayed_on: 100ms
+    on_press:
+      - switch.turn_off: valvula_agua_general
+      - switch.turn_on: sirena_alarma
+      - homeassistant.event:
+          event: esphome.leak_detected
+          data:
+            type: "water"
+            location: "lavanderia"
+
+  - platform: gpio
+    pin:
+      number: GPIO32
+      mode:
+        input: true
+    name: "Sensor Detector de Gas Metano / GLP"
+    id: sensor_gas
+    filters:
+      - delayed_on: 50ms
+    on_press:
+      # Lógica de máxima prioridad: CORTE INMEDIATO DE GAS Y ALARMA
+      - switch.turn_on: disparo_valvula_gas
+      - switch.turn_off: valvula_agua_general
+      - switch.turn_on: sirena_alarma
+      - logger.log: "PELIGRO CRÍTICO: FUGA DE GAS DETECTADA. ELECTROVÁLVULA DE GAS CERRADA INMEDIATAMENTE."
+      - homeassistant.event:
+          event: esphome.gas_leak_critical
+          data:
+            message: "Fuga de gas detectada. Suministro cortado automáticamente."

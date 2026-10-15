@@ -195,3 +195,4 @@ if __name__ == "__main__":
     dxf_target = os.path.join(base_dir, "01_energia_renovable_y_potencia/02_solar_termico_y_calefaccion/mecanico/esquema_hidraulico_piso_radiante.dxf")
     svg_target = os.path.join(base_dir, "01_energia_renovable_y_potencia/02_solar_termico_y_calefaccion/mecanico/esquema_hidraulico_piso_radiante.svg")
     generar_esquema_solar_termico(dxf_target, svg_target)
+

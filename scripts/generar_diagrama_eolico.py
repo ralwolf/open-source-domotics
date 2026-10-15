@@ -173,3 +173,4 @@ if __name__ == "__main__":
     dxf_target = os.path.join(base_dir, "01_energia_renovable_y_potencia/01_aerogenerador_archimedes_mk9/electrico/esquema_potencia_eolico.dxf")
     svg_target = os.path.join(base_dir, "01_energia_renovable_y_potencia/01_aerogenerador_archimedes_mk9/electrico/esquema_potencia_eolico.svg")
     generar_diagrama_eolico(dxf_target, svg_target)
+

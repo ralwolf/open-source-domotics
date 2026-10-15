@@ -1,0 +1,125 @@
+substitutions:
+  name: "controlador-cisterna-potabilizacion"
+  friendly_name: "Controlador Cisterna Pluvial y Potabilización"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 192.168.30.24
+    gateway: 192.168.30.1
+    subnet: 255.255.255.0
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret api_key"
+
+ota:
+  - platform: esphome
+
+# ---------------------------------------------------------------------------
+# SENSORES DE NIVEL, PRESIÓN Y CAUDAL
+# ---------------------------------------------------------------------------
+sensor:
+  # Sonda de Nivel Hidrostático Sumergible 4-20mA (0-3m columna de agua)
+  # R_shunt = 150 Ohm -> 4mA = 0.60V, 20mA = 3.00V en GPIO34
+  - platform: adc
+    pin: GPIO34
+    name: "Nivel de Agua en Cisterna"
+    id: nivel_cisterna_metros
+    update_interval: 5s
+    attenuation: 12db
+    unit_of_measurement: "m"
+    accuracy_decimals: 2
+    filters:
+      - calibrate_linear:
+          - 0.60 -> 0.0  # Cisterna vacía
+          - 3.00 -> 3.0  # Cisterna llena (3 metros)
+
+  # Volumen Calculado en Litros (Cisterna cilíndrica de 10,000L, radio 1.03m, h=3m)
+  - platform: template
+    name: "Volumen Cisterna Litros"
+    id: volumen_cisterna_litros
+    unit_of_measurement: "L"
+    accuracy_decimals: 0
+    lambda: |-
+      float h = id(nivel_cisterna_metros).state;
+      if (h < 0.0) h = 0.0;
+      float vol = 3.14159 * 1.03 * 1.03 * h * 1000.0;
+      return vol;
+
+  # Porcentaje Restante
+  - platform: template
+    name: "Porcentaje Cisterna"
+    unit_of_measurement: "%"
+    accuracy_decimals: 1
+    lambda: |-
+      return (id(volumen_cisterna_litros).state / 10000.0) * 100.0;
+
+  # Sensor de Presión de Red Doméstica (Transductor 0-10 bar / 0.5-4.5V)
+  - platform: adc
+    pin: GPIO35
+    name: "Presión Red Agua Potable"
+    id: presion_red_bar
+    update_interval: 2s
+    attenuation: 12db
+    unit_of_measurement: "bar"
+    accuracy_decimals: 1
+    filters:
+      - calibrate_linear:
+          - 0.50 -> 0.0
+          - 4.50 -> 10.0
+
+  # Caudalímetro de Pulsos (1 pulso = 2.25 mL)
+  - platform: pulse_counter
+    pin: GPIO18
+    name: "Caudal Instantáneo Agua"
+    id: caudal_instantaneo
+    unit_of_measurement: "L/min"
+    update_interval: 1s
+    filters:
+      - multiply: 0.135
+
+  # Monitor de Corriente de la Lámpara UV-C 55W (Verificación de Esterilización)
+  - platform: adc
+    pin: GPIO32
+    name: "Corriente Balastro Lámpara UV-C"
+    id: corriente_uvc
+    update_interval: 5s
+    attenuation: 12db
+
+binary_sensor:
+  # Estado de la Lámpara UV-C (Alerta si la bomba funciona y la lámpara está apagada)
+  - platform: template
+    name: "Estado Lámpara UV-C Germicida"
+    id: estado_lampara_uvc
+    lambda: |-
+      return id(corriente_uvc).state > 0.8; // > 800mV indica consumo activo de 55W
+
+switch:
+  # Relé Bomba Sumergible de Extracción
+  - platform: gpio
+    pin: GPIO25
+    id: rele_bomba_extraccion
+    name: "Bomba Sumergible Cisterna"
+    icon: "mdi:water-pump"
+
+  # Relé Balastro Lámpara UV-C
+  - platform: gpio
+    pin: GPIO26
+    id: rele_lampara_uvc
+    name: "Esterilizador Lámpara UV-C"
+    icon: "mdi:lightbulb-cfl"
+    restore_mode: ALWAYS_ON

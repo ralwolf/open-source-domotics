@@ -25,7 +25,15 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 
 ---
 
-## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
-- `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
-- `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).
+## 5. Estructura y Entregables de este Directorio
+- **`mecanico/`**:
+  - [`esquema_corte_valvulas_gas_agua.dxf`](mecanico/esquema_corte_valvulas_gas_agua.dxf): Plano CAD de tuberías, válvulas motorizadas de bola 1", electroválvula de gas normalmente cerrada con rearme manual, y sensores de fuga.
+  - [`esquema_corte_valvulas_gas_agua.svg`](mecanico/esquema_corte_valvulas_gas_agua.svg): Render vectorial del esquema de seguridad de gas y agua.
+- **`electrico/`**:
+  - [`controlador_valvulas_seguridad.kicad_pro`](electrico/controlador_valvulas_seguridad.kicad_pro): Proyecto KiCad 10.
+  - [`controlador_valvulas_seguridad.kicad_sch`](electrico/controlador_valvulas_seguridad.kicad_sch): Esquema electrónico KiCad 10 con ESP32, optoacopladores para sondas cableadas de agua, sensor MQ-4/MQ-2 gas, mosfets/relés para actuadores 12V e interbloqueo analógico fail-safe por hardware.
+  - [`controlador_valvulas_seguridad.svg`](electrico/controlador_valvulas_seguridad.svg): Esquema electrónico renderizado en SVG.
+  - [`BOM.md`](electrico/BOM.md): Lista detallada de componentes (ESP32, PC817, relés 10A, fusibles automotrices 2A, convertidor Buck MP1584, borneros tornillo).
+- **`control/`**:
+  - [`corte_emergencia_gas_agua.yaml`](control/corte_emergencia_gas_agua.yaml): Configuración ESPHome con corte autónomo local inmediato (<50ms) sin depender de WiFi/Home Assistant, telemetría de fugas y sirena piezoeléctrica local.
+

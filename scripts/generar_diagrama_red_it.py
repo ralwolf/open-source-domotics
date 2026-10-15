@@ -220,3 +220,4 @@ if __name__ == "__main__":
     dxf_out = os.path.join(base_dir, "02_infraestructura_it_y_red/02_red_vlans_y_comunicaciones/electrico/topologia_red_vlans.dxf")
     svg_out = os.path.join(base_dir, "02_infraestructura_it_y_red/02_red_vlans_y_comunicaciones/electrico/topologia_red_vlans.svg")
     generar_topologia_red(dxf_out, svg_out)
+

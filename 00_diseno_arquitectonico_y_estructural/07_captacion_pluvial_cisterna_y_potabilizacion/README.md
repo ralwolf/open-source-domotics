@@ -29,7 +29,10 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 
 ---
 
-## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D (FreeCAD / Open CAD Studio), modelos STL/STEP, tolerancias y anclajes.
-- `electrico/`: Diagramas unifilares y esquemas de conexionado (QElectroTech / KiCad), protecciones y lista de materiales (BOM).
-- `control/`: Configuraciones YAML de Home Assistant, firmware (ESPHome / Arduino CLI), integraciones locales.
+## 5. Estructura y Entregables de este Directorio
+- **`mecanico/`**:
+  - [`esquema_captacion_potabilizacion_pluvial.dxf`](mecanico/esquema_captacion_potabilizacion_pluvial.dxf): Plano CAD P&ID completo del tren pluvial: captación perimetral, separador de primeras lluvias (First Flush), cisterna subterránea de 10.000 L, bomba sumergible, sedimentador 20µm, carbón activado 5µm, esterilizador UV-C 55W y válvula de 3 vías conmutadora red/pluvial.
+  - [`esquema_captacion_potabilizacion_pluvial.svg`](mecanico/esquema_captacion_potabilizacion_pluvial.svg): Diagrama vectorial del sistema pluvial y potabilización.
+- **`control/`**:
+  - [`monitoreo_cisterna_potabilizacion.yaml`](control/monitoreo_cisterna_potabilizacion.yaml): Configuración ESPHome con sensor de nivel hidrostático 4-20mA, sensor de presión piezorresistivo, conmutación automática cisterna/red, contador horario para vida útil de lámpara UV-C y control de bomba.
+

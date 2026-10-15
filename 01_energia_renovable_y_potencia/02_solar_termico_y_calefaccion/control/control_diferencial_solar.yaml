@@ -142,3 +142,4 @@ interval:
           } else if (delta_t <= 2.0 || t_tanque >= 90.0) {
             id(pwm_bomba_solar).set_level(0.0); // Apagar bomba
           }
+

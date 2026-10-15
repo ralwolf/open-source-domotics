@@ -28,5 +28,8 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 
 ## 5. Estructura de este Directorio
 - `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
-- `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
+- `electrico/`:
+  - [`esquema_fotovoltaico_ess.dxf`](./electrico/esquema_fotovoltaico_ess.dxf): Plano CAD 2D normalizado del esquema unifilar de 2 strings fotovoltaicos (8.8 kWp), Combiner Box DC con fusibles gPV 15A / DPS 1000V, inversor híbrido 8 kW, banco LiFePO4 48V y salidas AC Grid / EPS Backup.
+  - [`esquema_fotovoltaico_ess.svg`](./electrico/esquema_fotovoltaico_ess.svg): Vista vectorial interactiva a color del flujo de energía solar y almacenamiento.
 - `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).
+- [`NOTA_DE_DISENO.md`](./NOTA_DE_DISENO.md): Memoria de cálculo fotovoltaico, horas de sol pico (HSP) y dimensionamiento de strings.

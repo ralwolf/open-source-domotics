@@ -30,3 +30,4 @@ streams:
     - esp32cam://192.168.40.7
   intercom_suite_principal:
     - esp32cam://192.168.40.8
+
