@@ -1,0 +1,172 @@
+# ==============================================================================
+# FRIGATE NVR - CONFIGURACIÓN DE PRODUCCIÓN CON ACELERACIÓN CORAL EDGE TPU
+# Despliegue Zero-Trust en Servidor Proxmox VE (VLAN 40 CCTV Aislada de Internet)
+# ==============================================================================
+
+mqtt:
+  enabled: True
+  host: 192.168.10.15 # Servidor MQTT Mosquitto en VLAN 10 (Gestión/Servidores)
+  port: 1883
+  topic_prefix: frigate
+  client_id: frigate_nvr_server
+  user: "{FRIGATE_MQTT_USER}"
+  password: "{FRIGATE_MQTT_PASSWORD}"
+
+# Acelerador de Inferencia de Redes Neuronales (Google Coral Edge TPU)
+detectors:
+  coral:
+    type: edgetpu
+    device: pci:0 # M.2 / PCIe Coral TPU (Tiempo de inferencia ~7ms)
+    # Si se utiliza modelo USB, reemplazar por:
+    # device: usb
+
+# Motor de Transmisión WebRTC de Ultra-Baja Latencia
+go2rtc:
+  streams:
+    cam_entrada:
+      - rtsp://admin:{CAM_PASSWORD}@192.168.40.11:554/Streaming/Channels/101 # Mainstream 4K H.265
+      - "ffmpeg:cam_entrada#video=h264#hardware"
+    cam_entrada_sub:
+      - rtsp://admin:{CAM_PASSWORD}@192.168.40.11:554/Streaming/Channels/102 # Substream 640x360 H.264
+    
+    cam_cochera:
+      - rtsp://admin:{CAM_PASSWORD}@192.168.40.12:554/Streaming/Channels/101
+      - "ffmpeg:cam_cochera#video=h264#hardware"
+    cam_cochera_sub:
+      - rtsp://admin:{CAM_PASSWORD}@192.168.40.12:554/Streaming/Channels/102
+
+    cam_patio:
+      - rtsp://admin:{CAM_PASSWORD}@192.168.40.13:554/Streaming/Channels/101
+      - "ffmpeg:cam_patio#video=h264#hardware"
+    cam_patio_sub:
+      - rtsp://admin:{CAM_PASSWORD}@192.168.40.13:554/Streaming/Channels/102
+
+    cam_trasera:
+      - rtsp://admin:{CAM_PASSWORD}@192.168.40.14:554/Streaming/Channels/101
+      - "ffmpeg:cam_trasera#video=h264#hardware"
+    cam_trasera_sub:
+      - rtsp://admin:{CAM_PASSWORD}@192.168.40.14:554/Streaming/Channels/102
+
+# Configuración Global de Grabación a Disco en Almacenamiento TrueNAS (NFS)
+record:
+  enabled: True
+  retain:
+    days: 7
+    mode: motion
+  events:
+    retain:
+      default: 30
+      mode: active_objects
+    pre_capture: 5
+    post_capture: 10
+
+# Snapshots para Alertas de Home Assistant
+snapshots:
+  enabled: True
+  clean_copy: True
+  timestamp: True
+  bounding_box: True
+  retain:
+    default: 30
+
+# Objetos Monitoreados por el Modelo de Visión
+objects:
+  track:
+    - person
+    - car
+    - motorcycle
+    - dog
+    - cat
+  filters:
+    person:
+      min_score: 0.70
+      threshold: 0.75
+    car:
+      min_score: 0.75
+      threshold: 0.80
+
+# Parámetros Específicos por Cámara
+cameras:
+  # 1. Cámara Entrada Principal (CAM-01 - 4K 8MP)
+  cam_entrada:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/cam_entrada_sub
+          roles:
+            - detect
+        - path: rtsp://127.0.0.1:8554/cam_entrada
+          roles:
+            - record
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+    zones:
+      zone_entrada:
+        coordinates: 120,360,180,180,460,180,520,360
+        objects:
+          - person
+
+  # 2. Cámara Cochera EV (CAM-02 - 4K 8MP)
+  cam_cochera:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/cam_cochera_sub
+          roles:
+            - detect
+        - path: rtsp://127.0.0.1:8554/cam_cochera
+          roles:
+            - record
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+    zones:
+      zone_driveway:
+        coordinates: 50,360,100,120,540,120,590,360
+        objects:
+          - car
+          - motorcycle
+          - person
+
+  # 3. Cámara Patio Interior (CAM-03 - 2K 4MP)
+  cam_patio:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/cam_patio_sub
+          roles:
+            - detect
+        - path: rtsp://127.0.0.1:8554/cam_patio
+          roles:
+            - record
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+    zones:
+      zone_patio:
+        coordinates: 60,340,120,80,520,80,580,340
+        objects:
+          - person
+          - dog
+          - cat
+
+  # 4. Cámara Perímetro Trasero / Biodigestor (CAM-04 - 2K 4MP)
+  cam_trasera:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/cam_trasera_sub
+          roles:
+            - detect
+        - path: rtsp://127.0.0.1:8554/cam_trasera
+          roles:
+            - record
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+    zones:
+      zone_tecnica:
+        coordinates: 80,360,140,100,500,100,560,360
+        objects:
+          - person

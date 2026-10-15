@@ -1,0 +1,169 @@
+(kicad_sch
+  (version 20231120)
+  (generator "open-source-domotics-gen")
+  (generator_version "10.0")
+  (uuid "087f20c7-16b3-47f6-be96-de17173a4562")
+  (paper "A3")
+  (title_block
+    (title "CONTROLADOR DIMMER PWM 4 CANALES 24V - ILUMINACION CIRCADIANA")
+    (date "2026-10-15")
+    (rev "v1.0")
+    (company "open-source-domotics (Hardware Libre)")
+    (comment 1 "PWM 20 kHz Flicker-Free | MOSFET AOD4184A | CCT + RGBW + Exterior")
+    (comment 2 "Mean Well HLG 24V SELV | Sensor Lux BH1750 + mmWave LD2410 + RS485")
+  )
+
+  (wire (pts (xy 35.0 50.0) (xy 75.0 50.0))
+    (stroke (width 0) (type default))
+    (uuid "b608a056-9a44-4564-a2b7-8967616cad41")
+  )
+  (text "ALIMENTACION_24VDC_SELV"
+    (at 35.0 48.0 0)
+    (effects (font (size 1.5 1.5)))
+    (uuid "95f02dda-0202-410c-b6c6-2f10808ba308")
+  )
+
+  (symbol
+    (lib_id "Regulator_Switching:MP1584")
+    (at 85.0 65.0 0)
+    (unit 1)
+    (uuid "eacebafd-8bd7-4ba6-a638-0964680c9cf8")
+    (property "Reference" "U1" (at 85.0 50.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MP1584_StepDown_3V3" (at 85.0 53.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Converter_DCDC:Converter_DCDC_MP1584_Mini" (at 85.0 65.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "RF_Module:ESP32-WROOM-32E")
+    (at 160.0 75.0 0)
+    (unit 1)
+    (uuid "383bec6a-270a-435c-a305-1d6424fc408c")
+    (property "Reference" "U2" (at 160.0 45.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ESP32-WROOM-32E" (at 160.0 48.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-WROOM-32E" (at 160.0 75.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Driver_FET:TC4427")
+    (at 220.0 60.0 0)
+    (unit 1)
+    (uuid "628fa230-c14a-4cc3-b29f-9675f294a652")
+    (property "Reference" "U3" (at 220.0 45.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "TC4427_DualGateDriver" (at 220.0 48.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 220.0 60.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Transistor_FET:AOD4184A")
+    (at 270.0 65.0 0)
+    (unit 1)
+    (uuid "29b0523c-5387-4bc3-a1a4-02eb430c5d23")
+    (property "Reference" "Q1" (at 270.0 52.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AOD4184A_40V_50A" (at 270.0 55.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:TO-252-2" (at 270.0 65.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Transistor_FET:AOD4184A")
+    (at 270.0 95.0 0)
+    (unit 1)
+    (uuid "e781958e-238c-4cc3-acf1-7b25ac1dd001")
+    (property "Reference" "Q2" (at 270.0 82.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AOD4184A_40V_50A" (at 270.0 85.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:TO-252-2" (at 270.0 95.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Transistor_FET:AOD4184A")
+    (at 270.0 125.0 0)
+    (unit 1)
+    (uuid "861d6753-6a0c-4ea2-a0d2-6e6f1183de43")
+    (property "Reference" "Q3" (at 270.0 112.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AOD4184A_40V_50A" (at 270.0 115.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:TO-252-2" (at 270.0 125.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Transistor_FET:AOD4184A")
+    (at 270.0 155.0 0)
+    (unit 1)
+    (uuid "ebd0dc40-fc2f-46b4-bbd3-718e5122fe48")
+    (property "Reference" "Q4" (at 270.0 142.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AOD4184A_40V_50A" (at 270.0 145.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:TO-252-2" (at 270.0 155.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 330.0 65.0 0)
+    (unit 1)
+    (uuid "6924015c-1add-4041-9517-662a0a5088ea")
+    (property "Reference" "J1" (at 330.0 55.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNA_CH1_WW_2200K" (at 330.0 58.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 330.0 65.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 330.0 95.0 0)
+    (unit 1)
+    (uuid "59d2dfce-8a72-4358-a1c2-db3a89fab8d1")
+    (property "Reference" "J2" (at 330.0 85.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNA_CH2_CW_6500K" (at 330.0 88.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 330.0 95.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 330.0 125.0 0)
+    (unit 1)
+    (uuid "97d79ec4-bba4-4bcd-9bc6-8bf1520f635a")
+    (property "Reference" "J3" (at 330.0 115.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNA_CH3_EXTERIOR_PERGOLA" (at 330.0 118.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 330.0 125.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 330.0 155.0 0)
+    (unit 1)
+    (uuid "4d8be7f6-c716-478e-810e-9891dc339007")
+    (property "Reference" "J4" (at 330.0 145.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNA_CH4_SEGURIDAD_FACHADA" (at 330.0 148.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" (at 330.0 155.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Sensor:BH1750")
+    (at 100.0 130.0 0)
+    (unit 1)
+    (uuid "fe3f35d6-4508-4e23-b62c-f39926e53ae7")
+    (property "Reference" "U4" (at 100.0 118.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BH1750_Lux_Sensor_I2C" (at 100.0 121.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 100.0 130.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Interface_UART:LD2410B")
+    (at 100.0 160.0 0)
+    (unit 1)
+    (uuid "b0f2128b-7786-4324-8c7f-14a982ccd267")
+    (property "Reference" "U5" (at 100.0 148.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "HLK-LD2410_mmWave_Radar" (at 100.0 151.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical" (at 100.0 160.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (symbol
+    (lib_id "Interface_UART:MAX13487")
+    (at 160.0 145.0 0)
+    (unit 1)
+    (uuid "40889eff-0fc9-426d-8ffd-9f2d77fb9308")
+    (property "Reference" "U6" (at 160.0 132.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MAX13487_RS485_AutoDir" (at 160.0 135.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 160.0 145.0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

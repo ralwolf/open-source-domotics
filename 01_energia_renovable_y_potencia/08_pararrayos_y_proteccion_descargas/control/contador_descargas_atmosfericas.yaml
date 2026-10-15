@@ -109,3 +109,4 @@ binary_sensor:
             data:
               title: "Impacto Atmosférico Detectado"
               message: "Se ha registrado una descarga en la bajante exterior. Comprobar cartuchos DPS y vía de chispas."
+

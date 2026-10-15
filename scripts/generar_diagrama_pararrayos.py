@@ -249,3 +249,4 @@ if __name__ == "__main__":
     dxf_out = "/home/ral/Documents/GitHub/open-source-domotics/01_energia_renovable_y_potencia/08_pararrayos_y_proteccion_descargas/electrico/esquema_pararrayos_tierras.dxf"
     svg_out = "/home/ral/Documents/GitHub/open-source-domotics/01_energia_renovable_y_potencia/08_pararrayos_y_proteccion_descargas/electrico/esquema_pararrayos_tierras.svg"
     generar_diagrama_pararrayos(dxf_out, svg_out)
+

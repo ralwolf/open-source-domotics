@@ -1,0 +1,217 @@
+substitutions:
+  node_name: "controlador-iluminacion-circadiana"
+  friendly_name: "Iluminación Circadiana y Exterior"
+
+esphome:
+  name: ${node_name}
+  friendly_name: ${friendly_name}
+  comment: "Controlador Dimmer PWM 4 Canales 20kHz con Curva Solar Circadiana y Radar mmWave"
+  min_version: 2024.6.0
+
+esp32:
+  board: esp32-wroom-32e
+  framework:
+    type: esp-idf
+
+wdt:
+  timeout: 15s
+
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+  manual_ip:
+    static_ip: 10.30.0.50
+    gateway: 10.30.0.1
+    subnet: 255.255.255.0
+    dns1: 10.10.0.1
+  power_save_mode: none
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+logger:
+  level: INFO
+
+# Bus I2C para sensor de iluminación ambiental BH1750
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+  id: bus_i2c
+
+# Interfaz UART para sensor radar mmWave LD2410B
+uart:
+  id: uart_radar
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 256000
+
+# Componente solar para cálculo astronómico de elevación y azimut local
+sun:
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  id: sol_local
+
+output:
+  # Canal 1: Blanco Cálido (2200K) - PWM 19.5 kHz (Flicker-free para CCTV y confort)
+  - platform: ledc
+    pin: GPIO18
+    id: pwm_ww
+    frequency: 19531Hz
+
+  # Canal 2: Blanco Frío (6500K) - PWM 19.5 kHz
+  - platform: ledc
+    pin: GPIO19
+    id: pwm_cw
+    frequency: 19531Hz
+
+  # Canal 3: Exterior Jardín / Pérgola 24V
+  - platform: ledc
+    pin: GPIO23
+    id: pwm_ext_jardin
+    frequency: 19531Hz
+
+  # Canal 4: Iluminación de Seguridad Perimetral / Fachada
+  - platform: ledc
+    pin: GPIO5
+    id: pwm_ext_fachada
+    frequency: 19531Hz
+
+light:
+  # Luminaria Circadiana CCT Dual (Warm White + Cold White)
+  - platform: cct
+    name: "Luz Circadiana Interior Principal"
+    id: luz_circadiana
+    warm_white: pwm_ww
+    cold_white: pwm_cw
+    cold_white_color_temperature: 6500 K
+    warm_white_color_temperature: 2200 K
+    default_transition_length: 3s
+    gamma_correct: 2.8
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  # Luz Exterior Pérgola y Jardín
+  - platform: monochromatic
+    name: "Luz Exterior Jardín y Pérgola"
+    id: luz_exterior_jardin
+    output: pwm_ext_jardin
+    default_transition_length: 1.5s
+    gamma_correct: 2.2
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  # Luz Exterior Fachada Perimetral (Interacción Cortesía / Seguridad)
+  - platform: monochromatic
+    name: "Luz Seguridad Perimetral Fachada"
+    id: luz_seguridad_fachada
+    output: pwm_ext_fachada
+    default_transition_length: 2s
+    gamma_correct: 2.2
+    restore_mode: ALWAYS_OFF
+
+sensor:
+  # Sensor de Luminancia Ambiental Digital BH1750
+  - platform: bh1750
+    name: "Iluminación Ambiental Interior (Lux)"
+    id: lux_ambiente
+    i2c_id: bus_i2c
+    address: 0x23
+    update_interval: 10s
+    filters:
+      - median:
+          window_size: 5
+          send_every: 5
+
+  # Elevación Solar en Grados
+  - platform: template
+    name: "Elevación Solar Local"
+    id: angulo_solar_grados
+    unit_of_measurement: "°"
+    accuracy_decimals: 1
+    lambda: |-
+      return id(sol_local).elevation();
+    update_interval: 60s
+
+# Radar de Presencia Humana mmWave 24 GHz Hi-Link LD2410
+ld2410:
+  uart_id: uart_radar
+
+binary_sensor:
+  # Presencia General (movimiento o micro-respiración estática)
+  - platform: ld2410
+    has_target:
+      name: "Presencia Humana en Zona"
+      id: presencia_humana
+      on_press:
+        - logger.log: "Presencia detectada por radar mmWave"
+      on_release:
+        - logger.log: "Zona despejada sin presencia humana"
+
+  # Estado de noche astronómica (Sol por debajo del horizonte)
+  - platform: template
+    name: "Es de Noche"
+    id: estado_noche
+    lambda: |-
+      return id(sol_local).elevation() < -4.0;
+
+# Automatización Circadiana Local:
+# Ajuste de temperatura de color y brillo automático cada 5 minutos
+interval:
+  - interval: 5min
+    then:
+      - lambda: |-
+          if (!id(luz_circadiana)->current_values.is_on()) {
+            return; // No alterar si el usuario la ha apagado manualmente
+          }
+          float elev = id(sol_local).elevation();
+          float mireds = 454.0; // 2200K por defecto de noche (1000000 / 2200 = 454)
+
+          if (elev < 0.0) {
+            // Noche / Crepúsculo: Blanco muy cálido (2200K a 2700K)
+            mireds = 454.0;
+          } else if (elev >= 0.0 && elev < 20.0) {
+            // Amanecer / Media mañana: Transición 2700K (370 mireds) a 4000K (250 mireds)
+            float frac = elev / 20.0;
+            mireds = 370.0 - (frac * (370.0 - 250.0));
+          } else if (elev >= 20.0 && elev < 50.0) {
+            // Mediodía solar: Máxima vigilia y foco cognitivo (5000K a 6500K -> 154 mireds)
+            float frac = (elev - 20.0) / 30.0;
+            mireds = 250.0 - (frac * (250.0 - 154.0));
+          } else {
+            mireds = 154.0; // Pico 6500K
+          }
+
+          auto call = id(luz_circadiana)->turn_on();
+          call.set_color_temperature(mireds);
+          call.set_transition_length(15000); // Rampa hiper-suave de 15 segundos
+          call.perform();
+
+# Modo Seguridad Perimetral Exterior:
+# Cortesía al 15% de noche -> Detección Frigate/Radar al 100% -> Rampa de retorno a 15%
+script:
+  - id: activar_foco_disuasion
+    mode: restart
+    then:
+      - logger.log: "Activando iluminación de seguridad al 100% por evento perimetral!"
+      - light.turn_on:
+          id: luz_seguridad_fachada
+          brightness: 1.0
+          transition_length: 1s
+      - delay: 60s
+      - if:
+          condition:
+            binary_sensor.is_on: estado_noche
+          then:
+            - logger.log: "Retornando a iluminación de cortesía perimetral tenue (15%)..."
+            - light.turn_on:
+                id: luz_seguridad_fachada
+                brightness: 0.15
+                transition_length: 5s
+          else:
+            - light.turn_off:
+                id: luz_seguridad_fachada
+                transition_length: 3s

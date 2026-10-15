@@ -199,3 +199,4 @@ interval:
             ESP_LOGI("biogas", "Batería recuperada (>85%). Apagando generador.");
             id(stop_generator_sequence).execute();
           }
+

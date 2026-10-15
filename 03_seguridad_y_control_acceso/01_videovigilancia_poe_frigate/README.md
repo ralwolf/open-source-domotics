@@ -24,7 +24,12 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 
 ---
 
-## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
-- `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
-- `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).
+## 5. Estructura y Entregables de este Directorio
+- **`mecanico/`**:
+  - [`caja_montaje_camara_poe.FCStd`](mecanico/caja_montaje_camara_poe.FCStd): Modelo 3D FreeCAD de caja estanca IP67 de montaje mural para cámaras torreta/domo PoE con entrada roscada para conduit M20 y alojamiento para conector RJ45.
+  - [`caja_montaje_camara_poe.step`](mecanico/caja_montaje_camara_poe.step): Exportación neutra STEP para mecanizado o inyección.
+  - [`plano_cobertura_cctv_poe.dxf`](mecanico/plano_cobertura_cctv_poe.dxf): Plano CAD de distribución de 4 cámaras PoE perimetrales (CAM-01 a CAM-04), conos de visión (FOV 108°/89°), distancias DORI (EN 62676-4) y zonas IA.
+  - [`plano_cobertura_cctv_poe.svg`](mecanico/plano_cobertura_cctv_poe.svg): Diagrama vectorial en alta resolución del mapa de cobertura y zonas de detección.
+- **`control/`**:
+  - [`config.yml`](control/config.yml): Configuración de producción para Frigate NVR con aceleración por hardware Google Coral Edge TPU (7ms/frame), servidor WebRTC go2rtc integrado para latencia <200ms, flujo dual (substream 640x360@5fps en RAM para inferencia y mainstream 4K/2K a TrueNAS NFS por eventos), y tópicos MQTT hacia Home Assistant.
+

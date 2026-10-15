@@ -1,0 +1,226 @@
+substitutions:
+  node_name: "control-acceso-cerradura-principal"
+  friendly_name: "Cerradura Biométrica Acceso Principal"
+
+esphome:
+  name: ${node_name}
+  friendly_name: ${friendly_name}
+  comment: "Controlador autónomo de acceso biométrico con sensor R503 y relé de cerradura 12V"
+  min_version: 2024.6.0
+
+esp32:
+  board: esp32-wroom-32e
+  framework:
+    type: esp-idf
+
+# Watchdog de hardware para garantizar operación 24/7 sin bloqueos
+wdt:
+  timeout: 15s
+
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+  manual_ip:
+    static_ip: 10.30.0.45
+    gateway: 10.30.0.1
+    subnet: 255.255.255.0
+    dns1: 10.10.0.1
+  power_save_mode: none
+  ap:
+    ssid: "Cerradura-Fallback-AP"
+    password: !secret fallback_ap_password
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+  services:
+    - service: enrolar_huella
+      variables:
+        finger_id: int
+        num_scans: int
+      then:
+        - r503_sensor.enroll:
+            finger_id: !lambda "return finger_id;"
+            num_scans: !lambda "return num_scans;"
+    - service: borrar_huella
+      variables:
+        finger_id: int
+      then:
+        - r503_sensor.delete:
+            finger_id: !lambda "return finger_id;"
+    - service: limpiar_todas_huellas
+      then:
+        - r503_sensor.delete_all:
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+logger:
+  level: INFO
+  baud_rate: 0  # Deshabilitado en UART0 si se requiere para depuración o pines dedicados
+
+# Bus UART aislado para sensor de huella dactilar capacitivo R503
+uart:
+  - id: uart_fingerprint
+    tx_pin: GPIO17
+    rx_pin: GPIO16
+    baud_rate: 57600
+
+# Controlador de Huella Dactilar R503 (Grow protocol)
+fingerprint_grow:
+  id: r503_sensor
+  uart_id: uart_fingerprint
+  sensing_pin: GPIO4
+  password: 0x00000000
+  on_finger_scan_matched:
+    - logger.log:
+        format: "Huella autorizada detectada! ID: %d, Confianza: %d"
+        args: ['finger_id', 'confidence']
+    - r503_sensor.aura_led_control:
+        state: FLASHING
+        speed: 25
+        color: GREEN
+        count: 2
+    - rpn:
+        rules:
+          - "1"
+    - switch.turn_on: relay_cerradura
+    - output.turn_on: buzzer_pwm
+    - delay: 100ms
+    - output.turn_off: buzzer_pwm
+    - homeassistant.event:
+        event: esphome.acceso_biometrico_concedido
+        data:
+          puerta: "acceso_principal"
+          finger_id: !lambda "return finger_id;"
+          confidence: !lambda "return confidence;"
+
+  on_finger_scan_unmatched:
+    - logger.log: "Huella NO reconocida. Acceso denegado."
+    - r503_sensor.aura_led_control:
+        state: FLASHING
+        speed: 10
+        color: RED
+        count: 3
+    - repeat:
+        count: 3
+        then:
+          - output.turn_on: buzzer_pwm
+          - delay: 80ms
+          - output.turn_off: buzzer_pwm
+          - delay: 60ms
+    - homeassistant.event:
+        event: esphome.acceso_biometrico_denegado
+        data:
+          puerta: "acceso_principal"
+          motivo: "huella_no_coincidente"
+
+  on_enrollment_scan:
+    - logger.log:
+        format: "Muestra de huella capturada para enrolamiento. Paso: %d"
+        args: ['finger_id']
+    - r503_sensor.aura_led_control:
+        state: BREATHING
+        speed: 50
+        color: PURPLE
+        count: 1
+
+output:
+  # Driver MOSFET PWM para Zumbador piezoeléctrico de señalización
+  - platform: ledc
+    pin: GPIO25
+    id: buzzer_pwm
+    frequency: 2700Hz
+
+switch:
+  # Salida MOSFET / Relé de pulso para Cerradura Eléctrica 12V (Fail-Secure)
+  - platform: gpio
+    name: "Cerradura Eléctrica"
+    pin: GPIO26
+    id: relay_cerradura
+    icon: "mdi:lock-open"
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - logger.log: "Activando solenoide de cerradura (pulso de 5 segundos)..."
+      - delay: 5000ms
+      - switch.turn_off: relay_cerradura
+
+binary_sensor:
+  # Sensor Magnético de Estado de Puerta (Contacto Reed NA/NC con resistencia pull-up externa)
+  - platform: gpio
+    name: "Estado Puerta"
+    pin:
+      number: GPIO27
+      mode: INPUT_PULLUP
+      inverted: true
+    id: sensor_puerta
+    device_class: door
+    filters:
+      - delayed_on_off: 50ms
+    on_state:
+      - if:
+          condition:
+            binary_sensor.is_on: sensor_puerta
+          then:
+            - logger.log: "Puerta Abierta"
+          else:
+            - logger.log: "Puerta Cerrada y Asegurada"
+
+  # Pulsador de Salida Interior No-Touch / REX (Request to Exit)
+  - platform: gpio
+    name: "Pulsador Salida Interior (REX)"
+    pin:
+      number: GPIO32
+      mode: INPUT_PULLUP
+      inverted: true
+    id: boton_rex
+    filters:
+      - delayed_on_off: 30ms
+    on_press:
+      - logger.log: "Pulsador de egreso interior activado"
+      - switch.turn_on: relay_cerradura
+      - output.turn_on: buzzer_pwm
+      - delay: 80ms
+      - output.turn_off: buzzer_pwm
+
+  # Switch Antimanipulación / Tamper microswitch (antivandalismo)
+  - platform: gpio
+    name: "Alarma Sabotaje Tamper"
+    pin:
+      number: GPIO33
+      mode: INPUT_PULLUP
+      inverted: false
+    id: sensor_tamper
+    device_class: safety
+    filters:
+      - delayed_on_off: 20ms
+    on_press:
+      - logger.log: "ALERTA CRÍTICA: Tamper frontal de cerradura activado (posible sabotaje)!"
+      - r503_sensor.aura_led_control:
+          state: FLASHING
+          speed: 5
+          color: RED
+          count: 20
+      - homeassistant.event:
+          event: esphome.alarma_tamper_cerradura
+          data:
+            puerta: "acceso_principal"
+            alerta: "sabotaje_mecanico_detectado"
+
+sensor:
+  # Monitor de Voltaje de Batería de Respaldo UPS 12V (divisor resistivo 100k/10k)
+  - platform: adc
+    pin: GPIO34
+    name: "Voltaje Alimentación Cerradura"
+    id: v_alimentacion
+    update_interval: 10s
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    attenuation: 12db
+    filters:
+      - multiply: 11.0  # Calibración del divisor de tensión (R1=100k, R2=10k)
+      - median:
+          window_size: 5
+          send_every: 5
+

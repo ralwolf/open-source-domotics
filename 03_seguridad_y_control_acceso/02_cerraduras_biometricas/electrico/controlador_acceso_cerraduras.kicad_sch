@@ -1,0 +1,109 @@
+(kicad_sch
+  (version 20231120)
+  (generator "open-source-domotics-gen")
+  (generator_version "10.0")
+  (uuid "03a6370d-7be6-49f7-9b1e-f6359a22dc87")
+  (paper "A3")
+  (title_block
+    (title "CONTROLADOR DE ACCESO AUTÓNOMO Y CERRADURAS BIOMÉTRICAS")
+    (date "2026-10-15")
+    (rev "v1.0")
+    (company "open-source-domotics (Hardware Libre)")
+    (comment 1 "Sensor Huella Capacitivo R503 + Driver Fail-Safe / Fail-Secure 12V 3A")
+    (comment 2 "Operación 100% autónoma offline con base de credenciales local en flash")
+  )
+
+  (wire (pts (xy 40.0 50.0) (xy 75.0 50.0))
+    (stroke (width 0) (type default))
+    (uuid "e6900c74-8da9-4dbe-afef-9bcb5ca7a605")
+  )
+  (text "ALIMENTACION_12VDC_UPS"
+    (at 40.0 48.0 0)
+    (effects (font (size 1.5 1.5)))
+    (uuid "94c5c7b1-8b3a-4a25-aee0-e3af01b79fec")
+  )
+
+  (symbol
+    (lib_id "Regulator_Switching:MP1584")
+    (at 85.0 65.0 0)
+    (unit 1)
+    (uuid "b81fbd51-4622-415c-83d5-cdb226112131")
+    (property "Reference" "U2" (at 85.0 52.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MP1584 (Buck 12V -> 3.3V 2A)" (at 85.0 78.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 85.0 65.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "RF_Module:ESP32-WROOM-32E")
+    (at 180.0 110.0 0)
+    (unit 1)
+    (uuid "86f1a21a-788c-4fd7-8af1-76d56bdcce7c")
+    (property "Reference" "U1" (at 180.0 80.0 0) (effects (font (size 1.5 1.5))))
+    (property "Value" "ESP32-WROOM-32E (16MB Flash)" (at 180.0 142.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-WROOM-32E" (at 180.0 110.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Connector:Conn_01x06_Pin")
+    (at 85.0 130.0 0)
+    (unit 1)
+    (uuid "95a603e0-5463-45fc-8599-a4fe320bc7a1")
+    (property "Reference" "J2" (at 85.0 118.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "CONECTOR SENSOR R503 (VCC, GND, TX, RX, WAKE, LED)" (at 85.0 142.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_JST:JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal" (at 85.0 130.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Transistor_FET:IRLZ44N")
+    (at 280.0 70.0 0)
+    (unit 1)
+    (uuid "7b7db630-ac2d-4ad9-9c21-10a18334157c")
+    (property "Reference" "Q1" (at 280.0 58.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "IRLZ44N (MOSFET N 55V 47A - Driver Cerradura)" (at 280.0 82.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical" (at 280.0 70.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Diode:1N5408")
+    (at 280.0 100.0 0)
+    (unit 1)
+    (uuid "a9668d71-27d7-4002-8fe2-fe4b08a09674")
+    (property "Reference" "D1" (at 280.0 92.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "1N5408 (Diodo Flyback 3A 1000V)" (at 280.0 108.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Diode_THT:D_DO-201AD_P15.24mm_Horizontal" (at 280.0 100.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Relay:G5LE-1")
+    (at 280.0 145.0 0)
+    (unit 1)
+    (uuid "bc8a95b7-50bb-4b75-8138-b831361eeac6")
+    (property "Reference" "K1" (at 280.0 132.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "Relé SPDT 10A (Selector Fail-Safe / Fail-Secure)" (at 280.0 158.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5LE-1" (at 280.0 145.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Isolator:PC817")
+    (at 85.0 185.0 0)
+    (unit 1)
+    (uuid "c8434c15-dd3c-4694-95e4-550714ca4a6d")
+    (property "Reference" "OK1" (at 85.0 172.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "PC817 (Sensor Magnético Puerta + REX Interior)" (at 85.0 198.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_DIP:DIP-4_W7.62mm" (at 85.0 185.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Connector:Screw_Terminal_01x08")
+    (at 360.0 110.0 0)
+    (unit 1)
+    (uuid "e18e3fa3-ba48-443b-b378-5984e3891c2e")
+    (property "Reference" "J1" (at 360.0 80.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNERO CERRADURA (12V_IN, GND, LOCK_NO, LOCK_COM, LOCK_NC, DOOR_SENS, REX_BTN, TAMPER)" (at 360.0 142.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-8_P5.08mm" (at 360.0 110.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

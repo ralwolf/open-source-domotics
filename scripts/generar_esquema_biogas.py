@@ -249,3 +249,4 @@ if __name__ == "__main__":
     dxf_out = "/home/ral/Documents/GitHub/open-source-domotics/01_energia_renovable_y_potencia/05_biodigestor_biogas_generador/mecanico/esquema_biogas_generador.dxf"
     svg_out = "/home/ral/Documents/GitHub/open-source-domotics/01_energia_renovable_y_potencia/05_biodigestor_biogas_generador/mecanico/esquema_biogas_generador.svg"
     generar_esquema_biogas(dxf_out, svg_out)
+

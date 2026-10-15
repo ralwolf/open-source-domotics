@@ -281,3 +281,4 @@ if __name__ == "__main__":
     dxf_out = "/home/ral/Documents/GitHub/open-source-domotics/00_diseno_arquitectonico_y_estructural/06_canalizaciones_y_ductos_electricos_normativa/trazado_canalizaciones/plano_canalizaciones_segregadas.dxf"
     svg_out = "/home/ral/Documents/GitHub/open-source-domotics/00_diseno_arquitectonico_y_estructural/06_canalizaciones_y_ductos_electricos_normativa/trazado_canalizaciones/plano_canalizaciones_segregadas.svg"
     generar_plano_canalizaciones(dxf_out, svg_out)
+

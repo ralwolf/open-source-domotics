@@ -246,3 +246,4 @@ if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     target_dir = os.path.join(base_dir, "01_energia_renovable_y_potencia/05_biodigestor_biogas_generador/electrico")
     generar_kicad_biogas(target_dir)
+
