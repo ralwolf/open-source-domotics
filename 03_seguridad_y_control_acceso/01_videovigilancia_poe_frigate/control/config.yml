@@ -170,3 +170,4 @@ cameras:
         coordinates: 80,360,140,100,500,100,560,360
         objects:
           - person
+

@@ -318,3 +318,4 @@ def generar_kicad_piscina(output_dir):
 if __name__ == "__main__":
     out = "/home/ral/Documents/GitHub/open-source-domotics/05_confort_y_exteriores/04_mantenimiento_automatizado_piscina/electrico"
     generar_kicad_piscina(out)
+

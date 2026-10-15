@@ -215,3 +215,4 @@ script:
             - light.turn_off:
                 id: luz_seguridad_fachada
                 transition_length: 3s
+

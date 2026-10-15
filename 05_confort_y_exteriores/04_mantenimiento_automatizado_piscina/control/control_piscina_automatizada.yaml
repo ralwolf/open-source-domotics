@@ -261,3 +261,4 @@ interval:
           then:
             - switch.turn_off: dosificador_cloro
             - logger.log: "Fin de pulso de inyección de Cloro."
+

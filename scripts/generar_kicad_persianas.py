@@ -247,3 +247,4 @@ def generar_kicad_persianas(output_dir):
 if __name__ == "__main__":
     out = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/04_cortinas_y_persianas_motorizadas/electrico"
     generar_kicad_persianas(out)
+

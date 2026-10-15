@@ -199,3 +199,4 @@ if __name__ == "__main__":
     dxf_out = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/04_cortinas_y_persianas_motorizadas/mecanico/plano_mecanismo_persiana.dxf"
     svg_out = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/04_cortinas_y_persianas_motorizadas/mecanico/plano_mecanismo_persiana.svg"
     generar_plano_persiana(dxf_out, svg_out)
+

@@ -108,3 +108,4 @@ def generar_persiana_3d(output_dir):
 if __name__ == "__main__":
     out_dir = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/04_cortinas_y_persianas_motorizadas/mecanico"
     generar_persiana_3d(out_dir)
+

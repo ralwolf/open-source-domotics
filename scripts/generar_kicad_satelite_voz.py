@@ -237,3 +237,4 @@ def generar_kicad_satelite_voz(output_dir):
 if __name__ == "__main__":
     out = "/home/ral/Documents/GitHub/open-source-domotics/05_confort_y_exteriores/06_asistente_voz_local_privado/electrico"
     generar_kicad_satelite_voz(out)
+

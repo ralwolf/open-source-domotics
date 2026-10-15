@@ -130,3 +130,4 @@ def generar_piscina_3d(output_dir):
 if __name__ == "__main__":
     out_dir = "/home/ral/Documents/GitHub/open-source-domotics/05_confort_y_exteriores/04_mantenimiento_automatizado_piscina/mecanico"
     generar_piscina_3d(out_dir)
+

@@ -235,3 +235,4 @@ if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     target_dir = os.path.join(base_dir, "03_seguridad_y_control_acceso/02_cerraduras_biometricas/electrico")
     generar_kicad_cerraduras(target_dir)
+

@@ -289,3 +289,4 @@ def generar_kicad_iluminacion(output_dir):
 if __name__ == "__main__":
     out = "/home/ral/Documents/GitHub/open-source-domotics/05_confort_y_exteriores/01_iluminacion_circadiana_y_exterior/electrico"
     generar_kicad_iluminacion(out)
+

@@ -268,3 +268,4 @@ if __name__ == "__main__":
     dxf_out = "/home/ral/Documents/GitHub/open-source-domotics/05_confort_y_exteriores/04_mantenimiento_automatizado_piscina/mecanico/plano_hidraulico_piscina.dxf"
     svg_out = "/home/ral/Documents/GitHub/open-source-domotics/05_confort_y_exteriores/04_mantenimiento_automatizado_piscina/mecanico/plano_hidraulico_piscina.svg"
     generar_plano_piscina(dxf_out, svg_out)
+

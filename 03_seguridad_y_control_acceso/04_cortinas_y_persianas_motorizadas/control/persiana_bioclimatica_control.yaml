@@ -165,3 +165,4 @@ interval:
             ESP_LOGI("bioclimatica", "Atardecer. Cerrando persiana completamente para aislamiento térmico nocturno.");
             id(persiana_salon)->close();
           }
+

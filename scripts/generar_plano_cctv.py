@@ -239,3 +239,4 @@ if __name__ == "__main__":
     dxf_out = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/01_videovigilancia_poe_frigate/mecanico/plano_cobertura_cctv_poe.dxf"
     svg_out = "/home/ral/Documents/GitHub/open-source-domotics/03_seguridad_y_control_acceso/01_videovigilancia_poe_frigate/mecanico/plano_cobertura_cctv_poe.svg"
     generar_plano_cctv(dxf_out, svg_out)
+

@@ -188,3 +188,4 @@ binary_sensor:
     on_release:
       - logger.log: "Modo Privacidad Desactivado: Micrófono habilitado para escucha local."
       - light.turn_off: anillo_led_rgb
+

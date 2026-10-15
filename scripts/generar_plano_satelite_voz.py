@@ -215,3 +215,4 @@ if __name__ == "__main__":
     dxf_out = "/home/ral/Documents/GitHub/open-source-domotics/05_confort_y_exteriores/06_asistente_voz_local_privado/mecanico/plano_satelite_voz.dxf"
     svg_out = "/home/ral/Documents/GitHub/open-source-domotics/05_confort_y_exteriores/06_asistente_voz_local_privado/mecanico/plano_satelite_voz.svg"
     generar_plano_satelite_voz(dxf_out, svg_out)
+
