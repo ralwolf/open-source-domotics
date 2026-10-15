@@ -25,7 +25,15 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 
 ---
 
-## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
-- `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
-- `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).
+## 5. Estructura y Entregables de este Directorio
+- **`mecanico/`**:
+  - [`esquema_hidraulico_riego.dxf`](mecanico/esquema_hidraulico_riego.dxf): Plano CAD del manifold distribuidor de 4 zonas + válvula maestra de seguridad 24VAC, filtro de anillas 120 mesh, caudalímetro de pulsos, tubería matriz PE 32mm y ramales a goteo (setos/macetas), aspersión (césped) y microdifusión (huerto).
+  - [`esquema_hidraulico_riego.svg`](mecanico/esquema_hidraulico_riego.svg): Esquema hidráulico vectorial con especificación de caudales y presiones.
+- **`electrico/`**:
+  - [`controlador_riego_jardin.kicad_pro`](electrico/controlador_riego_jardin.kicad_pro): Proyecto electrónico KiCad 10.
+  - [`controlador_riego_jardin.kicad_sch`](electrico/controlador_riego_jardin.kicad_sch): Esquema electrónico KiCad 10 con ESP32-WROOM-32E, 5x Triacs BT136 con optotriacs MOC3041 (cruce por cero), snubbers RC + varistores MOV, 4 canales analógicos para sondas capacitivas de suelo y acondicionamiento de pulsos de caudalímetro.
+  - [`controlador_riego_jardin.svg`](electrico/esquema_svg/controlador_riego_jardin.svg): Esquema electrónico exportado con kicad-cli.
+  - [`BOM.md`](electrico/BOM.md): Lista completa de materiales y componentes para ensamblaje.
+- **`control/`**:
+  - [`riego_inteligente_jardin.yaml`](control/riego_inteligente_jardin.yaml): Firmware ESPHome con controlador de aspersores (`sprinkler`), interbloqueo con cisterna pluvial (<15% desactiva riego), predicción de lluvia meteorológica, calibración de sondas de humedad y detección automática de fugas.
+

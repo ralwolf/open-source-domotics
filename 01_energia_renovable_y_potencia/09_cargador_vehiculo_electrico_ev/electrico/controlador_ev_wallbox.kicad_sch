@@ -1,0 +1,129 @@
+(kicad_sch
+  (version 20231120)
+  (generator "open-source-domotics-gen")
+  (generator_version "10.0")
+  (uuid "53a2c16b-5753-4e55-bbaa-8aaf11273483")
+  (paper "A3")
+  (title_block
+    (title "CONTROLADOR INTELIGENTE EV WALLBOX 32A (IEC 61851-1 / SAE J1772)")
+    (date "2026-10-15")
+    (rev "v1.0")
+    (company "open-source-domotics (Hardware Libre)")
+    (comment 1 "CP PWM ±12V + PP Cable Sense + RCMB 6mA DC + Contactor 40A + Modbus RS-485")
+    (comment 2 "Control dinámico de excedentes solares fotovoltaicos y eólicos (6A a 32A)")
+  )
+
+  (wire (pts (xy 40.0 50.0) (xy 75.0 50.0))
+    (stroke (width 0) (type default))
+    (uuid "8b9ee967-e0ce-4013-9eb8-5ef12a9ec346")
+  )
+  (text "ALIMENTACION_230VAC_IN"
+    (at 40.0 48.0 0)
+    (effects (font (size 1.5 1.5)))
+    (uuid "476b62b3-1b7d-4da3-b2d4-4006eae7f7e1")
+  )
+
+  (symbol
+    (lib_id "Power_Supply:HLK-PM12")
+    (at 85.0 65.0 0)
+    (unit 1)
+    (uuid "03459198-e8b9-45fc-bb23-744e327996c3")
+    (property "Reference" "PS1" (at 85.0 52.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "HLK-PM12 (230VAC -> 12VDC 3W)" (at 85.0 78.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Converter_ACDC:Converter_ACDC_HiLink_HLK-PMxx" (at 85.0 65.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Regulator_Linear:AMS1117-3.3")
+    (at 130.0 65.0 0)
+    (unit 1)
+    (uuid "19e33460-b8e4-4c21-baaa-46b1510a454a")
+    (property "Reference" "U2" (at 130.0 52.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AMS1117-3.3 (12V -> 3.3V 1A)" (at 130.0 78.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-223-3_TabPin2" (at 130.0 65.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "RF_Module:ESP32-WROOM-32E")
+    (at 200.0 110.0 0)
+    (unit 1)
+    (uuid "930f846c-d5d9-4be8-86b2-5e4c5fcec8fb")
+    (property "Reference" "U1" (at 200.0 80.0 0) (effects (font (size 1.5 1.5))))
+    (property "Value" "ESP32-WROOM-32E (16MB Flash)" (at 200.0 142.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-WROOM-32E" (at 200.0 110.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Amplifier_Operational:MCP6002")
+    (at 85.0 140.0 0)
+    (unit 1)
+    (uuid "08e31609-22dc-4e9c-aad8-e71e9f0e06dd")
+    (property "Reference" "U3" (at 85.0 128.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MCP6002 (Generador CP ±12V PWM 1kHz)" (at 85.0 152.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 85.0 140.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Converter_DCDC:B1212S-1WR3")
+    (at 40.0 140.0 0)
+    (unit 1)
+    (uuid "42be7e89-650c-4934-9036-62df6155afe3")
+    (property "Reference" "DC1" (at 40.0 128.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "B1212S (Rail Negativo -12V)" (at 40.0 152.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Converter_DCDC:Converter_DCDC_Mornsun_B_S-1WR3_Single" (at 40.0 140.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Relay:G5LE-1")
+    (at 290.0 80.0 0)
+    (unit 1)
+    (uuid "90f65710-9371-484f-9b1c-049ebbd5d777")
+    (property "Reference" "K1" (at 290.0 68.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "Relé Bobina Contactor 40A (12VDC / 250VAC 10A)" (at 290.0 92.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5LE-1" (at 290.0 80.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Driver_Motor:L9110S")
+    (at 290.0 135.0 0)
+    (unit 1)
+    (uuid "a5e6c9b9-0058-4bc4-935b-04f216eab55e")
+    (property "Reference" "U4" (at 290.0 122.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "L9110S (Driver Bloqueo Motor Tipo 2)" (at 290.0 148.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOP-8_3.9x4.9mm_P1.27mm" (at 290.0 135.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Interface_UART:ISO3082")
+    (at 200.0 200.0 0)
+    (unit 1)
+    (uuid "ffc0c895-141b-480a-aa36-70f49df507df")
+    (property "Reference" "U5" (at 200.0 188.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ISO3082 (Transceptor RS-485 Aislado Galvánico)" (at 200.0 212.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-16W_7.5x10.3mm_P1.27mm" (at 200.0 200.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Connector:Screw_Terminal_01x06")
+    (at 360.0 110.0 0)
+    (unit 1)
+    (uuid "c18a889e-c237-441a-9d1e-52937031f7c3")
+    (property "Reference" "J1" (at 360.0 80.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNERO TIPO 2 (CP, PP, LOCK+, LOCK-, GND, PE)" (at 360.0 142.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-6_P5.08mm" (at 360.0 110.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Connector:Screw_Terminal_01x04")
+    (at 360.0 200.0 0)
+    (unit 1)
+    (uuid "ace78a26-02d6-4d96-a896-dca8fcb7e3e0")
+    (property "Reference" "J2" (at 360.0 178.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNERO MODBUS RS-485 (A, B, GND_ISO, SHIELD)" (at 360.0 222.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-4_P5.08mm" (at 360.0 200.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

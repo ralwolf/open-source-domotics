@@ -1,0 +1,219 @@
+substitutions:
+  device_name: "riego-inteligente-jardin"
+  friendly_name: "Controlador Riego Jardín 4 Zonas"
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+  comment: "Controlador de Riego Multizona con Triacs 24VAC, Sondas de Humedad y Protección Pluvial"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Red IoT Segregada (VLAN 30 IoT - Cero Acceso a Internet)
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+  manual_ip:
+    static_ip: 192.168.30.56
+    gateway: 192.168.30.1
+    subnet: 255.255.255.0
+    dns1: 192.168.30.1
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+
+logger:
+  level: INFO
+
+# Salidas Conmutadas por Triac (Zero-Crossing MOC3041 + BT136)
+switch:
+  - platform: gpio
+    pin: GPIO23
+    id: valve_master
+    name: "Válvula Maestra de Seguridad"
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    pin: GPIO19
+    id: valve_zone_1
+    name: "Válvula Zona 1 (Setos y Perímetro)"
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    pin: GPIO18
+    id: valve_zone_2
+    name: "Válvula Zona 2 (Césped y Pradera)"
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    pin: GPIO5
+    id: valve_zone_3
+    name: "Válvula Zona 3 (Huerto y Bancales)"
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    pin: GPIO17
+    id: valve_zone_4
+    name: "Válvula Zona 4 (Macetas y Patio)"
+    restore_mode: ALWAYS_OFF
+
+# Componente Nativo Sprinkler de ESPHome
+sprinkler:
+  - id: garden_sprinkler
+    main_switch: "Riego Secuencial Automático"
+    auto_advance_switch: "Avance Automático de Zonas"
+    reverse_switch: "Invertir Secuencia"
+    valve_overlap: 0s
+    standby_time: 5s
+    manual_selection: true
+    valves:
+      - valve_switch: valve_zone_1
+        name: "Zona 1 - Setos"
+        run_duration: 900s # 15 minutos por goteo
+      - valve_switch: valve_zone_2
+        name: "Zona 2 - Césped"
+        run_duration: 600s # 10 minutos por aspersión
+      - valve_switch: valve_zone_3
+        name: "Zona 3 - Huerto"
+        run_duration: 480s # 8 minutos microdifusión
+      - valve_switch: valve_zone_4
+        name: "Zona 4 - Macetas"
+        run_duration: 300s # 5 minutos microtubo
+    master_valve: valve_master
+    master_valve_switch: "Habilitar Válvula Maestra"
+
+# Sensores Analógicos de Humedad de Suelo y Caudalímetro
+sensor:
+  # Caudalímetro de Efecto Hall (1 pulso / litro)
+  - platform: pulse_counter
+    pin:
+      number: GPIO4
+      mode: INPUT_PULLUP
+    name: "Caudal Instantáneo de Riego"
+    id: flow_rate
+    unit_of_measurement: "L/min"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 1.0 # 1 pulso = 1 litro
+    total:
+      name: "Consumo Acumulado de Riego"
+      unit_of_measurement: "L"
+      accuracy_decimals: 0
+      device_class: water
+      state_class: total_increasing
+
+  # Sonda 1: Humedad Suelo Zona 1 (Setos)
+  - platform: adc
+    pin: GPIO32
+    name: "Humedad Suelo Zona 1 (Setos)"
+    id: soil_moisture_z1
+    attenuation: 12db
+    update_interval: 30s
+    filters:
+      # Calibración capacitiva: 2.8V en seco -> 0%, 1.2V sumergido -> 100%
+      - calibrate_linear:
+          - 2.80 -> 0.0
+          - 1.20 -> 100.0
+      - clamp:
+          min_value: 0.0
+          max_value: 100.0
+    unit_of_measurement: "%"
+    accuracy_decimals: 1
+    device_class: humidity
+
+  # Sonda 2: Humedad Suelo Zona 2 (Césped)
+  - platform: adc
+    pin: GPIO33
+    name: "Humedad Suelo Zona 2 (Césped)"
+    id: soil_moisture_z2
+    attenuation: 12db
+    update_interval: 30s
+    filters:
+      - calibrate_linear:
+          - 2.80 -> 0.0
+          - 1.20 -> 100.0
+      - clamp:
+          min_value: 0.0
+          max_value: 100.0
+    unit_of_measurement: "%"
+    accuracy_decimals: 1
+    device_class: humidity
+
+  # Sonda 3: Humedad Suelo Zona 3 (Huerto)
+  - platform: adc
+    pin: GPIO34
+    name: "Humedad Suelo Zona 3 (Huerto)"
+    id: soil_moisture_z3
+    attenuation: 12db
+    update_interval: 30s
+    filters:
+      - calibrate_linear:
+          - 2.80 -> 0.0
+          - 1.20 -> 100.0
+      - clamp:
+          min_value: 0.0
+          max_value: 100.0
+    unit_of_measurement: "%"
+    accuracy_decimals: 1
+    device_class: humidity
+
+  # Sonda 4: Humedad Suelo Zona 4 (Macetas)
+  - platform: adc
+    pin: GPIO35
+    name: "Humedad Suelo Zona 4 (Macetas)"
+    id: soil_moisture_z4
+    attenuation: 12db
+    update_interval: 30s
+    filters:
+      - calibrate_linear:
+          - 2.80 -> 0.0
+          - 1.20 -> 100.0
+      - clamp:
+          min_value: 0.0
+          max_value: 100.0
+    unit_of_measurement: "%"
+    accuracy_decimals: 1
+    device_class: humidity
+
+  # Entidades Importadas desde Home Assistant para Interbloqueo Inteligente
+  - platform: homeassistant
+    id: cistern_level_pct
+    entity_id: sensor.nivel_cisterna_pluvial_porcentaje
+    internal: true
+
+  - platform: homeassistant
+    id: rain_probability_forecast
+    entity_id: sensor.probabilidad_lluvia_proximas_24h
+    internal: true
+
+# Sensores Binarios de Seguridad y Detección de Fugas
+binary_sensor:
+  - platform: template
+    name: "Alerta Fuga en Red de Riego"
+    id: leak_detected_alert
+    device_class: problem
+    lambda: |-
+      // Si hay flujo de agua (> 1.5 L/min) pero todas las válvulas están apagadas -> Fuga o rotura
+      bool any_valve_on = id(valve_master).state || id(valve_zone_1).state || 
+                          id(valve_zone_2).state || id(valve_zone_3).state || id(valve_zone_4).state;
+      return (!any_valve_on && id(flow_rate).state > 1.5);
+
+# Reglas y Automatizaciones Autónomas Locales
+interval:
+  - interval: 1min
+    then:
+      - lambda: |-
+          // Si el nivel de cisterna desciende del 15%, abortar ciclo de riego para proteger la bomba
+          if (id(cistern_level_pct).state < 15.0) {
+            if (id(garden_sprinkler).is_running()) {
+              id(garden_sprinkler).stop();
+              ESP_LOGW("riego", "Ciclo de riego abortado: Nivel de cisterna pluvial insuficiente (<15%)");
+            }
+          }

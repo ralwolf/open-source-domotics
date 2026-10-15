@@ -1,0 +1,139 @@
+(kicad_sch
+  (version 20231120)
+  (generator "open-source-domotics-gen")
+  (generator_version "10.0")
+  (uuid "6ae054aa-46c8-44ad-86b6-0a1f78f8bc6d")
+  (paper "A3")
+  (title_block
+    (title "CONTROLADOR DE RIEGO INTELIGENTE MULTIZONA (24VAC / TRIAC ZERO-CROSS)")
+    (date "2026-10-15")
+    (rev "v1.0")
+    (company "open-source-domotics (Hardware Libre)")
+    (comment 1 "5x Triacs BT136 + MOC3041 Zero-Cross + 4x Sondas Capacitivas + Caudalímetro Hall")
+    (comment 2 "Protección snubber RC y varistores MOV contra sobretensiones inductivas de solenoides")
+  )
+
+  (wire (pts (xy 40.0 50.0) (xy 75.0 50.0))
+    (stroke (width 0) (type default))
+    (uuid "76aaa4fa-2306-4a5c-b155-6f586e1f59ae")
+  )
+  (text "ALIMENTACION_24VAC_IN"
+    (at 40.0 48.0 0)
+    (effects (font (size 1.5 1.5)))
+    (uuid "480e192c-32bd-46b6-a51f-b83d34bef243")
+  )
+
+  (symbol
+    (lib_id "Device:D_Bridge_+-~~")
+    (at 85.0 65.0 0)
+    (unit 1)
+    (uuid "3f66142f-ef16-459b-a2c9-0235b28ca321")
+    (property "Reference" "BR1" (at 85.0 52.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MB6S (Puente Rectificador 600V 1A)" (at 85.0 78.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-4_4.4x3.9mm_P2.54mm" (at 85.0 65.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Regulator_Switching:LM2596HV-5.0")
+    (at 130.0 65.0 0)
+    (unit 1)
+    (uuid "d7c3cf06-d319-42a7-bd15-13986d62c885")
+    (property "Reference" "U2" (at 130.0 52.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "LM2596HV-5.0 (Buck 60V -> 5V 1A)" (at 130.0 78.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:TO-263-5_TabPin3" (at 130.0 65.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "RF_Module:ESP32-WROOM-32E")
+    (at 200.0 110.0 0)
+    (unit 1)
+    (uuid "a566b877-01f5-4ab4-bc5f-2f9463aa08f8")
+    (property "Reference" "U1" (at 200.0 80.0 0) (effects (font (size 1.5 1.5))))
+    (property "Value" "ESP32-WROOM-32E (16MB Flash)" (at 200.0 142.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-WROOM-32E" (at 200.0 110.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Isolator:MOC3041M")
+    (at 290.0 70.0 0)
+    (unit 1)
+    (uuid "cca96092-e00b-444e-b681-57b982d3d2da")
+    (property "Reference" "OK1" (at 290.0 58.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MOC3041M (Optotriac Cruce por Cero)" (at 290.0 82.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_DIP:DIP-6_W7.62mm" (at 290.0 70.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Triac:BT136-600E")
+    (at 350.0 70.0 0)
+    (unit 1)
+    (uuid "4be53935-3348-4617-b618-e1cec5669751")
+    (property "Reference" "Q1" (at 350.0 58.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BT136-600E (Triac 4A 600V TO-220 - EV1)" (at 350.0 82.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical" (at 350.0 70.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Triac:BT136-600E")
+    (at 350.0 115.0 0)
+    (unit 1)
+    (uuid "91abe5f4-f016-4041-9841-78e463adb6fa")
+    (property "Reference" "Q2" (at 350.0 102.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BT136-600E (Triac EV2)" (at 350.0 128.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical" (at 350.0 115.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Triac:BT136-600E")
+    (at 350.0 160.0 0)
+    (unit 1)
+    (uuid "d7e5fa97-425e-4178-97b2-c7ddb6f845d8")
+    (property "Reference" "Q3" (at 350.0 148.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BT136-600E (Triac EV3)" (at 350.0 172.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical" (at 350.0 160.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Triac:BT136-600E")
+    (at 350.0 205.0 0)
+    (unit 1)
+    (uuid "29687a3e-ee17-430a-b6b4-eef24fefa2e0")
+    (property "Reference" "Q4" (at 350.0 192.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BT136-600E (Triac EV4)" (at 350.0 218.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical" (at 350.0 205.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Triac:BT136-600E")
+    (at 350.0 250.0 0)
+    (unit 1)
+    (uuid "de2b3d6a-1111-4040-939a-088b2adb93b2")
+    (property "Reference" "Q5" (at 350.0 238.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BT136-600E (Triac Válvula Maestra)" (at 350.0 262.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical" (at 350.0 250.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Connector:Screw_Terminal_01x08")
+    (at 410.0 160.0 0)
+    (unit 1)
+    (uuid "e7eb0269-4d1f-4d77-b409-97b77d88afce")
+    (property "Reference" "J1" (at 410.0 125.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNERO VÁLVULAS 24VAC (24VAC_IN, COM, MV, Z1, Z2, Z3, Z4, GND)" (at 410.0 195.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-8_P5.08mm" (at 410.0 160.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Connector:Screw_Terminal_01x06")
+    (at 85.0 180.0 0)
+    (unit 1)
+    (uuid "83f1ecdd-1569-4974-93da-347d8fbdfb8d")
+    (property "Reference" "J2" (at 85.0 150.0 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BORNERO SONDAS (S1, S2, S3, S4, CAUDAL_PULSO, +3.3V)" (at 85.0 210.0 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "TerminalBlock:TerminalBlock_bornier-6_P3.81mm" (at 85.0 180.0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

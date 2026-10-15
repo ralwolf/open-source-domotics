@@ -28,7 +28,17 @@ Este directorio contiene la documentación, especificaciones, esquemas y archivo
 
 ---
 
-## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D (FreeCAD / Open CAD Studio), modelos STL/STEP, tolerancias y anclajes.
-- `electrico/`: Diagramas unifilares y esquemas de conexionado (QElectroTech / KiCad), protecciones y lista de materiales (BOM).
-- `control/`: Configuraciones YAML de Home Assistant, firmware (ESPHome / Arduino CLI), integraciones locales.
+## 5. Estructura y Entregables de este Directorio
+- **`mecanico/`**:
+  - [`cargador_ev_wallbox.FCStd`](mecanico/cargador_ev_wallbox.FCStd): Modelo 3D paramétrico FreeCAD de la carcasa Wallbox IP54 / IK10 con receptáculo Tipo 2 (Mennekes IEC 62196-2), aro LED RGB difusor, ventana para OLED/RFID, seta de paro de emergencia y gancho enrollador de cable.
+  - [`cargador_ev_wallbox.step`](mecanico/cargador_ev_wallbox.step): Exportación neutra STEP para fabricación y mecanizado.
+- **`electrico/`**:
+  - [`esquema_ev_wallbox.dxf`](electrico/esquema_ev_wallbox.dxf): Plano CAD unifilar y de maniobra con acometida 230V 32A (3x10mm²), MCB C40A, RCD Tipo B (30mA AC + 6mA DC según IEC 62955), contactor de potencia 40A 2P con contacto auxiliar y bus RS-485.
+  - [`esquema_ev_wallbox.svg`](electrico/esquema_ev_wallbox.svg): Diagrama vectorial en alta resolución.
+  - [`controlador_ev_wallbox.kicad_pro`](electrico/controlador_ev_wallbox.kicad_pro): Proyecto electrónico KiCad 10.
+  - [`controlador_ev_wallbox.kicad_sch`](electrico/controlador_ev_wallbox.kicad_sch): Esquema electrónico KiCad 10 con ESP32-WROOM-32E, circuito analógico CP ±12V PWM 1kHz, sensado ADC de niveles A-F, divisor PP, transceptor aislado ISO3082 y driver para relé de contactor.
+  - [`controlador_ev_wallbox.svg`](electrico/esquema_svg/controlador_ev_wallbox.svg): Esquema renderizado con kicad-cli.
+  - [`BOM.md`](electrico/BOM.md): Lista detallada de componentes (ICs, semiconductores, transformadores y aparamenta modular de potencia).
+- **`control/`**:
+  - [`ev_smart_charger.yaml`](control/ev_smart_charger.yaml): Firmware ESPHome con máquina de estados IEC 61851-1, telemetría Modbus de tensión/corriente/energía, selector de consigna dinámica y 3 modos operativos: Solar Puro (cero importación/inyección), Eco Solar (base 6A + excedentes) y Rápido (32A / 7.4 kW).
+

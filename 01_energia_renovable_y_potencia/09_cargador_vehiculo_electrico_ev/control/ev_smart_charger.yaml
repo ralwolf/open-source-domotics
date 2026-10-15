@@ -1,0 +1,281 @@
+substitutions:
+  device_name: "ev-smart-wallbox"
+  friendly_name: "Cargador EV Inteligente 32A"
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+  comment: "Controlador EVSE IEC 61851-1 Modo 3 con Balanceo Dinámico de Excedentes Solares"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Red y Comunicaciones Zero-Trust (VLAN 30 IoT - Sin salida a Internet)
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+  manual_ip:
+    static_ip: 192.168.30.55
+    gateway: 192.168.30.1
+    subnet: 255.255.255.0
+    dns1: 192.168.30.1
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+
+logger:
+  level: INFO
+
+# Bus UART para Medidor de Energía Modbus RS-485
+uart:
+  - id: uart_modbus
+    tx_pin: GPIO17
+    rx_pin: GPIO16
+    baud_rate: 9600
+    stop_bits: 1
+
+modbus:
+  id: modbus_evse
+  uart_id: uart_modbus
+
+modbus_controller:
+  - id: sdm120_meter
+    address: 1
+    modbus_id: modbus_evse
+    setup_priority: -10
+
+# Generador PWM 1 kHz para el Control Pilot (CP) según IEC 61851-1
+output:
+  - platform: ledc
+    id: cp_pwm_output
+    pin: GPIO25
+    frequency: 1000 Hz
+
+  # Salida de Relé para Bobina del Contactor de Potencia 40A
+  - platform: gpio
+    id: contactor_relay_output
+    pin: GPIO26
+
+  # Driver de Bloqueo de Conector Tipo 2 (Puente H)
+  - platform: gpio
+    id: lock_motor_fwd
+    pin: GPIO27
+  - platform: gpio
+    id: lock_motor_rev
+    pin: GPIO14
+
+# Variables Globales de Control y Estado
+globals:
+  - id: charging_state
+    type: std::string
+    restore_value: no
+    initial_value: '"Estado A (En espera)"'
+  - id: max_cable_current
+    type: float
+    restore_value: no
+    initial_value: '32.0'
+  - id: target_current
+    type: float
+    restore_value: yes
+    initial_value: '16.0'
+  - id: charging_mode
+    type: int
+    restore_value: yes
+    initial_value: '1' # 0: Solar Puro, 1: Eco Solar, 2: Rápido 32A
+
+# Sensores de Telemetría Eléctrica y Lectura de Estados
+sensor:
+  # 1. Medidor de Energía Modbus (SDM120 / Finder)
+  - platform: modbus_controller
+    modbus_controller_id: sdm120_meter
+    name: "Wallbox Tensión de Red"
+    address: 0x0000
+    register_type: input
+    value_type: FP32
+    unit_of_measurement: "V"
+    accuracy_decimals: 1
+    device_class: voltage
+
+  - platform: modbus_controller
+    modbus_controller_id: sdm120_meter
+    name: "Wallbox Corriente de Carga"
+    id: ev_current_actual
+    address: 0x0006
+    register_type: input
+    value_type: FP32
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    device_class: current
+
+  - platform: modbus_controller
+    modbus_controller_id: sdm120_meter
+    name: "Wallbox Potencia Activa"
+    id: ev_power_actual
+    address: 0x000C
+    register_type: input
+    value_type: FP32
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    device_class: power
+
+  - platform: modbus_controller
+    modbus_controller_id: sdm120_meter
+    name: "Wallbox Energía Total Sesión"
+    address: 0x0156
+    register_type: input
+    value_type: FP32
+    unit_of_measurement: "kWh"
+    accuracy_decimals: 2
+    state_class: total_increasing
+    device_class: energy
+
+  # 2. Sensor ADC del Control Pilot (CP) para detección de estado del vehículo
+  - platform: adc
+    pin: GPIO36
+    id: cp_voltage_adc
+    name: "Tensión de Control Pilot (CP)"
+    update_interval: 100ms
+    attenuation: 12db
+    filters:
+      - multiply: 4.85 # Factor de calibración divisor de tensión resistivo (100k/22k)
+    on_value:
+      then:
+        - lambda: |-
+            float v = x;
+            if (v >= 10.5) {
+              id(charging_state) = "Estado A (Vehículo Desconectado)";
+              id(contactor_switch).turn_off();
+              id(cp_pwm_output).set_level(1.0); // 100% DC = +12V continuo
+            } else if (v >= 8.0 && v < 10.5) {
+              id(charging_state) = "Estado B (Vehículo Conectado)";
+              id(contactor_switch).turn_off();
+              // Activar PWM según consigna de corriente
+              float duty = id(target_current) / 0.6 / 100.0;
+              id(cp_pwm_output).set_level(duty);
+            } else if (v >= 5.0 && v < 8.0) {
+              id(charging_state) = "Estado C (Carga Activa OK)";
+              id(contactor_switch).turn_on();
+            } else if (v >= 2.5 && v < 5.0) {
+              id(charging_state) = "Estado D (Ventilación Requerida)";
+              id(contactor_switch).turn_on();
+            } else {
+              id(charging_state) = "Estado E/F (Falla de Diodo / Cortocircuito)";
+              id(contactor_switch).turn_off();
+              id(cp_pwm_output).set_level(0.0);
+            }
+
+  # 3. Sensor ADC del Proximity Pilot (PP) para capacidad máxima del cable
+  - platform: adc
+    pin: GPIO39
+    name: "Tensión Proximity Pilot (PP)"
+    update_interval: 1s
+    attenuation: 12db
+    on_value:
+      then:
+        - lambda: |-
+            if (x > 2.0) {
+              id(max_cable_current) = 13.0; // 1500 ohms
+            } else if (x > 1.2) {
+              id(max_cable_current) = 20.0; // 680 ohms
+            } else if (x > 0.5) {
+              id(max_cable_current) = 32.0; // 220 ohms
+            } else {
+              id(max_cable_current) = 63.0; // 100 ohms
+            }
+
+  # 4. Potencia Excedentaria Solar Importada desde Home Assistant
+  - platform: homeassistant
+    id: solar_surplus_watts
+    entity_id: sensor.excedente_solar_neto
+    internal: true
+    on_value:
+      then:
+        - lambda: |-
+            if (id(charging_mode) == 0) {
+              // Modo Solar Puro: Corriente = Excedente(W) / 230V
+              float amps = x / 230.0;
+              if (amps < 6.0) {
+                // Mínimo IEC 61851 es 6A; si no alcanza excedente, pausar carga
+                id(target_current) = 0.0;
+                id(cp_pwm_output).set_level(1.0);
+              } else {
+                amps = std::min(amps, id(max_cable_current));
+                amps = std::min(amps, 32.0f);
+                id(target_current) = amps;
+                id(cp_pwm_output).set_level(amps / 0.6 / 100.0);
+              }
+            } else if (id(charging_mode) == 1) {
+              // Modo Eco: Asegurar base de 6A y aprovechar excedente hasta 32A
+              float amps = std::max(6.0f, (float)(x / 230.0));
+              amps = std::min(amps, id(max_cable_current));
+              id(target_current) = amps;
+              id(cp_pwm_output).set_level(amps / 0.6 / 100.0);
+            }
+
+# Sensores Binarios de Seguridad
+binary_sensor:
+  # Detección Falla RDC-DD 6mA DC (Corte ultra-rápido por interrupción hardware)
+  - platform: gpio
+    pin:
+      number: GPIO34
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Alarma Fuga DC (RCMB 6mA)"
+    device_class: problem
+    on_press:
+      then:
+        - switch.turn_off: contactor_switch
+        - output.set_level:
+            id: cp_pwm_output
+            level: 0.0
+        - logger.log: "EMERGENCIA: Fuga DC detectada (>6mA). Contactor desconectado."
+
+  # Supervisión Soldadura Contactor Auxiliar
+  - platform: gpio
+    pin:
+      number: GPIO35
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Feedback Auxiliar Contactor"
+    device_class: safety
+
+# Interruptores de Control Local
+switch:
+  - platform: gpio
+    pin: GPIO26
+    id: contactor_switch
+    name: "Contactor de Potencia 230V"
+    restore_mode: ALWAYS_OFF
+
+# Selector de Modos de Carga
+select:
+  - platform: template
+    name: "Modo de Carga Wallbox"
+    options:
+      - "Solar Puro (Zero Export/Import)"
+      - "Eco Solar (Base 6A + Excedentes)"
+      - "Máxima Potencia (32A / 7.4 kW)"
+    initial_option: "Eco Solar (Base 6A + Excedentes)"
+    set_action:
+      - lambda: |-
+          if (x == "Solar Puro (Zero Export/Import)") {
+            id(charging_mode) = 0;
+          } else if (x == "Eco Solar (Base 6A + Excedentes)") {
+            id(charging_mode) = 1;
+          } else {
+            id(charging_mode) = 2;
+            id(target_current) = std::min(32.0f, id(max_cable_current));
+            id(cp_pwm_output).set_level(id(target_current) / 0.6 / 100.0);
+          }
+
+text_sensor:
+  - platform: template
+    name: "Estado IEC 61851"
+    lambda: |-
+      return id(charging_state);

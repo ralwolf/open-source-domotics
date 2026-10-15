@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 850" width="100%" height="100%" style="background-color: #0b131e; font-family: monospace, sans-serif;">
+  <defs>
+    <filter id="glow_water" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <rect x="20" y="20" width="1160" height="810" fill="none" stroke="#1e293b" stroke-width="2" rx="8" />
+
+  <!-- Cajetin -->
+  <rect x="680" y="730" width="480" height="80" fill="#152132" stroke="#0284c7" stroke-width="2" rx="4" />
+  <text x="700" y="755" fill="#38bdf8" font-size="16" font-weight="bold">OPEN-SOURCE-DOMOTICS</text>
+  <text x="700" y="775" fill="#f8fafc" font-size="13" font-weight="bold">ESQUEMA HIDRÁULICO - RIEGO AUTOMATIZADO MULTIZONA</text>
+  <text x="700" y="795" fill="#94a3b8" font-size="11">Colector 4 Zonas + Válvula Maestra 24VAC + Caudalímetro + Cisterna Pluvial</text>
+
+  <!-- Alimentacion Cisterna Pluvial -->
+  <g transform="translate(50, 180)">
+    <rect x="0" y="0" width="130" height="220" fill="#1e293b" stroke="#0284c7" stroke-width="2" rx="6" />
+    <text x="15" y="30" fill="#38bdf8" font-size="13" font-weight="bold">SUMINISTRO AGUA</text>
+    <text x="15" y="55" fill="#f8fafc" font-size="12">Cisterna Pluvial</text>
+    <text x="15" y="75" fill="#94a3b8" font-size="11">10.000 L / Bomba</text>
+    <text x="15" y="110" fill="#cbd5e1" font-size="11">Presión: 3.0 bar</text>
+    <text x="15" y="130" fill="#cbd5e1" font-size="11">Tubería PE 32 mm</text>
+    <text x="15" y="160" fill="#22c55e" font-size="11">Válvula Bypass</text>
+    <text x="15" y="180" fill="#94a3b8" font-size="10">a Red de Agua</text>
+  </g>
+
+  <!-- Tuberia Principal -->
+  <path d="M 180 290 L 250 290" stroke="#0ea5e9" stroke-width="8" fill="none" />
+
+  <!-- Filtro de Anillas 120 Mesh -->
+  <g transform="translate(250, 220)">
+    <rect x="0" y="0" width="100" height="140" fill="#1e293b" stroke="#eab308" stroke-width="2" rx="6" />
+    <text x="12" y="30" fill="#facc15" font-size="12" font-weight="bold">FILTRO ANILLAS</text>
+    <text x="12" y="55" fill="#f8fafc" font-size="12">120 Mesh</text>
+    <text x="12" y="75" fill="#94a3b8" font-size="11">130 micras</text>
+    <text x="12" y="105" fill="#cbd5e1" font-size="10">Manómetro 0-6 bar</text>
+    <text x="12" y="125" fill="#22c55e" font-size="10">Purga manual</text>
+  </g>
+
+  <path d="M 350 290 L 410 290" stroke="#0ea5e9" stroke-width="8" fill="none" />
+
+  <!-- Caudimetro de Pulsos -->
+  <g transform="translate(410, 220)">
+    <rect x="0" y="0" width="110" height="140" fill="#1e293b" stroke="#8b5cf6" stroke-width="2" rx="6" />
+    <text x="10" y="30" fill="#c084fc" font-size="12" font-weight="bold">CAUDALÍMETRO</text>
+    <text x="10" y="55" fill="#f8fafc" font-size="12">Efecto Hall</text>
+    <text x="10" y="75" fill="#94a3b8" font-size="11">1 pulso / Litro</text>
+    <text x="10" y="105" fill="#cbd5e1" font-size="10">Rango: 2-50 L/min</text>
+    <text x="10" y="125" fill="#38bdf8" font-size="10">Detección fugas</text>
+  </g>
+
+  <path d="M 520 290 L 580 290" stroke="#0ea5e9" stroke-width="8" fill="none" />
+
+  <!-- Valvula Maestra de Seguridad (Master Valve) -->
+  <g transform="translate(580, 220)">
+    <rect x="0" y="0" width="120" height="140" fill="#1e293b" stroke="#f43f5e" stroke-width="2" rx="6" />
+    <text x="12" y="30" fill="#fb7185" font-size="12" font-weight="bold">VÁLVULA MAESTRA</text>
+    <text x="12" y="55" fill="#f8fafc" font-size="12">Solenoide 24V AC</text>
+    <text x="12" y="75" fill="#94a3b8" font-size="11">1" BSP (NC)</text>
+    <text x="12" y="105" fill="#cbd5e1" font-size="10">Apertura única</text>
+    <text x="12" y="125" fill="#ef4444" font-size="10">Corte preventivo</text>
+  </g>
+
+  <!-- Tuberia al Colector Manifold -->
+  <path d="M 700 290 L 760 290" stroke="#0ea5e9" stroke-width="8" fill="none" />
+
+  <!-- Colector Manifold Vertical -->
+  <path d="M 760 120 L 760 560" stroke="#0284c7" stroke-width="12" stroke-linecap="round" fill="none" />
+  <text x="740" y="100" fill="#38bdf8" font-size="13" font-weight="bold">COLECTOR MANIFOLD 1"</text>
+
+  <!-- 4 Salidas a Zonas de Riego -->
+  <!-- Zona 1: Setos (Y=140) -->
+  <path d="M 760 140 L 820 140" stroke="#0ea5e9" stroke-width="6" fill="none" />
+  <g transform="translate(820, 105)">
+    <rect x="0" y="0" width="75" height="70" fill="#1e293b" stroke="#10b981" stroke-width="1.5" rx="4" />
+    <text x="8" y="25" fill="#34d399" font-size="11" font-weight="bold">EV ZONA 1</text>
+    <text x="8" y="45" fill="#f8fafc" font-size="10">24V AC 1"</text>
+    <text x="8" y="60" fill="#94a3b8" font-size="9">Caudal Reg.</text>
+  </g>
+  <path d="M 895 140 L 930 140" stroke="#10b981" stroke-width="4" fill="none" />
+  <g transform="translate(930, 105)">
+    <rect x="0" y="0" width="220" height="70" fill="#0f172a" stroke="#10b981" stroke-width="1.5" rx="4" />
+    <text x="12" y="25" fill="#f8fafc" font-size="12" font-weight="bold">ZONA 1: SETOS PERIMETRALES</text>
+    <text x="12" y="45" fill="#94a3b8" font-size="10">Goteo autocompensante 2.3 L/h (PE 16mm)</text>
+    <text x="12" y="60" fill="#38bdf8" font-size="10">Sonda Humedad Suelo 1 (Raíces 30cm)</text>
+  </g>
+
+  <!-- Zona 2: Cesped (Y=280) -->
+  <path d="M 760 280 L 820 280" stroke="#0ea5e9" stroke-width="6" fill="none" />
+  <g transform="translate(820, 245)">
+    <rect x="0" y="0" width="75" height="70" fill="#1e293b" stroke="#10b981" stroke-width="1.5" rx="4" />
+    <text x="8" y="25" fill="#34d399" font-size="11" font-weight="bold">EV ZONA 2</text>
+    <text x="8" y="45" fill="#f8fafc" font-size="10">24V AC 1"</text>
+    <text x="8" y="60" fill="#94a3b8" font-size="9">Caudal Reg.</text>
+  </g>
+  <path d="M 895 280 L 930 280" stroke="#10b981" stroke-width="4" fill="none" />
+  <g transform="translate(930, 245)">
+    <rect x="0" y="0" width="220" height="70" fill="#0f172a" stroke="#10b981" stroke-width="1.5" rx="4" />
+    <text x="12" y="25" fill="#f8fafc" font-size="12" font-weight="bold">ZONA 2: CÉSPED Y PRADERA</text>
+    <text x="12" y="45" fill="#94a3b8" font-size="10">4x Aspersores emergentes (18 L/min total)</text>
+    <text x="12" y="60" fill="#38bdf8" font-size="10">Sonda Humedad Suelo 2 (Superficie 10cm)</text>
+  </g>
+
+  <!-- Zona 3: Huerto (Y=420) -->
+  <path d="M 760 420 L 820 420" stroke="#0ea5e9" stroke-width="6" fill="none" />
+  <g transform="translate(820, 385)">
+    <rect x="0" y="0" width="75" height="70" fill="#1e293b" stroke="#10b981" stroke-width="1.5" rx="4" />
+    <text x="8" y="25" fill="#34d399" font-size="11" font-weight="bold">EV ZONA 3</text>
+    <text x="8" y="45" fill="#f8fafc" font-size="10">24V AC 1"</text>
+    <text x="8" y="60" fill="#94a3b8" font-size="9">Caudal Reg.</text>
+  </g>
+  <path d="M 895 420 L 930 420" stroke="#10b981" stroke-width="4" fill="none" />
+  <g transform="translate(930, 385)">
+    <rect x="0" y="0" width="220" height="70" fill="#0f172a" stroke="#10b981" stroke-width="1.5" rx="4" />
+    <text x="12" y="25" fill="#f8fafc" font-size="12" font-weight="bold">ZONA 3: HUERTO Y BANCALES</text>
+    <text x="12" y="45" fill="#94a3b8" font-size="10">Microaspersión / Nebulización en bancales</text>
+    <text x="12" y="60" fill="#38bdf8" font-size="10">Sonda Humedad Suelo 3 (Sustrato 15cm)</text>
+  </g>
+
+  <!-- Zona 4: Macetas Terraza (Y=540) -->
+  <path d="M 760 540 L 820 540" stroke="#0ea5e9" stroke-width="6" fill="none" />
+  <g transform="translate(820, 505)">
+    <rect x="0" y="0" width="75" height="70" fill="#1e293b" stroke="#10b981" stroke-width="1.5" rx="4" />
+    <text x="8" y="25" fill="#34d399" font-size="11" font-weight="bold">EV ZONA 4</text>
+    <text x="8" y="45" fill="#f8fafc" font-size="10">24V AC 1"</text>
+    <text x="8" y="60" fill="#94a3b8" font-size="9">Caudal Reg.</text>
+  </g>
+  <path d="M 895 540 L 930 540" stroke="#10b981" stroke-width="4" fill="none" />
+  <g transform="translate(930, 505)">
+    <rect x="0" y="0" width="220" height="70" fill="#0f172a" stroke="#10b981" stroke-width="1.5" rx="4" />
+    <text x="12" y="25" fill="#f8fafc" font-size="12" font-weight="bold">ZONA 4: MACETAS Y PATIO</text>
+    <text x="12" y="45" fill="#94a3b8" font-size="10">Microtubo 4mm con goteros regulables</text>
+    <text x="12" y="60" fill="#38bdf8" font-size="10">Sonda Humedad Suelo 4 (Jardinera central)</text>
+  </g>
+
+  <!-- Cuadro Inferior: Logica del Controlador ESP32 -->
+  <g transform="translate(50, 480)">
+    <rect x="0" y="0" width="650" height="230" fill="#152132" stroke="#10b981" stroke-width="2" rx="6" />
+    <text x="25" y="35" fill="#34d399" font-size="15" font-weight="bold">CONTROLADOR INTELIGENTE ESP32 (VLAN 30 IoT - Cero Nube)</text>
+    
+    <text x="25" y="70" fill="#cbd5e1" font-size="11">• 5x Triacs BT136 con optotriacs MOC3041 (Conmutación en cruce por cero sin chispas ni ruidos)</text>
+    <text x="25" y="95" fill="#cbd5e1" font-size="11">• 4x Sondas capacitivas analógicas protegidas contra corrosión galvánica (0-100% calibradas)</text>
+    <text x="25" y="120" fill="#cbd5e1" font-size="11">• Integración de radar meteorológico Open-Meteo: Omite riego si probabilidad de lluvia &gt; 60%</text>
+    <text x="25" y="145" fill="#cbd5e1" font-size="11">• Interbloqueo cisterna pluvial: Desactiva riego si nivel desciende por debajo del 15%</text>
+    <text x="25" y="170" fill="#cbd5e1" font-size="11">• Algoritmo Watchdog anti-fugas: Si el caudalímetro lee flujo con válvulas OFF -&gt; Corte y Alerta HA</text>
+    <text x="25" y="195" fill="#38bdf8" font-size="11">• Aislamiento galvánico: Transformador 230V a 24V AC 50VA independiente con fusible 2A</text>
+  </g>
+</svg>
