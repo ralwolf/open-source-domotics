@@ -1,0 +1,147 @@
+substitutions:
+  name: "cocina-telemetria-ups"
+  friendly_name: "Cocina Telemetría y UPS Refrigerador"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "Telemetría de Cargas en Cocina, Detección Fin de Ciclo Lavavajillas y Mini-UPS LiFePO4 para Refrigerador"
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret esphome_api_key"
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 10.0.30.80
+    gateway: 10.0.30.1
+    subnet: 255.255.255.0
+    dns1: 10.0.10.1
+
+i2c:
+  sda: GPIO4
+  scl: GPIO5
+  scan: true
+  id: bus_i2c_cocina
+
+uart:
+  - id: uart_bl0942_refrig
+    tx_pin: GPIO21
+    rx_pin: GPIO20
+    baud_rate: 4800
+
+# 1. Metrología Refrigerator
+sensor:
+  - platform: bl0942
+    uart_id: uart_bl0942_refrig
+    voltage:
+      name: "Refrigerador Tensión Red"
+      unit_of_measurement: "V"
+      accuracy_decimals: 1
+      id: refrig_voltage
+      on_value_range:
+        - below: 195.0
+          then:
+            - switch.turn_on: sw_transferencia_ups
+        - above: 253.0
+          then:
+            - switch.turn_on: sw_transferencia_ups
+    current:
+      name: "Refrigerador Corriente"
+      unit_of_measurement: "A"
+      accuracy_decimals: 3
+    power:
+      name: "Refrigerador Potencia Activa"
+      unit_of_measurement: "W"
+      accuracy_decimals: 1
+      id: refrig_power
+    energy:
+      name: "Refrigerador Energía Acumulada"
+      unit_of_measurement: "kWh"
+      accuracy_decimals: 3
+
+  # Potencia Lavavajillas con detección fin de ciclo
+  - platform: template
+    name: "Lavavajillas Potencia Activa"
+    id: lavavajillas_potencia
+    unit_of_measurement: "W"
+    accuracy_decimals: 1
+    update_interval: 10s
+    lambda: |-
+      return 2.1f; # En reposo / fin de ciclo
+    on_value:
+      then:
+        - if:
+            condition:
+              lambda: 'return id(lavavajillas_potencia).state < 3.0f && id(lavavajillas_en_ciclo).state;'
+            then:
+              - binary_sensor.template.publish:
+                  id: lavavajillas_en_ciclo
+                  state: false
+              - homeassistant.event:
+                  event: esphome.lavavajillas_fin_ciclo
+                  data:
+                    message: "El lavavajillas ha finalizado el ciclo de lavado y secado."
+
+  # Monitor de Batería LiFePO4 de Mini-UPS (12.8V 20Ah)
+  - platform: ina219
+    i2c_id: bus_i2c_cocina
+    address: 0x40
+    shunt_resistance: 0.1 ohm
+    current:
+      name: "UPS Batería Corriente"
+      unit_of_measurement: "A"
+      accuracy_decimals: 2
+    voltage:
+      name: "UPS Batería Tensión"
+      unit_of_measurement: "V"
+      accuracy_decimals: 2
+      id: ups_bat_volt
+    power:
+      name: "UPS Batería Potencia"
+      unit_of_measurement: "W"
+      accuracy_decimals: 1
+    update_interval: 15s
+
+# 2. Variables de Estado de Ciclo
+binary_sensor:
+  - platform: template
+    name: "Lavavajillas Ciclo en Progreso"
+    id: lavavajillas_en_ciclo
+
+  - platform: template
+    name: "Refrigerador Alerta Fallo Compresor"
+    id: refrig_alerta_compresor
+    device_class: problem
+    lambda: |-
+      // Si la potencia supera 350W sostenidos
+      if (id(refrig_power).state > 350.0f) {
+        return true;
+      }
+      return false;
+
+# 3. Conmutador de Transferencia a Mini-UPS
+output:
+  - platform: gpio
+    pin: GPIO6
+    id: out_rele_ups
+
+switch:
+  - platform: output
+    name: "Refrigerador Forzar Respaldo UPS"
+    id: sw_transferencia_ups
+    output: out_rele_ups
+    restore_mode: RESTORE_DEFAULT_OFF

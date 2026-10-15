@@ -1,0 +1,136 @@
+substitutions:
+  name: "lavanderia-telemetria-seguridad"
+  friendly_name: "Lavandería Telemetría y Seguridad"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "Telemetría de Lavadora/Secadora, Detección Fin de Ciclo y Protección Anti-Inundación"
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret esphome_api_key"
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 10.0.30.85
+    gateway: 10.0.30.1
+    subnet: 255.255.255.0
+    dns1: 10.0.10.1
+
+i2c:
+  sda: GPIO8
+  scl: GPIO9
+  scan: true
+  id: bus_i2c_lavand
+
+uart:
+  - id: uart_bl0942_lav
+    tx_pin: GPIO21
+    rx_pin: GPIO20
+    baud_rate: 4800
+
+# 1. Metrología Eléctrica BL0942
+sensor:
+  - platform: bl0942
+    uart_id: uart_bl0942_lav
+    voltage:
+      name: "Lavadora Tensión Red"
+      unit_of_measurement: "V"
+      accuracy_decimals: 1
+    current:
+      name: "Lavadora Corriente"
+      unit_of_measurement: "A"
+      accuracy_decimals: 3
+    power:
+      name: "Lavadora Potencia Activa"
+      unit_of_measurement: "W"
+      accuracy_decimals: 1
+      id: lavadora_power
+      on_value:
+        then:
+          - if:
+              condition:
+                lambda: 'return id(lavadora_power).state > 150.0f;'
+              then:
+                - binary_sensor.template.publish:
+                    id: lavadora_en_ciclo
+                    state: true
+          - if:
+              condition:
+                lambda: 'return id(lavadora_power).state < 2.5f && id(lavadora_en_ciclo).state;'
+              then:
+                - binary_sensor.template.publish:
+                    id: lavadora_en_ciclo
+                    state: false
+                - homeassistant.event:
+                    event: esphome.lavadora_fin_ciclo
+                    data:
+                      message: "La lavadora ha terminado el ciclo de lavado y centrifugado."
+    energy:
+      name: "Lavadora Energía Acumulada"
+      unit_of_measurement: "kWh"
+      accuracy_decimals: 3
+
+# 2. Sensor de Inundación de Suelo y Enclavamiento Anti-Fugas
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO4
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Lavandería Alerta Inundación Suelo"
+    id: sensor_inundacion_suelo
+    device_class: moisture
+    filters:
+      - delayed_on: 100ms
+    on_press:
+      then:
+        - logger.log: "INUNDACIÓN DETECTADA: Cerrando válvula de agua y cortando alimentación de tomas."
+        - switch.turn_off: sw_valvula_agua
+        - switch.turn_off: sw_enchufe_potencia
+        - homeassistant.event:
+            event: esphome.alerta_inundacion_lavanderia
+            data:
+              level: "CRITICAL"
+              action: "Agua cortada y tomas desenergizadas"
+
+  - platform: template
+    name: "Lavadora Ciclo en Curso"
+    id: lavadora_en_ciclo
+
+# 3. Actuadores de Potencia y Válvula de Agua
+output:
+  - platform: gpio
+    pin: GPIO5
+    id: out_valvula_agua_mosfet
+
+  - platform: gpio
+    pin: GPIO6
+    id: out_rele_enchufe_16a
+
+switch:
+  - platform: output
+    name: "Válvula Entrada Agua Lavandería"
+    id: sw_valvula_agua
+    output: out_valvula_agua_mosfet
+    restore_mode: RESTORE_DEFAULT_ON
+
+  - platform: output
+    name: "Alimentación Enchufe Lavandería (16A)"
+    id: sw_enchufe_potencia
+    output: out_rele_enchufe_16a
+    restore_mode: RESTORE_DEFAULT_ON

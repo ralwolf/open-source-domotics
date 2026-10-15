@@ -1,0 +1,108 @@
+substitutions:
+  name: "oficina-pdu-telemetria"
+  friendly_name: "PDU Oficina Técnica"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "PDU de Escritorio Filtrada EMI, Desconexión de Cargas Vampiro y Señalizador ON-AIR"
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret esphome_api_key"
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 10.0.30.90
+    gateway: 10.0.30.1
+    subnet: 255.255.255.0
+    dns1: 10.0.10.1
+
+uart:
+  - id: uart_bl0942_oficina
+    tx_pin: GPIO21
+    rx_pin: GPIO20
+    baud_rate: 4800
+
+# 1. Metrología Toma Maestra (PC Workstation)
+sensor:
+  - platform: bl0942
+    uart_id: uart_bl0942_oficina
+    voltage:
+      name: "Oficina Tensión Red"
+      unit_of_measurement: "V"
+      accuracy_decimals: 1
+    current:
+      name: "PC Corriente"
+      unit_of_measurement: "A"
+      accuracy_decimals: 3
+    power:
+      name: "PC Potencia Activa"
+      unit_of_measurement: "W"
+      accuracy_decimals: 1
+      id: pc_power
+      on_value:
+        then:
+          # Si PC se enciende (> 45W)
+          - if:
+              condition:
+                lambda: 'return id(pc_power).state > 45.0f && !id(sw_cargas_esclavas).state;'
+              then:
+                - switch.turn_on: sw_cargas_esclavas
+                - logger.log: "PC activo: Encendiendo periféricos y monitores."
+          # Si PC se apaga o entra en suspensión (< 18W)
+          - if:
+              condition:
+                lambda: 'return id(pc_power).state < 18.0f && id(sw_cargas_esclavas).state;'
+              then:
+                - delay: 30s # Retardo para evitar falsos positivos
+                - if:
+                    condition:
+                      lambda: 'return id(pc_power).state < 18.0f;'
+                    then:
+                      - switch.turn_off: sw_cargas_esclavas
+                      - logger.log: "PC en reposo: Desconectando cargas esclavas (cero consumo vampiro)."
+    energy:
+      name: "PC Energía Consumida"
+      unit_of_measurement: "kWh"
+      accuracy_decimals: 3
+
+# 2. Control de Salidas de Potencia y Señalizador
+output:
+  # Relé de Cargas Esclavas (Monitores, Altavoces, Iluminación de estudio)
+  - platform: gpio
+    pin: GPIO6
+    id: out_rele_esclavo
+
+  # Driver LED 12V Señalizador "ON AIR / EN LLAMADA"
+  - platform: ledc
+    pin: GPIO7
+    id: out_led_onair
+    frequency: 1000Hz
+
+switch:
+  - platform: output
+    name: "Cargas Esclavas Periféricos"
+    id: sw_cargas_esclavas
+    output: out_rele_esclavo
+    restore_mode: RESTORE_DEFAULT_ON
+
+light:
+  - platform: monochromatic
+    output: out_led_onair
+    name: "Señalizador Puerta ON AIR"
+    id: light_onair
+    restore_mode: RESTORE_DEFAULT_OFF

@@ -1,0 +1,95 @@
+# Integración de Robot de Limpieza con Firmware Libre Valetudo (MQTT Local)
+# Sin dependencia de nubes propietarias ni servidores externos.
+
+mqtt:
+  vacuum:
+    - name: "Robot Aspirador y Fregona Valetudo"
+      unique_id: "robot_valetudo_01"
+      supported_features:
+        - turn_on
+        - turn_off
+        - pause
+        - stop
+        - return_home
+        - battery
+        - status
+        - locate
+        - clean_spot
+        - fan_speed
+      command_topic: "valetudo/robot/command"
+      battery_level_topic: "valetudo/robot/battery"
+      battery_level_template: "{{ value_json.level }}"
+      charging_topic: "valetudo/robot/battery"
+      charging_template: "{{ value_json.charging }}"
+      state_topic: "valetudo/robot/status"
+      fan_speed_list:
+        - "low"
+        - "medium"
+        - "high"
+        - "max"
+      fan_speed_topic: "valetudo/robot/fanspeed"
+      set_fan_speed_topic: "valetudo/robot/set_fanspeed"
+
+  sensor:
+    - name: "Robot Vida Filtro HEPA"
+      unique_id: "robot_hepa_filter_life"
+      state_topic: "valetudo/robot/consumables"
+      value_template: "{{ value_json.filter_life }}"
+      unit_of_measurement: "%"
+
+    - name: "Robot Vida Cepillo Principal"
+      unique_id: "robot_main_brush_life"
+      state_topic: "valetudo/robot/consumables"
+      value_template: "{{ value_json.main_brush_life }}"
+      unit_of_measurement: "%"
+
+    - name: "Estación Base Potencia Consumida"
+      unique_id: "estacion_base_robot_potencia"
+      state_topic: "tele/estacion_robot/state"
+      value_template: "{{ value_json.power }}"
+      unit_of_measurement: "W"
+
+# Automatizaciones Inteligentes en Home Assistant
+automation:
+  # 1. Iniciar Limpieza Automática al Salir Todos los Habitantes
+  - alias: "Robot - Iniciar Limpieza por Ausencia Total"
+    trigger:
+      - platform: state
+        entity_id: zone.home
+        to: "0"
+        for:
+          minutes: 5
+    condition:
+      - condition: time
+        after: "09:00:00"
+        before: "19:00:00"
+      - condition: state
+        entity_id: vacuum.robot_aspirador_y_fregona_valetudo
+        state: "docked"
+    action:
+      - service: vacuum.start
+        target:
+          entity_id: vacuum.robot_aspirador_y_fregona_valetudo
+      - service: notify.notify
+        data:
+          title: "Robótica de Limpieza"
+          message: "Casa vacía detectada: Iniciando aspirado y fregado general con Valetudo."
+
+  # 2. Cancelar y Retornar al Dock si Alguien Regresa
+  - alias: "Robot - Retorno al Dock si Alguien Llega a Casa"
+    trigger:
+      - platform: numeric_state
+        entity_id: zone.home
+        above: 0
+    condition:
+      - condition: state
+        entity_id: vacuum.robot_aspirador_y_fregona_valetudo
+        state: "cleaning"
+    action:
+      - service: vacuum.return_to_base
+        target:
+          entity_id: vacuum.robot_aspirador_y_fregona_valetudo
+      - service: notify.notify
+        data:
+          title: "Robótica de Limpieza"
+          message: "Ocupante en casa: Robot pausado y retornando a la base para no entorpecer."

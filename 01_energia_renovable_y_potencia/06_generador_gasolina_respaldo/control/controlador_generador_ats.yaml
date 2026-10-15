@@ -1,0 +1,201 @@
+substitutions:
+  name: "generador-respaldo-ats"
+  friendly_name: "Generador Respaldo ATS"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "Controlador Autónomo de Arranque de Grupo Electrógeno y Conmutación de Tablero ATS"
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "!secret esphome_api_key"
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: "!secret wifi_iot_ssid"
+  password: "!secret wifi_iot_password"
+  manual_ip:
+    static_ip: 10.0.30.95
+    gateway: 10.0.30.1
+    subnet: 255.255.255.0
+    dns1: 10.0.10.1
+
+# 1. Detección de Tensión AC Generada (Optoacoplador EL814)
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO3
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Generador Tensión 230V Activa"
+    id: gen_tension_activa
+    filters:
+      - delayed_on: 500ms
+      - delayed_off: 500ms
+
+  - platform: template
+    name: "Generador Estado Motor en Marcha"
+    id: gen_motor_en_marcha
+
+  - platform: template
+    name: "Generador Alerta Nivel Combustible Bajo"
+    id: gen_alerta_combustible_bajo
+    device_class: problem
+    lambda: |-
+      if (id(gen_nivel_gasolina).state < 15.0f) {
+        return true;
+      }
+      return false;
+
+# 2. Sensores Analógicos (Tensión Batería 12V y Boya Combustible)
+sensor:
+  # Monitor de Tensión de Batería de Arranque de 12V
+  - platform: adc
+    pin: GPIO0
+    name: "Generador Tensión Batería 12V"
+    id: gen_bat_tension
+    update_interval: 10s
+    filters:
+      - multiply: 5.545 # Factor divisor 100k / 22k
+    unit_of_measurement: "V"
+    accuracy_decimals: 1
+
+  # Nivel de Gasolina en Tanque (0 - 100%)
+  - platform: adc
+    pin: GPIO1
+    name: "Generador Nivel de Gasolina"
+    id: gen_nivel_gasolina
+    update_interval: 30s
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    filters:
+      - map:
+          - 0.2 -> 0.0
+          - 2.5 -> 100.0
+
+# 3. Salidas de Relés de Potencia para Arranque y ATS
+output:
+  - platform: gpio
+    pin: GPIO4
+    id: out_rele_ignicion
+
+  - platform: gpio
+    pin: GPIO5
+    id: out_rele_starter
+
+  - platform: gpio
+    pin: GPIO6
+    id: out_rele_ats_transfer
+
+switch:
+  - platform: output
+    name: "Generador Contacto / Ignición"
+    id: sw_ignicion
+    output: out_rele_ignicion
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: output
+    name: "Generador Conmutación ATS a Carga"
+    id: sw_ats_transfer
+    output: out_rele_ats_transfer
+    restore_mode: RESTORE_DEFAULT_OFF
+
+# 4. Secuencia Automatizada de Arranque de 3 Intentos
+script:
+  - id: arrancar_generador_secuencia
+    then:
+      - logger.log: "Iniciando secuencia de arranque de grupo electrógeno..."
+      - switch.turn_on: sw_ignicion
+      - delay: 2s
+      # Intento 1
+      - output.turn_on: out_rele_starter
+      - delay: 4s
+      - output.turn_off: out_rele_starter
+      - delay: 3s
+      - if:
+          condition:
+            binary_sensor.is_on: gen_tension_activa
+          then:
+            - binary_sensor.template.publish:
+                id: gen_motor_en_marcha
+                state: true
+            - logger.log: "Motor arrancado en Intento 1. Estabilizando régimen (45s)..."
+            - delay: 45s
+            - switch.turn_on: sw_ats_transfer
+            - logger.log: "Tablero ATS conmutado a Generador de Respaldo."
+          else:
+            # Intento 2
+            - logger.log: "Intento 1 fallido, esperando 10s para reintento..."
+            - delay: 10s
+            - output.turn_on: out_rele_starter
+            - delay: 4s
+            - output.turn_off: out_rele_starter
+            - delay: 3s
+            - if:
+                condition:
+                  binary_sensor.is_on: gen_tension_activa
+                then:
+                  - binary_sensor.template.publish:
+                      id: gen_motor_en_marcha
+                      state: true
+                  - logger.log: "Motor arrancado en Intento 2. Calentando 45s..."
+                  - delay: 45s
+                  - switch.turn_on: sw_ats_transfer
+                else:
+                  # Intento 3 Final
+                  - logger.log: "Intento 2 fallido. Último intento..."
+                  - delay: 10s
+                  - output.turn_on: out_rele_starter
+                  - delay: 5s
+                  - output.turn_off: out_rele_starter
+                  - delay: 4s
+                  - if:
+                      condition:
+                        binary_sensor.is_on: gen_tension_activa
+                      then:
+                        - binary_sensor.template.publish:
+                            id: gen_motor_en_marcha
+                            state: true
+                        - delay: 45s
+                        - switch.turn_on: sw_ats_transfer
+                      else:
+                        - switch.turn_off: sw_ignicion
+                        - logger.log: "FALLO CRÍTICO: El motor no arrancó tras 3 intentos."
+                        - homeassistant.event:
+                            event: esphome.generador_fallo_arranque
+
+  - id: apagar_generador_secuencia
+    then:
+      - logger.log: "Desconectando carga ATS..."
+      - switch.turn_off: sw_ats_transfer
+      - delay: 30s # Enfriamiento en vacío (Cool-down)
+      - switch.turn_off: sw_ignicion
+      - binary_sensor.template.publish:
+          id: gen_motor_en_marcha
+          state: false
+      - logger.log: "Generador apagado correctamente."
+
+# 5. Rutina de Test Mensual de Lubricación (1er Domingo de Mes a las 11:00 AM)
+time:
+  - platform: sntp
+    on_time:
+      - seconds: 0
+        minutes: 0
+        hours: 11
+        days_of_month: 1
+        then:
+          - logger.log: "Ejecutando test mensual de lubricación del grupo electrógeno (10 min en vacío)..."
+          - script.execute: arrancar_generador_secuencia
+          - delay: 600s # 10 minutos
+          - script.execute: apagar_generador_secuencia
