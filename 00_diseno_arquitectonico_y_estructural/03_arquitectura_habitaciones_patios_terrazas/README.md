@@ -1,28 +1,16 @@
-# Diseño Arquitectónico: Zonificación, Habitaciones, Patios Interiores y Terrazas
+# Diseño Arquitectónico: Habitaciones, Patios y Terrazas
 
-## 1. Alcance Técnico
-Distribución espacial de la vivienda optimizada para el confort bioclimático, ergonomía habitacional, acústica y accesibilidad domótica.
+## 1. Descripción y Alcance
+Este subsistema define la distribución espacial bioclimática, circulaciones ergonómicas y optimización solar pasiva de la vivienda unifamiliar aislada de $10.00 \times 10.00\text{ m}$ (100 m² construidos en planta). La planta se organiza en torno a un patio interior central ($3.00 \times 2.00\text{ m}$) que actúa como chimenea solar, pozo de luz natural para todas las estancias y pulmón verde termorregulador.
 
-## 2. Zonificación Funcional
-- **Zona Social y Convivencia:**
-  - Sala de estar y comedor de concepto abierto conectados visualmente con patios y jardines.
-  - Cocina ergonómica con isla de inducción, campana integrada y acceso rápido a despensa y patio de servicio.
-- **Zona Privada (Dormitorios):**
-  - Recámara principal en suite con vestidor, baño privado y salida directa a terraza privada.
-  - Recámaras secundarias y dormitorio infantil/bebé con aislamiento acústico en tabiquería y carpintería.
-- **Zona Técnica y Telecomunicaciones (Cerebro de la Casa):**
-  - Cuarto técnico dedicado para **Rack IT de 19" (Servidores, Switch PoE, Router)** con climatización dedicada y entrada de canalizaciones troncales.
-  - Sala exterior o semicubierta ventilada para inversor solar, banco de baterías LiFePO4 y tablero general de potencia.
-- **Patios Interiores, Balcones y Terrazas:**
-  - Patio central como pozo de luz y regulador higrotérmico natural con plantas y vegetación caducifolia.
-  - Terrazas en planta alta diseñadas como mirador y área de relajación con vistas despejadas.
+---
 
-## 3. Aislamiento Térmico y Acústico
-- Muros exteriores de doble hoja con cámara de aire y aislamiento de lana de roca o poliestireno extruido (XPS de 60-80 mm).
-- Rotura de puente térmico en todos los encuentros de forjados y carpinterías.
+## 2. Entregables de Diseño Arquitectónico y Modelado 3D (`mecanico/`)
+- [`modelo_arquitectonico_vivienda_3d.FCStd`](./mecanico/modelo_arquitectonico_vivienda_3d.FCStd): Modelo paramétrico 3D volumétrico nativo en FreeCAD 1.1+ de la envolvente edificatoria, solera de cimentación, cerramientos exteriores de 30 cm con aislamiento térmico continuo (SATE), tabiquería interior divisoria, patio central cenital con hueco de lucernario en cubierta y vanos de carpintería exterior (puertas y ventanas).
+- [`modelo_arquitectonico_vivienda_3d.step`](./mecanico/modelo_arquitectonico_vivienda_3d.step): Archivo de intercambio neutro STEP AP214 para simulaciones energéticas dinámicas (BEM / EnergyPlus) y análisis de asoleamiento.
 
-## 4. Contenido del Directorio
-- `planos_2d_dxf/`:
-  - [`planta_arquitectonica_base.dxf`](./planos_2d_dxf/planta_arquitectonica_base.dxf): Plano CAD 2D de distribución arquitectónica ($10 \times 10\text{ m}$), incluyendo sala social, cocina, recámaras, sala IT central, patio interior y hueco cenital de lucernario.
-- `planos_arquitectonicos/`: Plantas arquitectónicas acotadas, alzados, secciones longitudinales y transversales.
-- `renders_y_distribucion/`: Renders 3D, diagramas de zonificación y mobiliario de distribución interior.
+---
+
+## 3. Planos 2D de Distribución y Replanteo (`planos_2d_dxf/`)
+- [`planta_arquitectonica_base.dxf`](./planos_2d_dxf/planta_arquitectonica_base.dxf): Plano CAD 2D normalizado con cotas acotadas en milímetros, distribución de estancias (Dormitorio principal 16 m², Dormitorio infantil 16 m², Salón-Comedor 24 m², Cocina ergonómica 17 m², Baño 8.5 m², Sala IT central 6 m² y Patio interior 6 m²).
+- [`planta_arquitectonica_base.svg`](./planos_2d_dxf/planta_arquitectonica_base.svg): Plano vectorial interactivo en formato SVG en alta resolución con zonificación cromática y orientación norte.

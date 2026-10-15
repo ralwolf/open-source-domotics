@@ -1,0 +1,257 @@
+#!/usr/bin/env python3
+"""
+generar_plano_lucernario.py
+Genera la sección bioclimática 2D (.dxf y .svg) del Lucernario Cenital y Chimenea Solar
+ilustrando el tiro térmico por estratificación (efecto chimenea), apertura de compuertas
+y captación de brisas para ventilación pasiva nocturna.
+"""
+
+import os
+
+DXF_CONTENT = """0
+SECTION
+2
+HEADER
+9
+$ACADVER
+1
+AC1009
+0
+ENDSEC
+0
+SECTION
+2
+ENTITIES
+0
+LINE
+8
+ESTRUCTURA
+10
+0.0
+20
+0.0
+30
+0.0
+11
+3000.0
+21
+0.0
+31
+0.0
+0
+LINE
+8
+ESTRUCTURA
+10
+0.0
+20
+0.0
+30
+0.0
+11
+0.0
+21
+600.0
+31
+0.0
+0
+LINE
+8
+ESTRUCTURA
+10
+3000.0
+20
+0.0
+30
+0.0
+11
+3000.0
+21
+600.0
+31
+0.0
+0
+LINE
+8
+CUPULA_VIDRIO
+10
+-100.0
+20
+600.0
+30
+0.0
+11
+1500.0
+21
+1100.0
+31
+0.0
+0
+LINE
+8
+CUPULA_VIDRIO
+10
+1500.0
+20
+1100.0
+30
+0.0
+11
+3100.0
+21
+600.0
+31
+0.0
+0
+LINE
+8
+COMPUERTAS_VENTILACION
+10
+150.0
+20
+650.0
+30
+0.0
+11
+750.0
+21
+850.0
+31
+0.0
+0
+LINE
+8
+COMPUERTAS_VENTILACION
+10
+2850.0
+20
+650.0
+30
+0.0
+11
+2250.0
+21
+850.0
+31
+0.0
+0
+TEXT
+8
+TEXTO
+10
+1100.0
+20
+950.0
+30
+0.0
+40
+50.0
+1
+CUPULA VIDRIO LOW-IRON ASTRONOMICO
+0
+TEXT
+8
+TEXTO
+10
+400.0
+20
+720.0
+30
+0.0
+40
+40.0
+1
+COMPUERTA BASCULANTE ACTUADOR 24V
+0
+TEXT
+8
+TEXTO
+10
+900.0
+20
+350.0
+30
+0.0
+40
+60.0
+1
+TIRO TERMICO ASCENDENTE (CHIMENEA SOLAR)
+0
+TEXT
+8
+TEXTO
+10
+850.0
+20
+-150.0
+30
+0.0
+40
+50.0
+1
+HUECO DE PATIO INTERIOR CENTRAL (3.0 x 2.0 m)
+0
+ENDSEC
+0
+EOF
+"""
+
+SVG_CONTENT = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="100%" height="100%">
+  <rect width="1000" height="700" fill="#111827"/>
+  <!-- Cielo exterior -->
+  <rect x="0" y="0" width="1000" height="280" fill="#1f2937"/>
+  <!-- Estrellas / Celestes -->
+  <circle cx="150" cy="80" r="2" fill="#fef08a"/>
+  <circle cx="280" cy="50" r="1.5" fill="#fef08a"/>
+  <circle cx="750" cy="70" r="2" fill="#fef08a"/>
+  <circle cx="850" cy="110" r="2.5" fill="#fef08a"/>
+  <circle cx="480" cy="40" r="2" fill="#fef08a"/>
+  <!-- Losa de hormigón del techo -->
+  <rect x="50" y="280" width="250" height="50" fill="#4b5563" stroke="#9ca3af" stroke-width="2"/>
+  <rect x="700" y="280" width="250" height="50" fill="#4b5563" stroke="#9ca3af" stroke-width="2"/>
+  <!-- Murete de coronación / brocal perimetral -->
+  <rect x="300" y="200" width="60" height="130" fill="#6b7280" stroke="#d1d5db" stroke-width="2"/>
+  <rect x="640" y="200" width="60" height="130" fill="#6b7280" stroke="#d1d5db" stroke-width="2"/>
+  <!-- Cúpula acristalada a dos aguas inclinada -->
+  <polygon points="300,200 500,100 700,200 680,210 500,120 320,210" fill="#38bdf8" fill-opacity="0.5" stroke="#0284c7" stroke-width="3"/>
+  <!-- Compuertas motorizadas abiertas -->
+  <line x1="330" y1="190" x2="410" y2="135" stroke="#f59e0b" stroke-width="5"/>
+  <line x1="670" y1="190" x2="590" y2="135" stroke="#f59e0b" stroke-width="5"/>
+  <!-- Actuadores lineales 24V -->
+  <line x1="350" y1="210" x2="380" y2="170" stroke="#ef4444" stroke-width="3"/>
+  <line x1="650" y1="210" x2="620" y2="170" stroke="#ef4444" stroke-width="3"/>
+  <!-- Flechas de flujo térmico ascendente (Aire caliente saliendo) -->
+  <path d="M 460,450 C 460,350 420,220 370,150" fill="none" stroke="#f87171" stroke-width="4" stroke-dasharray="6,4"/>
+  <polygon points="360,140 380,145 370,160" fill="#f87171"/>
+  <path d="M 540,450 C 540,350 580,220 630,150" fill="none" stroke="#f87171" stroke-width="4" stroke-dasharray="6,4"/>
+  <polygon points="640,140 630,160 620,145" fill="#f87171"/>
+  <!-- Flechas de aire fresco entrando desde el patio -->
+  <path d="M 200,600 C 350,600 450,550 500,480" fill="none" stroke="#38bdf8" stroke-width="4" stroke-dasharray="6,4"/>
+  <polygon points="500,470 490,490 510,490" fill="#38bdf8"/>
+  <!-- Leyendas y Textos -->
+  <text x="500" y="50" fill="#f9fafb" font-family="sans-serif" font-size="20" font-weight="bold" text-anchor="middle">SECCIÓN BIOCLIMÁTICA: TIRO TÉRMICO Y VENTILACIÓN CENITAL</text>
+  <text x="500" y="80" fill="#38bdf8" font-family="sans-serif" font-size="13" text-anchor="middle">Doble acristalamiento Low-Iron 6+6 con RPT (Observación astronómica y estanqueidad)</text>
+  <text x="500" y="380" fill="#f87171" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle">EXTRACCIÓN DE AIRE CALIENTE POR EFECTO CHIMENEA (ΔT &gt; 3°C)</text>
+  <text x="500" y="640" fill="#93c5fd" font-family="sans-serif" font-size="14" text-anchor="middle">Patio Interior Vegetal Central (Aire fresco sombreado a cota baja)</text>
+  <text x="180" y="180" fill="#f59e0b" font-family="sans-serif" font-size="12">Compuerta basculante motorizada</text>
+  <text x="820" y="180" fill="#ef4444" font-family="sans-serif" font-size="12">Actuador lineal 24V DC (400 mm)</text>
+</svg>
+"""
+
+def generar_planos_lucernario():
+    base_dir = "/home/ral/Documents/GitHub/open-source-domotics/00_diseno_arquitectonico_y_estructural/04_bioclimatica_ventilacion_lucernario_celeste/mecanico"
+    os.makedirs(base_dir, exist_ok=True)
+
+    dxf_path = os.path.join(base_dir, "seccion_bioclimatica_lucernario.dxf")
+    svg_path = os.path.join(base_dir, "seccion_bioclimatica_lucernario.svg")
+
+    with open(dxf_path, "w", encoding="utf-8") as f:
+        f.write(DXF_CONTENT)
+    with open(svg_path, "w", encoding="utf-8") as f:
+        f.write(SVG_CONTENT)
+
+    print(f"Plano DXF guardado en: {dxf_path}")
+    print(f"Plano SVG guardado en: {svg_path}")
+
+if __name__ == "__main__":
+    generar_planos_lucernario()

@@ -1,33 +1,17 @@
 # Virtualización y Núcleo de Software (Proxmox, HA, Frigate, TrueNAS)
 
 ## 1. Descripción y Alcance
-Este directorio contiene la documentación, especificaciones, esquemas y archivos de diseño tanto mecánicos como eléctricos para este componente.
+Este subsistema constituye el cerebro computacional y de almacenamiento masivo local de la domótica y seguridad. Todo el ecosistema opera 100% on-premises sin requerir servicios en la nube de terceros, garantizando privacidad absoluta mediante virtualización tipo 1 (bare-metal KVM con Proxmox VE), contenedores LXC de alto rendimiento, aceleración de redes neuronales con Google Coral Edge TPU para Frigate NVR, y almacenamiento ZFS redundante con TrueNAS.
 
 ---
 
-## 2. Requerimientos de Diseño Mecánico (`mecanico/`)
-- Chasis de servidor en rack (1U/2U) o Mini PC / servidor torre con bahías para discos intercambiables.
-- Disipadores pasivos/activos de cobre y ventiladores PWM silenciosos.
+## 2. Entregables Mecánicos y Modelado 3D (`mecanico/`)
+- [`servidor_rack_1u_computo.FCStd`](./mecanico/servidor_rack_1u_computo.FCStd): Modelo paramétrico 3D nativo en FreeCAD 1.1+ del chasis de servidor 19" 1U (482.6 x 450 x 43.6 mm), chapa SPCC 1.2 mm, orejetas normalizadas EIA-310, 4 bahías hot-swap para discos SSD de 2.5", ranura de expansión PCIe de media altura para acelerador Coral TPU y fuentes redundantes Flex-ATX.
+- [`servidor_rack_1u_computo.step`](./mecanico/servidor_rack_1u_computo.step): Archivo STEP AP214 universal para integración en el armario rack del centro de datos.
 
 ---
 
-## 3. Requerimientos de Diseño Eléctrico y Protecciones (`electrico/`)
-- Fuente de alimentación certificada 80 Plus Gold/Platinum con PFC activo.
-- Acelerador de IA Google Coral TPU (interfaz USB o M.2 PCIe).
-- Adaptador/Coordinador Zigbee 3.0 / Matter USB de alta ganancia con cable de extensión apantallado.
-
----
-
-## 4. Requerimientos de Control y Automatización (`control/`)
-- Proxmox VE como hipervisor base con clustering y snapshots automáticos.
-- VM Home Assistant OS con passthrough del coordinador Zigbee y broker Mosquitto.
-- LXC/VM Frigate NVR con aceleración Coral TPU y streams RTSP directos.
-- VM TrueNAS CORE/SCALE con pool ZFS en espejo para almacenamiento de grabaciones y backups.
-
----
-
-## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
-- `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
-- `control/`:
-  - [`docker-compose.yml`](./control/docker-compose.yml): Despliegue unificado del ecosistema de cómputo local (Home Assistant Core, Mosquitto MQTT, Frigate NVR con Coral TPU, go2rtc WebRTC y Zigbee2MQTT).
+## 3. Entregables de Arquitectura y Topología de Servicios (`control/`)
+- [`arquitectura_servidores_servicios.dxf`](./control/arquitectura_servidores_servicios.dxf): Plano CAD 2D de la arquitectura de capas lógicas, asignación de núcleos de CPU, memoria RAM ECC y segmentación de interfaces de red por VLAN.
+- [`arquitectura_servidores_servicios.svg`](./control/arquitectura_servidores_servicios.svg): Diagrama vectorial interactivo del ecosistema de software y servicios virtualizados.
+- [`docker-compose.yml`](./control/docker-compose.yml): Manifiesto unificado para despliegue de Home Assistant Core, Mosquitto MQTT, Frigate NVR (aceleración Coral Edge TPU), servidor de streaming go2rtc WebRTC y Zigbee2MQTT.

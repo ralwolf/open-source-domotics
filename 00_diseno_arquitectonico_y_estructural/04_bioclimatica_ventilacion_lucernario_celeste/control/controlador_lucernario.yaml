@@ -1,0 +1,123 @@
+substitutions:
+  name: "controlador-lucernario"
+  friendly_name: "Controlador Lucernario Bioclimático"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "Apertura bioclimatica cenital, proteccion contra lluvia y viento para lucernario astronomico"
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+wifi:
+  ssid: "IoT_Secure_Net"
+  password: "!VLAN30_WPA3_Secret!"
+  manual_ip:
+    static_ip: 10.0.30.28
+    gateway: 10.0.30.1
+    subnet: 255.255.255.0
+    dns1: 10.0.10.1
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE="
+
+ota:
+  - platform: esphome
+
+output:
+  # Driver Puente H 24V (LMD18200)
+  - platform: ledc
+    pin: GPIO1
+    id: pwm_motor_abrir
+    frequency: 1000Hz
+
+  - platform: ledc
+    pin: GPIO2
+    id: pwm_motor_cerrar
+    frequency: 1000Hz
+
+cover:
+  - platform: endstop
+    name: "Compuertas Lucernario Cenital"
+    id: compuertas_lucernario
+    device_class: damper
+    open_action:
+      - output.set_level:
+          id: pwm_motor_cerrar
+          level: 0%
+      - output.set_level:
+          id: pwm_motor_abrir
+          level: 100%
+    open_duration: 25s
+    close_action:
+      - output.set_level:
+          id: pwm_motor_abrir
+          level: 0%
+      - output.set_level:
+          id: pwm_motor_cerrar
+          level: 100%
+    close_duration: 25s
+    stop_action:
+      - output.set_level:
+          id: pwm_motor_abrir
+          level: 0%
+      - output.set_level:
+          id: pwm_motor_cerrar
+          level: 0%
+    open_endstop: endstop_abierto
+    close_endstop: endstop_cerrado
+
+binary_sensor:
+  # Finales de carrera magnéticos
+  - platform: gpio
+    pin:
+      number: GPIO4
+      mode: INPUT_PULLUP
+      inverted: true
+    id: endstop_abierto
+
+  - platform: gpio
+    pin:
+      number: GPIO5
+      mode: INPUT_PULLUP
+      inverted: true
+    id: endstop_cerrado
+
+  # Sensor óptico de lluvia RG-11 (cierre inmediato de seguridad)
+  - platform: gpio
+    pin:
+      number: GPIO6
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Lluvia Detectada Tejado"
+    id: sensor_lluvia
+    device_class: moisture
+    on_press:
+      then:
+        - cover.close: compuertas_lucernario
+        - logger.log: "¡LLUVIA DETECTADA! Cerrando lucernario cenital de emergencia."
+
+sensor:
+  # Anemómetro de pulsos (Davis/Misol)
+  - platform: pulse_counter
+    pin:
+      number: GPIO7
+      mode: INPUT_PULLUP
+    name: "Velocidad del Viento Tejado"
+    id: viento_tejado
+    unit_of_measurement: "km/h"
+    update_interval: 2s
+    filters:
+      - multiply: 2.4 # Calibración estándar de cazoletas
+    on_value_range:
+      - above: 40.0
+        then:
+          - cover.close: compuertas_lucernario
+          - logger.log: "¡VIENTO FUERTE (>40 km/h)! Cerrando compuertas preventivamente."

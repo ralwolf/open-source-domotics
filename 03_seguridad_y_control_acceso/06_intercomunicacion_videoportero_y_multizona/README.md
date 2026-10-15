@@ -116,6 +116,8 @@ graph TD
 - `mecanico/`:
   - [`videoportero_carcasa.FCStd`](./mecanico/videoportero_carcasa.FCStd): Modelo paramétrico 3D en FreeCAD 1.1+ de la carcasa antivandálica exterior con visera antilluvia a 15°, orificio de lente M12, botón de 19 mm y rejilla acústica.
   - [`videoportero_carcasa.step`](./mecanico/videoportero_carcasa.step): Modelo universal STEP AP214 para mecanizado CNC en aluminio o impresión 3D en PETG/ABS.
+  - [`plano_videoportero_instalacion.dxf`](./mecanico/plano_videoportero_instalacion.dxf): Plano CAD 2D de fachada exterior con cono de visión angular (160° FOV), cotas de empotramiento y tornillería de seguridad.
+  - [`plano_videoportero_instalacion.svg`](./mecanico/plano_videoportero_instalacion.svg): Vista vectorial interactiva de la placa exterior del videoportero.
 - `electrico/`:
   - [`videoportero_esp32s3.kicad_pro`](./electrico/videoportero_esp32s3.kicad_pro) y [`videoportero_esp32s3.kicad_sch`](./electrico/videoportero_esp32s3.kicad_sch): Proyecto y esquemático en KiCad 10.0 con ESP32-S3, cámara DVP, audio I2S (INMP441 + MAX98357A), driver MOSFET para cerradura 12V 2A y PoE.
   - [`videoportero_esp32s3.svg`](./electrico/esquema_svg/videoportero_esp32s3.svg): Exportación vectorial de alta definición del circuito electrónico.

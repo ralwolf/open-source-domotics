@@ -1,26 +1,26 @@
-# Diseño Bioclimático: Ventilación Cruzada, Iluminación Pasiva y Vitrina Astronómica Cenital
+# Lucernario Cenital Bioclimático y Chimenea Solar
 
-## 1. Alcance Técnico
-Aprovechamiento de los recursos naturales del entorno (radiación solar, vientos dominantes y bóveda celeste) para reducir drásticamente el consumo energético activo y proporcionar una experiencia sensorial única mediante observación estelar.
+## 1. Descripción y Alcance
+Este subsistema combina el confort lumínico y térmico pasivo con la pasión por la astronomía amateur. Consiste en una cúpula cenital acristalada a dos aguas ($3.0 \times 2.0\text{ m}$) sobre el patio central de la vivienda, dotada de vidrio doble de seguridad bajo emisivo extraclaro (*low-iron*), compuertas perimetrales basculantes accionadas por actuadores lineales de 24V DC y control meteorológico predictivo que explota el efecto chimenea solar para refrigerar pasivamente la vivienda durante la noche estival.
 
-## 2. Ventilación Natural Cruzada y Flujo Dinámico de Aire
-- **Orientación de Vanos:** Ventanas enfrentadas estratégicamente situadas según los cuadrantes de los vientos predominantes locales.
-- **Efecto Chimenea / Tiro Térmico:** Entrada de aire fresco a nivel inferior por patios sombreados que desplaza el aire caliente acumulado hacia las salidas superiores del lucernario en el techo.
-- **Carpinterías Eficientes:** Ventanas de PVC o aluminio con rotura de puente térmico (RPT), doble o triple acristalamiento bajo emisivo (*Low-E*) con gas argón en cámara (4/16/4 o 6/16/6) y apertura oscilobatiente.
+---
 
-## 3. Vitrina / Cúpula Cenital para Iluminación y Observación Astronómica de Estrellas
-- **Diseño del Lucernario de Cubierta:**
-  - Estructura de vidrio templado extraclaro laminado de alta resistencia al impacto de granizo y deformaciones térmicas.
-  - Inclinación geométrica calculada para máxima captación de luz natural en invierno y reducción de deslumbramiento en verano.
-  - Tratamiento óptico antirreflejante de alta transmitancia luminosa para **observación astronómica nocturna de constelaciones y estrellas** desde el interior (salón o distribuidor central).
-- **Mecanismo de Ventilación y Oscurecimiento Motorizado:**
-  - Apertura basculante o corrediza motorizada mediante actuador lineal de 24V DC integrado a Home Assistant: se abre automáticamente en noches frescas de verano para refrescar la casa y se cierra al detectar lluvia mediante sensor pluviométrico.
-  - Cortina plisada celular motorizada para oscurecimiento total y aislamiento térmico en horas de máxima radiación estival.
+## 2. Entregables Mecánicos y Modelado 3D (`mecanico/`)
+- [`lucernario_astronomico_cenital.FCStd`](./mecanico/lucernario_astronomico_cenital.FCStd): Modelo paramétrico 3D nativo en FreeCAD 1.1+ del lucernario cenital ($3.0 \times 2.0\text{ m}$), perfilería de aluminio estructural con rotura de puente térmico (RPT), compuertas basculantes y actuadores lineales.
+- [`lucernario_astronomico_cenital.step`](./mecanico/lucernario_astronomico_cenital.step): Archivo STEP AP214 para análisis CFD y verificación de estanqueidad.
+- [`seccion_bioclimatica_lucernario.dxf`](./mecanico/seccion_bioclimatica_lucernario.dxf): Plano CAD 2D de sección transversal arquitectónica mostrando el tiro térmico ascendente, las cotas del brocal de coronación y la entrada de aire fresco desde el patio interior.
+- [`seccion_bioclimatica_lucernario.svg`](./mecanico/seccion_bioclimatica_lucernario.svg): Esquema vectorial ilustrativo del flujo convectivo nocturno.
 
-## 4. Contenido del Directorio
-- `mecanico/`:
-  - [`lucernario_astronomico_cenital.FCStd`](./mecanico/lucernario_astronomico_cenital.FCStd): Modelo 3D paramétrico en FreeCAD 1.1+ (marco perimetral de $3.0 \times 2.0\text{ m}$, acristalamiento doble laminado low-iron y actuador lineal basculante de $24\text{ V}$).
-  - [`lucernario_astronomico_cenital.step`](./mecanico/lucernario_astronomico_cenital.step): Modelo universal STEP AP214 para fabricación y ensamble mecánico.
-- `diseno_lucernario/`: Planos de detalle constructivo del lucernario cenital, sellados impermeables EPDM, marco de aluminio y especificaciones del vidrio astronómico.
-- `simulacion_ventilacion/`: Diagramas de flujo de ventilación cruzada, estudios de asoleamiento estacional y confort térmico pasivo.
-- [`NOTA_DE_DISENO.md`](./NOTA_DE_DISENO.md): Memoria de cálculo bioclimático, transmitancia lumínica y tiro térmico pasivo.
+---
+
+## 3. Entregables Eléctricos y Electrónica (`electrico/`)
+- [`controlador_lucernario_bioclimatico.kicad_sch`](./electrico/controlador_lucernario_bioclimatico.kicad_sch): Esquema electrónico profesional en KiCad 10 con ESP32-S3, etapa de potencia en puente H LMD18200 (24V 3A), interfaz para sensor óptico de lluvia Hydreon RG-11, contador de pulsos para anemómetro de cazoletas y fuente industrial Mean Well IRM-15-24.
+- [`controlador_lucernario_bioclimatico.kicad_pro`](./electrico/controlador_lucernario_bioclimatico.kicad_pro): Archivo de proyecto en KiCad 10.
+- [`esquema_svg/controlador_lucernario_bioclimatico.svg`](./electrico/esquema_svg/controlador_lucernario_bioclimatico.svg): Renderizado esquemático vectorial.
+- [`BOM.md`](./electrico/BOM.md): Lista completa de materiales y componentes.
+
+---
+
+## 4. Entregables de Control y Firmware (`control/`)
+- [`controlador_lucernario.yaml`](./control/controlador_lucernario.yaml): Firmware para ESPHome con algoritmo de ventilación pasiva libre (*free-cooling*), enclavamiento por hardware ante lluvia inminente (<100 ms) y repliegue preventivo ante rachas de viento superiores a 40 km/h.
+- [`NOTA_DE_DISENO.md`](./NOTA_DE_DISENO.md): Memoria técnica de cálculo del caudal volumétrico por convección natural según gradiente térmico $\Delta T$.

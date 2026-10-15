@@ -41,9 +41,11 @@ Este subsistema implementa un nodo de control de acceso autónomo de alta seguri
 
 ## 2. Entregables y Modelos del Subsistema
 
-### 2.1 Diseño Mecánico 3D (`mecanico/`)
+### 2.1 Diseño Mecánico 3D y Planos 2D (`mecanico/`)
 - **Modelo CAD FreeCAD 1.1+**: [panel_acceso_biometrico.FCStd](mecanico/panel_acceso_biometrico.FCStd)
 - **Modelo de Intercambio STEP**: [panel_acceso_biometrico.step](mecanico/panel_acceso_biometrico.step)
+- **Plano CAD 2D DXF**: [plano_cerradura_biometrica.dxf](mecanico/plano_cerradura_biometrica.dxf)
+- **Plano Vectorial SVG**: [plano_cerradura_biometrica.svg](mecanico/plano_cerradura_biometrica.svg)
 - **Script Generador Paramétrico**: [generar_cerradura_biometrica_3d.py](../../scripts/generar_cerradura_biometrica_3d.py)
 - **Especificaciones**:
   - Mecanizado en bloque de aluminio anodizado 6061-T6 ($160 \times 80 \times 32\text{ mm}$, espesor de pared $4.0\text{ mm}$).
