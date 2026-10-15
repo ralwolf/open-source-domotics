@@ -1,0 +1,129 @@
+substitutions:
+  name: "controlador-tablero-cgmp"
+  friendly_name: "Supervisión Cuadro General CGMP"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "Supervisión de calidad de red, estado de protectores de sobretensión SPD y disparo remoto en CGMP"
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+wifi:
+  ssid: "IoT_Secure_Net"
+  password: "!VLAN30_WPA3_Secret!"
+  manual_ip:
+    static_ip: 10.0.30.26
+    gateway: 10.0.30.1
+    subnet: 255.255.255.0
+    dns1: 10.0.10.1
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE="
+
+ota:
+  - platform: esphome
+
+uart:
+  id: uart_modbus
+  tx_pin: GPIO17
+  rx_pin: GPIO18
+  baud_rate: 9600
+  stop_bits: 1
+
+modbus:
+  id: bus_modbus
+  uart_id: uart_modbus
+
+modbus_controller:
+  - id: medidor_mid
+    address: 1
+    modbus_id: bus_modbus
+    setup_priority: -10
+
+one_wire:
+  - platform: gpio
+    pin: GPIO4
+    id: bus_1wire
+
+switch:
+  - platform: gpio
+    pin: GPIO5
+    id: rele_disparo_emision
+    name: "Bobina Emisión Desconexión CGMP"
+    icon: "mdi:power-off"
+
+sensor:
+  # Monitoreo de tensión RMS mediante transformadores activos ZMPT101B
+  - platform: adc
+    pin: GPIO1
+    name: "Tensión Fase L1 Raw"
+    id: tension_l1_raw
+    attenuation: 11db
+    update_interval: 1s
+    filters:
+      - calibrate_linear:
+          - 0.5 -> 0.0
+          - 2.5 -> 230.0
+
+  - platform: adc
+    pin: GPIO2
+    name: "Tensión Fase L2 Raw"
+    id: tension_l2_raw
+    attenuation: 11db
+    update_interval: 1s
+    filters:
+      - calibrate_linear:
+          - 0.5 -> 0.0
+          - 2.5 -> 230.0
+
+  - platform: adc
+    pin: GPIO3
+    name: "Tensión Fase L3 Raw"
+    id: tension_l3_raw
+    attenuation: 11db
+    update_interval: 1s
+    filters:
+      - calibrate_linear:
+          - 0.5 -> 0.0
+          - 2.5 -> 230.0
+
+  # Termometría de barra colectora de cobre
+  - platform: dallas_temp
+    address: 0x2800000000000003
+    name: "Temperatura Embarrado CGMP"
+    id: temp_embarrado
+    update_interval: 5s
+
+binary_sensor:
+  # Contacto auxiliar del descargador de sobretensiones SPD Tipo 2 (normalmente cerrado)
+  - platform: gpio
+    pin:
+      number: GPIO6
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Alerta Cartucho SPD Degradado / Disparado"
+    id: sensor_spd_falla
+    device_class: problem
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms
+
+  # Contacto auxiliar del Interruptor General Automático (IGA)
+  - platform: gpio
+    pin:
+      number: GPIO7
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Estado IGA (Cerrado/Armado)"
+    id: sensor_iga_estado
+    filters:
+      - delayed_on: 50ms
+      - delayed_off: 50ms

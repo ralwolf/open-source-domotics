@@ -1,0 +1,103 @@
+substitutions:
+  name: "combinador-solar-pv"
+  friendly_name: "Combinador y Telemetría Solar PV"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "Telemetría de strings solares fotovoltaicos, corriente Hall ACS758, tensión DC y alerta SPD"
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+wifi:
+  ssid: "IoT_Secure_Net"
+  password: "!VLAN30_WPA3_Secret!"
+  manual_ip:
+    static_ip: 10.0.30.27
+    gateway: 10.0.30.1
+    subnet: 255.255.255.0
+    dns1: 10.0.10.1
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE="
+
+ota:
+  - platform: esphome
+
+i2c:
+  sda: GPIO4
+  scl: GPIO5
+  scan: true
+  id: bus_i2c
+
+sensor:
+  # Sensor de corriente de efecto Hall Allegro ACS758LCB-050B (40mV/A)
+  - platform: adc
+    pin: GPIO1
+    name: "Corriente String PV (ACS758)"
+    id: corriente_pv_raw
+    attenuation: 11db
+    update_interval: 1s
+    filters:
+      - calibrate_linear:
+          - 2.50 -> 0.0
+          - 3.30 -> 20.0
+          - 1.70 -> -20.0
+
+  # Divisor de tensión de alta impedancia (hasta 600V DC)
+  - platform: adc
+    pin: GPIO2
+    name: "Tensión String PV DC"
+    id: tension_pv_dc
+    attenuation: 11db
+    update_interval: 1s
+    filters:
+      - calibrate_linear:
+          - 0.0 -> 0.0
+          - 2.5 -> 500.0
+
+  # Cálculo de potencia instantánea en vatios (W = V * I)
+  - platform: template
+    name: "Potencia Solar DC Instantánea"
+    id: potencia_solar_dc
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    update_interval: 1s
+    lambda: |-
+      float v = id(tension_pv_dc).state;
+      float i = id(corriente_pv_raw).state;
+      if (isnan(v) || isnan(i) || i < 0) return 0.0;
+      return v * i;
+
+  # Sensor de temperatura en cara posterior del panel fotovoltaico
+  - platform: sht3xd
+    temperature:
+      name: "Temperatura Cara Posterior Panel PV"
+      id: temp_panel_pv
+    humidity:
+      name: "Humedad Ambiente Caja Combinadora"
+      id: hum_caja_pv
+    address: 0x44
+    update_interval: 10s
+
+binary_sensor:
+  # Contacto auxiliar del descargador de sobretensiones SPD DC 1000V
+  - platform: gpio
+    pin:
+      number: GPIO6
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Falla Cartucho SPD DC 1000V"
+    id: sensor_spd_dc_falla
+    device_class: problem
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms

@@ -1,39 +1,25 @@
-# Sistema Solar Térmico, Termotanque y Calefacción por Piso Radiante
+# Sistema Solar Térmico y Calefacción por Suelo Radiante
 
 ## 1. Descripción y Alcance
-Este directorio contiene la documentación, especificaciones, esquemas y archivos de diseño tanto mecánicos como eléctricos para este componente.
+Este subsistema integra la captación de radiación solar para producción de agua caliente sanitaria (ACS) y calefacción de baja temperatura mediante suelo radiante. Se compone de un campo de captadores de tubos de vacío tipo heat pipe, un acumulador estratificado de 500 litros con serpentines dobles de acero inoxidable AISI 316L, un grupo de bombeo solar de alta eficiencia con modulación electrónica y un controlador diferencial microprocesado de alta precisión.
 
 ---
 
-## 2. Requerimientos de Diseño Mecánico (`mecanico/`)
-- Colector solar de tubos de vacío de borosilicato de 3 capas con tecnología Heat Pipe (resistente a impactos y granizo).
-- Estructura de soporte de aluminio anodizado con ajuste de ángulo estacional.
-- Termotanque presurizado acumulador (Buffer Tank de 200-300L) con aislamiento térmico de poliuretano expandido y doble serpentín de intercambio de cobre.
-- Múltiple colector de distribución de piso radiante con caudalímetros y válvulas de zona.
-- Tuberías de cobre o multicapa aisladas térmicamente con coquilla elastomérica de alta temperatura.
-- Vaso de expansión cerrado y válvula de seguridad de sobrepresión (3-6 bar).
+## 2. Entregables Mecánicos y Modelado 3D (`mecanico/`)
+- [`colector_termico_estratificacion_3d.FCStd`](./mecanico/colector_termico_estratificacion_3d.FCStd): Modelo paramétrico 3D nativo en FreeCAD 1.1+ del conjunto captador de tubos de vacío heat pipe (30 tubos de borosilicato 58x1800 mm) con soporte inclinado a 45°, depósito acumulador estratificado de 500 L aislado con poliuretano de 50 mm, conexiones hidráulicas de impulsión/retorno y vaso de expansión solar de 24 litros.
+- [`colector_termico_estratificacion_3d.step`](./mecanico/colector_termico_estratificacion_3d.step): Archivo neutro STEP AP214 para análisis térmico de fluidos e integración en sala técnica de calderas.
+- [`esquema_hidraulico_piso_radiante.dxf`](./mecanico/esquema_hidraulico_piso_radiante.dxf): Plano CAD P&ID 2D normalizado del circuito primario solar con glicol, circuito secundario de estratificación, válvula mezcladora de 3 vías y colectores de distribución de 6 zonas de suelo radiante.
+- [`esquema_hidraulico_piso_radiante.svg`](./mecanico/esquema_hidraulico_piso_radiante.svg): Esquema hidráulico interactivo vectorial.
 
 ---
 
-## 3. Requerimientos de Diseño Eléctrico y Protecciones (`electrico/`)
-- Bomba de circulación de alta eficiencia (bomba solar PWM / AC) para el circuito primario.
-- Bomba circuladora modulada para el circuito de suelo radiante.
-- Válvula mezcladora motorizada proporcional de 3 vías con servomotor 24V/230V.
-- Termostato de seguridad y alimentación para caldera auxiliar de respaldo.
+## 3. Entregables Eléctricos y Electrónica (`electrico/`)
+- [`controlador_diferencial_solar.kicad_sch`](./electrico/controlador_diferencial_solar.kicad_sch): Esquema electrónico profesional en KiCad 10 con microcontrolador ESP32-S3, interfaz cuádruple SPI MAX31865 para lectura ratiométrica de sondas PT1000 de alta temperatura (-50°C a +200°C), driver PWM a 0-10V aislado mediante LM358 para modulación proporcional de caudal de bomba solar, y relé de 16A para válvula de 3 vías.
+- [`controlador_diferencial_solar.kicad_pro`](./electrico/controlador_diferencial_solar.kicad_pro): Archivo de proyecto en KiCad 10.
+- [`esquema_svg/controlador_diferencial_solar.svg`](./electrico/esquema_svg/controlador_diferencial_solar.svg): Renderizado esquemático vectorial.
+- [`BOM.md`](./electrico/BOM.md): Lista completa de materiales y componentes electrónicos con referencias comerciales y tolerancias.
 
 ---
 
-## 4. Requerimientos de Control y Automatización (`control/`)
-- Sondas de temperatura PT100 / DS18B20 en cabezal de colector solar, parte superior e inferior del acumulador, y retorno de calefacción.
-- Lógica de control diferencial de temperatura (Delta-T) para activación de bomba solar.
-- Integración con Home Assistant para conmutación de caldera de apoyo cuando el acumulador solar esté por debajo del setpoint.
-
----
-
-## 5. Estructura de este Directorio
-- `mecanico/`:
-  - [`esquema_hidraulico_piso_radiante.dxf`](./mecanico/esquema_hidraulico_piso_radiante.dxf): Plano CAD 2D normalizado del esquema de principio hidráulico (P&ID) de la instalación solar térmica, tanque interacumulador de 500L, módulo ACS antiescaldadura y colector de suelo radiante de 6 zonas.
-  - [`esquema_hidraulico_piso_radiante.svg`](./mecanico/esquema_hidraulico_piso_radiante.svg): Vista vectorial interactiva a color del circuito hidráulico primario (glicol) y secundario (suelo radiante baja temperatura 35°C).
-- `electrico/`: Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
-- `control/`:
-  - [`control_diferencial_solar.yaml`](./control/control_diferencial_solar.yaml): Firmware ESPHome para control diferencial solar $\Delta T$ con sondas PT1000, bomba de velocidad variable PWM, protección anti-heladas y control individual de 6 cabezales electrotérmicos de zona.
+## 4. Entregables de Control y Firmware (`control/`)
+- [`control_diferencial_solar.yaml`](./control/control_diferencial_solar.yaml): Firmware ESPHome para gestión diferencial del ciclo solar: arranque progresivo de bomba cuando $\Delta T = T_{colector} - T_{tanque\_bajo} \ge 6^\circ\text{C}$, parada de seguridad por estancamiento a $130^\circ\text{C}$, control de válvula motorizada de 3 vías hacia impulsión de suelo radiante y disipación nocturna de excedentes en verano.

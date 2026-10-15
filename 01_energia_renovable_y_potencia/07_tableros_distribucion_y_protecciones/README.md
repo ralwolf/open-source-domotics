@@ -1,37 +1,25 @@
-# Tablero Principal de Distribución Eléctrica y Protecciones (Consumer Unit)
+# Tableros de Distribución Eléctrica y Protecciones (CGMP)
 
 ## 1. Descripción y Alcance
-Este directorio contiene la documentación, especificaciones, esquemas y archivos de diseño tanto mecánicos como eléctricos para este componente.
+Este subsistema define la arquitectura de potencia, corte y protección contra sobretensiones y contactos indirectos para la totalidad de la vivienda domótica. Cumple con la normativa electrotécnica de baja tensión (ITC-BT), integrando envolvente modular de 72 módulos DIN en 4 filas, interruptores magnetotérmicos con poder de corte de 6 kA, diferenciales superinmunizados Clase A (30 mA), descargadores de sobretensiones transitorias y permanentes Tipo 2 con contacto de señalización remota, y supervisión electrónica continua mediante bus Modbus RTU y ESP32-S3.
 
 ---
 
-## 2. Requerimientos de Diseño Mecánico (`mecanico/`)
-- Gabinete para montaje en pared de carril DIN (2 a 4 filas, mínimo 36 a 72 módulos).
-- Separación física interna entre sección de potencia (230V) y sección de medición/control.
-- Canaletas ranuradas para guiado de cableado de potencia.
+## 2. Entregables Mecánicos y Modelado 3D (`mecanico/`)
+- [`gabinete_cuadro_general_mando_proteccion.FCStd`](./mecanico/gabinete_cuadro_general_mando_proteccion.FCStd): Modelo paramétrico 3D nativo en FreeCAD 1.1+ del cuadro modular estanco IP65/IK08 (450 x 750 x 160 mm), puerta reversible en policarbonato ahumado con cerradura de leva, 4 carriles DIN 35x7.5 mm, embarrados de cobre/latón para puesta a tierra (PE) y neutro (N), y troqueles cónicos para pasamuros M25/M32/M40.
+- [`gabinete_cuadro_general_mando_proteccion.step`](./mecanico/gabinete_cuadro_general_mando_proteccion.step): Archivo STEP AP214 universal para integración en la maqueta arquitectónica y replanteo de rozas y tubos corrugados.
 
 ---
 
-## 3. Requerimientos de Diseño Eléctrico y Protecciones (`electrico/`)
-- Acometida con conductores de fase y neutro de 25 mm².
-- Protector contra sobretensiones transitorias y permanentes (DPS Clase II).
-- Medidor de energía digital bidireccional en cabecera.
-- Interruptor seccionador general bipolar (DP Main Isolator Switch) con puentes de 16 mm².
-- Interruptor diferencial general (RCCB / ELCB) de 63A y 30mA de sensibilidad.
-- Barras colectoras sólidas de Neutro y Tierra (Earth Bar) conectada a jabalina de puesta a tierra (< 5 ohm).
-- Disyuntores termomagnéticos (MCB): C16 Iluminación, C10 Tomas generales, C20 Lavadora, C20 Refrigerador, C20 Calentador eléctrico, C32 Placa/horno de inducción, C16 Climatización, C16 Extractor, C16 Oficina.
+## 3. Entregables Eléctricos y Electrónica (`electrico/`)
+- [`cuadro_general_unifilar.dxf`](./electrico/cuadro_general_unifilar.dxf): Plano CAD unifilar 2D normalizado con discriminación de circuitos de fuerza, iluminación, climatización, vehículo eléctrico y cargas críticas respaldadas por SAI.
+- [`cuadro_general_unifilar.svg`](./electrico/cuadro_general_unifilar.svg): Esquema unifilar interactivo en formato SVG vectorial.
+- [`controlador_telemetria_cuadro_cgmp.kicad_sch`](./electrico/controlador_telemetria_cuadro_cgmp.kicad_sch): Esquema electrónico profesional en KiCad 10 del módulo de supervisión sobre carril DIN con microcontrolador ESP32-S3, sensores de tensión activos ZMPT101B para las 3 fases, optoacopladores para lectura de estado de cartuchos de varistor SPD e interruptor IGA, puerto RS485 para analizador de redes Modbus RTU y relé para bobina de disparo.
+- [`controlador_telemetria_cuadro_cgmp.kicad_pro`](./electrico/controlador_telemetria_cuadro_cgmp.kicad_pro): Proyecto electrónico en KiCad 10.
+- [`esquema_svg/controlador_telemetria_cuadro_cgmp.svg`](./electrico/esquema_svg/controlador_telemetria_cuadro_cgmp.svg): Renderizado esquemático vectorial.
+- [`BOM.md`](./electrico/BOM.md): Lista de componentes electrónicos y aparamenta modular con códigos de pedido.
 
 ---
 
-## 4. Requerimientos de Control y Automatización (`control/`)
-- Integración de analizadores de energía Modbus / Shelly Pro para medición por circuito en tiempo real.
-
----
-
-## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
-- `electrico/`:
-  - [`cuadro_general_unifilar.dxf`](./electrico/cuadro_general_unifilar.dxf): Plano CAD 2D estándar en DXF (LibreCAD / AutoCAD) del diagrama unifilar del Tablero General de Baja Tensión (TGBT).
-  - [`cuadro_general_unifilar.svg`](./electrico/cuadro_general_unifilar.svg): Esquema vectorial SVG interactivo de alta resolución visualizable directamente en navegador y GitHub con segregación de cargas críticas (UPS) y desconectables (Load Shedding).
-  - Diagramas unifilares y multifilares, esquemas de borneros, selección de disyuntores, calibres de cableado y listas de componentes (BOM).
-- `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).
+## 4. Entregables de Control y Firmware (`control/`)
+- [`controlador_tablero_cgmp.yaml`](./control/controlador_tablero_cgmp.yaml): Firmware ESPHome para adquisición en tiempo real de tensión de red, monitoreo de degradación de varistores del descargador de sobretensiones (alerta temprana antes de tormentas), temperatura del embarrado principal y disparo remoto de emergencia.

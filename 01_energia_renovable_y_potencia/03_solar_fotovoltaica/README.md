@@ -1,35 +1,25 @@
-# Generación Solar Fotovoltaica (PV)
+# Sistema Solar Fotovoltaico y Generación Distribuida
 
 ## 1. Descripción y Alcance
-Este directorio contiene la documentación, especificaciones, esquemas y archivos de diseño tanto mecánicos como eléctricos para este componente.
+Este subsistema aborda la generación eléctrica renovable solar mediante módulos fotovoltaicos bifaciales de alta eficiencia (550 Wp monocristalinos), la estructura portante de cubierta inclinada a 30° con orientación sur, y la caja combinadora/protecciones DC con telemetría local autónoma para máxima resiliencia energética.
 
 ---
 
-## 2. Requerimientos de Diseño Mecánico (`mecanico/`)
-- Racks y rieles de montaje coplanar/triangular de aluminio con anclajes impermeabilizados para techumbre.
-- Grapas intermedias y finales de fijación para módulos fotovoltaicos.
-- Canalizaciones metálicas tipo conduit galvanizado en intemperie para paso de cables DC.
+## 2. Entregables Mecánicos y Modelado 3D (`mecanico/`)
+- [`estructura_montaje_coplanar_pv.FCStd`](./mecanico/estructura_montaje_coplanar_pv.FCStd): Modelo paramétrico 3D nativo en FreeCAD 1.1+ de la estructura triangular autoportante en perfil de aluminio estructural AL6005-T5, tornillería de acero inoxidable A2, mordazas centrales y finales, arriostramiento contra cargas de viento según CTE DB-SE-AE y dos módulos fotovoltaicos de 550W (2278 x 1134 x 35 mm).
+- [`estructura_montaje_coplanar_pv.step`](./mecanico/estructura_montaje_coplanar_pv.step): Archivo de intercambio STEP AP214 para validación estructural en cubiertas y análisis de sombras (heliodon/shading).
 
 ---
 
-## 3. Requerimientos de Diseño Eléctrico y Protecciones (`electrico/`)
-- Módulos solares monocristalinos bifaciales / PERC (ej. 6x 350W+ en serie-paralelo).
-- Caja combinadora DC (PV Combiner Box) con fusibles seccionables en ambos polos (+ y -) y supresor de sobretensiones DC (SPD Clase II).
-- Cable solar fotovoltaico de 4-6 mm² doblemente aislado con conectores MC4 certificados.
-- Inversor híbrido de onda senoidal pura con entradas MPPT.
-- Conexión a medidor bidireccional (Net Metering) y varilla de tierra (Ground Rod).
+## 3. Entregables Eléctricos y Electrónica (`electrico/`)
+- [`esquema_fotovoltaico_ess.dxf`](./electrico/esquema_fotovoltaico_ess.dxf): Plano CAD unifilar 2D del campo solar, diodos de bloqueo, fusibles gPV de 1000V DC y topología de conexión hacia el inversor híbrido / sistema ESS.
+- [`esquema_fotovoltaico_ess.svg`](./electrico/esquema_fotovoltaico_ess.svg): Esquema vectorial interactivo.
+- [`combinador_telemetria_pv.kicad_sch`](./electrico/combinador_telemetria_pv.kicad_sch): Esquema electrónico profesional en KiCad 10 con ESP32-S3, sensor de corriente Hall aislado Allegro ACS758 (50A DC), divisor resistivo de alta tensión (hasta 600V DC), descargador de sobretensiones SPD DC Tipo II con contacto auxiliar optoacoplado y sensor térmico SHT31.
+- [`combinador_telemetria_pv.kicad_pro`](./electrico/combinador_telemetria_pv.kicad_pro): Proyecto en KiCad 10.
+- [`esquema_svg/combinador_telemetria_pv.svg`](./electrico/esquema_svg/combinador_telemetria_pv.svg): Renderizado esquemático vectorial.
+- [`BOM.md`](./electrico/BOM.md): Lista completa de materiales y componentes fotovoltaicos y de instrumentación.
 
 ---
 
-## 4. Requerimientos de Control y Automatización (`control/`)
-- Telemetría continua de producción instantánea (W), kWh diarios, tensión y corriente de strings vía Modbus TCP/RTU o CAN Bus a Home Assistant.
-
----
-
-## 5. Estructura de este Directorio
-- `mecanico/`: Planos CAD 2D/3D, modelos STL/STEP, especificaciones de corte, perfiles, anclajes y tolerancias mecánicas.
-- `electrico/`:
-  - [`esquema_fotovoltaico_ess.dxf`](./electrico/esquema_fotovoltaico_ess.dxf): Plano CAD 2D normalizado del esquema unifilar de 2 strings fotovoltaicos (8.8 kWp), Combiner Box DC con fusibles gPV 15A / DPS 1000V, inversor híbrido 8 kW, banco LiFePO4 48V y salidas AC Grid / EPS Backup.
-  - [`esquema_fotovoltaico_ess.svg`](./electrico/esquema_fotovoltaico_ess.svg): Vista vectorial interactiva a color del flujo de energía solar y almacenamiento.
-- `control/`: Archivos de configuración (YAML de Home Assistant, configuraciones de ESPHome, tópicos MQTT, plantillas de automatización).
-- [`NOTA_DE_DISENO.md`](./NOTA_DE_DISENO.md): Memoria de cálculo fotovoltaico, horas de sol pico (HSP) y dimensionamiento de strings.
+## 4. Entregables de Control y Firmware (`control/`)
+- [`combinador_solar_pv.yaml`](./control/combinador_solar_pv.yaml): Firmware ESPHome para adquisición continua de tensión DC, amperaje y potencia instantánea producida (W), estimación de pérdidas por calentamiento de placas y alarma ante degradación de protectores SPD.

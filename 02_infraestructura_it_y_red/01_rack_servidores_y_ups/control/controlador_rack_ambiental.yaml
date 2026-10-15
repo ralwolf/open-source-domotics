@@ -1,0 +1,156 @@
+substitutions:
+  name: "controlador-ambiental-rack-it"
+  friendly_name: "Controlador Ambiental y PDU Rack IT"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "Telemetria ambiental, control de extraccion termorregulada y seguridad fisica de rack 19U"
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+wifi:
+  ssid: "IoT_Secure_Net"
+  password: "!VLAN30_WPA3_Secret!"
+  manual_ip:
+    static_ip: 10.0.30.25
+    gateway: 10.0.30.1
+    subnet: 255.255.255.0
+    dns1: 10.0.10.1
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE="
+
+ota:
+  - platform: esphome
+
+i2c:
+  sda: GPIO4
+  scl: GPIO5
+  scan: true
+  id: bus_i2c
+
+one_wire:
+  - platform: gpio
+    pin: GPIO6
+    id: bus_1wire
+
+output:
+  - platform: ledc
+    pin: GPIO7
+    id: pwm_fans_techo
+    frequency: 25000Hz
+
+switch:
+  - platform: gpio
+    pin: GPIO8
+    id: rele_luz_led_servicio
+    name: "Luz LED de Servicio Rack"
+    icon: "mdi:led-strip-variant"
+
+  - platform: gpio
+    pin: GPIO9
+    id: buzzer_alarma
+    name: "Zumbador Alarma Rack"
+    icon: "mdi:buzzer"
+
+sensor:
+  # Sensor I2C SHT31 frontal (Intake)
+  - platform: sht3xd
+    temperature:
+      name: "Temperatura Frontal Intake Rack"
+      id: temp_intake
+      filters:
+        - sliding_window_moving_average:
+            window_size: 5
+            send_every: 1
+    humidity:
+      name: "Humedad Relativa Intake Rack"
+      id: hum_intake
+      filters:
+        - sliding_window_moving_average:
+            window_size: 5
+            send_every: 1
+    address: 0x44
+    update_interval: 10s
+
+  # Sensores 1-Wire DS18B20
+  - platform: dallas_temp
+    address: 0x2800000000000001
+    name: "Temperatura Extraccion Techo Exhaust"
+    id: temp_exhaust
+    update_interval: 5s
+    on_value:
+      then:
+        - lambda: |-
+            // Curva lineal de ventilacion PWM: 25°C -> 30%, 35°C -> 100%
+            float t = id(temp_exhaust).state;
+            if (t <= 25.0) {
+              id(pwm_fans_techo).set_level(0.30);
+            } else if (t >= 35.0) {
+              id(pwm_fans_techo).set_level(1.0);
+              id(buzzer_alarma).turn_on();
+            } else {
+              float duty = 0.30 + (t - 25.0) * (0.70 / 10.0);
+              id(pwm_fans_techo).set_level(duty);
+              id(buzzer_alarma).turn_off();
+            }
+
+  - platform: dallas_temp
+    address: 0x2800000000000002
+    name: "Temperatura Modulo Baterias SAI UPS"
+    id: temp_ups
+    update_interval: 10s
+
+  # Transformador de corriente SCT-013-000 en entrada PDU
+  - platform: ct_clamp
+    sensor: adc_corriente_pdu
+    name: "Corriente Total Rack RMS"
+    id: corriente_rack
+    update_interval: 5s
+    filters:
+      - calibrate_linear:
+          - 0.0 -> 0.0
+          - 0.5 -> 15.0
+
+  - platform: adc
+    pin: GPIO1
+    id: adc_corriente_pdu
+    attenuation: 11db
+    update_interval: 5s
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO10
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Puerta Frontal Rack Abierta"
+    id: sensor_puerta_frontal
+    filters:
+      - delayed_on: 50ms
+      - delayed_off: 50ms
+    on_press:
+      then:
+        - switch.turn_on: rele_luz_led_servicio
+    on_release:
+      then:
+        - switch.turn_off: rele_luz_led_servicio
+
+  - platform: gpio
+    pin:
+      number: GPIO11
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Puerta Trasera Rack Abierta"
+    id: sensor_puerta_trasera
+    filters:
+      - delayed_on: 50ms
+      - delayed_off: 50ms

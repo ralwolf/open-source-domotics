@@ -1,38 +1,25 @@
-# Captación de Agua de Lluvia, Cisterna Subterránea, Presurización y Potabilización
+# Captación Pluvial, Cisterna y Sistema de Potabilización UV-C
 
 ## 1. Descripción y Alcance
-Este directorio contiene la documentación, especificaciones, esquemas y archivos de diseño tanto mecánicos como eléctricos para este componente.
+Este subsistema asegura la autonomía hídrica de la vivienda recolectando el agua de lluvia procedente de las cubiertas y terrazas, prefiltrándola mediante separación centrífuga de hojas y partículas gruesas, almacenándola en una cisterna subterránea de 10.000 litros y acondicionándola para uso sanitario y potable mediante un skid de filtración de 3 etapas y esterilización germicida por radiación ultravioleta UV-C.
 
 ---
 
-## 2. Requerimientos de Diseño Mecánico (`mecanico/`)
-- Red de canalones perimetrales de aluminio/cinc sobredimensionados para lluvias torrenciales.
-- Filtro ciclónico y separador de primeras lluvias (First-Flush diverter) para descarte de polvo del tejado.
-- Cisterna subterránea de acumulación (capacidad 5.000 L a 10.000 L) con registro estanco, boya de nivel y rebose con válvula antirretorno a drenaje pluvial.
-- Tren de filtración mecánica multicapa (filtro de sedimentos de 20 y 5 micras + filtro de carbón activado en bloque).
-- Separación física de red de aguas grises (lavamanos, duchas) hacia tanque de decantación previo al biodigestor.
+## 2. Entregables Mecánicos y Modelado 3D (`mecanico/`)
+- [`cisterna_y_skid_potabilizacion_3d.FCStd`](./mecanico/cisterna_y_skid_potabilizacion_3d.FCStd): Modelo paramétrico 3D nativo en FreeCAD 1.1+ de la cisterna subterránea de 10.000 L (Ø2400 x 2600 mm) con registro DN600 y tapa de fundición B125, filtro vórtex centrífugo de bajante, y bancada metálica antivibratoria para el skid de potabilización con bomba vertical multietapa, 3 vasos portacartuchos Big Blue 10" y reactor de desinfección UV-C en acero inoxidable AISI 304 (55W).
+- [`cisterna_y_skid_potabilizacion_3d.step`](./mecanico/cisterna_y_skid_potabilizacion_3d.step): Archivo STEP AP214 universal para replanteo de excavación civil y conexionado de tuberías.
+- [`esquema_captacion_potabilizacion_pluvial.dxf`](./mecanico/esquema_captacion_potabilizacion_pluvial.dxf): Plano CAD P&ID 2D de la línea de captación, decantación de primeros litros (*first flush*), almacenamiento, bombeo presurizado y desinfección bacteriológica.
+- [`esquema_captacion_potabilizacion_pluvial.svg`](./mecanico/esquema_captacion_potabilizacion_pluvial.svg): Esquema hidráulico interactivo vectorial.
 
 ---
 
-## 3. Requerimientos de Diseño Eléctrico y Protecciones (`electrico/`)
-- Bomba presurizadora de agua sumergible o de superficie con Variador de Frecuencia (VFD) para presión constante (3 bar) con mínimo consumo.
-- Esterilizador por lámpara ultravioleta (UV-C de 55W) con balastro electrónico y horómetro de vida útil.
-- Electroválvula de 3 vías de conmutación automática entre agua de cisterna y agua de red pública.
-- Alimentación respaldada por la red de emergencia / UPS.
+## 3. Entregables Eléctricos y Electrónica (`electrico/`)
+- [`controlador_potabilizacion_pluvial.kicad_sch`](./electrico/controlador_potabilizacion_pluvial.kicad_sch): Esquema electrónico profesional en KiCad 10 con microcontrolador ESP32-S3, interfaz para sensor de nivel ultrasónico estanco JSN-SR04T, receptor de bucle de corriente 4-20mA para transductor de presión de red de 0-6 bar, circuito optoacoplado de monitoreo de corriente del balastro UV-C (alerta de fallo de lámpara germicida) y relé de 16A para contactor de electrobomba.
+- [`controlador_potabilizacion_pluvial.kicad_pro`](./electrico/controlador_potabilizacion_pluvial.kicad_pro): Proyecto en KiCad 10.
+- [`esquema_svg/controlador_potabilizacion_pluvial.svg`](./electrico/esquema_svg/controlador_potabilizacion_pluvial.svg): Renderizado esquemático vectorial.
+- [`BOM.md`](./electrico/BOM.md): Lista completa de materiales y componentes para el skid y su electrónica de control.
 
 ---
 
-## 4. Requerimientos de Control y Automatización (`control/`)
-- Sensor de nivel de agua hidrostático sumergible (4-20mA) o ultrasónico conectado por ESPHome.
-- Lógica en Home Assistant: conmutación a agua de red únicamente si la cisterna pluvial desciende del 10% de capacidad.
-- Alerta de cambio de filtros mecánicos y lámpara UV según horas de operación y caudal acumulado.
-
----
-
-## 5. Estructura y Entregables de este Directorio
-- **`mecanico/`**:
-  - [`esquema_captacion_potabilizacion_pluvial.dxf`](mecanico/esquema_captacion_potabilizacion_pluvial.dxf): Plano CAD P&ID completo del tren pluvial: captación perimetral, separador de primeras lluvias (First Flush), cisterna subterránea de 10.000 L, bomba sumergible, sedimentador 20µm, carbón activado 5µm, esterilizador UV-C 55W y válvula de 3 vías conmutadora red/pluvial.
-  - [`esquema_captacion_potabilizacion_pluvial.svg`](mecanico/esquema_captacion_potabilizacion_pluvial.svg): Diagrama vectorial del sistema pluvial y potabilización.
-- **`control/`**:
-  - [`monitoreo_cisterna_potabilizacion.yaml`](control/monitoreo_cisterna_potabilizacion.yaml): Configuración ESPHome con sensor de nivel hidrostático 4-20mA, sensor de presión piezorresistivo, conmutación automática cisterna/red, contador horario para vida útil de lámpara UV-C y control de bomba.
-
+## 4. Entregables de Control y Firmware (`control/`)
+- [`monitoreo_cisterna_potabilizacion.yaml`](./control/monitoreo_cisterna_potabilizacion.yaml): Firmware ESPHome para cálculo de volumen en litros y porcentaje de llenado de la cisterna con filtrado de eco acústico, vigilancia de presión de servicio en bar, enclavamiento de bomba ante nivel bajo crítico (protección contra marcha en seco) y supervisión del estado de desinfección UV-C.
